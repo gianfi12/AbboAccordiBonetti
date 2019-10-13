@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generato da Microsoft Visio, esportazione SVG UML states user - v1.0.svg Access data -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="11.6929in" height="8.26772in"
+		viewBox="0 0 841.89 595.276" xml:space="preserve" color-interpolation-filters="sRGB" class="st8">
+	<v:documentProperties v:langID="1040" v:metric="true" v:viewMarkup="false">
+		<v:userDefs>
+			<v:ud v:nameU="msvNoAutoConnect" v:prompt="" v:val="VT0(0):26"/>
+		</v:userDefs>
+	</v:documentProperties>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#5b9bd5;stroke:#5b9bd5;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st2 {marker-end:url(#mrkr4-8);stroke:#5592c9;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st3 {fill:#5592c9;fill-opacity:1;stroke:#5592c9;stroke-opacity:1;stroke-width:0.16556291390728}
+		.st4 {fill:#73ae42;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st5 {fill:#ffffff;font-family:Calibri;font-size:1.00001em}
+		.st6 {fill:#ffffff;stroke:none;stroke-linecap:butt;stroke-width:7.2}
+		.st7 {fill:#41719d;font-family:Calibri;font-size:0.666664em}
+		.st8 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Markers">
+		<g id="lend4">
+			<path d="M 2 1 L 0 0 L 2 -1 L 2 1 " style="stroke:none"/>
+		</g>
+		<marker id="mrkr4-8" class="st3" v:arrowType="4" v:arrowSize="2" v:setback="12.08" refX="-12.08" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend4" transform="scale(-6.04,-6.04) "/>
+		</marker>
+	</defs>
+	<g v:mID="4" v:index="2" v:groupContext="foregroundPage">
+		<v:userDefs>
+			<v:ud v:nameU="msvThemeOrder" v:val="VT0(0):26"/>
+		</v:userDefs>
+		<title>User interaction</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Connettore" v:index="0"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(57.685,-543.26)">
+			<title>Stato iniziale</title>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<ellipse cx="17.0079" cy="578.268" rx="17.0079" ry="17.0079" class="st1"/>
+		</g>
+		<g id="shape3-3" v:mID="3" v:groupContext="shape" v:layerMember="0" transform="translate(91.7008,-553.181)">
+			<title>Connettore dinamico</title>
+			<path d="M0 588.19 L78.17 588.19" class="st2"/>
+		</g>
+		<g id="shape2-9" v:mID="2" v:groupContext="shape" transform="translate(175.91,-543.26)">
+			<title>Azione</title>
+			<desc>Login</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="56.6929" cy="578.268" width="113.39" height="34.0157"/>
+			<rect x="0" y="561.26" width="113.386" height="34.0157" rx="8.50394" ry="8.50394" class="st4"/>
+			<text x="43.65" y="581.87" class="st5" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Login</text>		</g>
+		<g id="shape4-12" v:mID="4" v:groupContext="shape" transform="translate(175.91,-483.732)">
+			<title>Azione.4</title>
+			<desc>Load data</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="56.6929" cy="578.268" width="113.39" height="34.0157"/>
+			<rect x="0" y="561.26" width="113.386" height="34.0157" rx="8.50394" ry="8.50394" class="st4"/>
+			<text x="32.71" y="581.87" class="st5" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Load data</text>		</g>
+		<g id="shape6-15" v:mID="6" v:groupContext="shape" transform="translate(175.91,-424.205)">
+			<title>Azione.6</title>
+			<desc>Show map</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="56.6929" cy="578.268" width="113.39" height="34.0157"/>
+			<rect x="0" y="561.26" width="113.386" height="34.0157" rx="8.50394" ry="8.50394" class="st4"/>
+			<text x="31.15" y="581.87" class="st5" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Show map</text>		</g>
+		<g id="shape7-18" v:mID="7" v:groupContext="shape" transform="translate(18,-424.205)">
+			<title>Azione.7</title>
+			<desc>Input position</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="56.6929" cy="578.268" width="113.39" height="34.0157"/>
+			<rect x="0" y="561.26" width="113.386" height="34.0157" rx="8.50394" ry="8.50394" class="st4"/>
+			<text x="22.61" y="581.87" class="st5" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Input position</text>		</g>
+		<g id="shape10-21" v:mID="10" v:groupContext="shape" transform="translate(175.91,-364.677)">
+			<title>Azione.10</title>
+			<desc>New report</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="56.6929" cy="578.268" width="113.39" height="34.0157"/>
+			<rect x="0" y="561.26" width="113.386" height="34.0157" rx="8.50394" ry="8.50394" class="st4"/>
+			<text x="28.69" y="581.87" class="st5" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>New report</text>		</g>
+		<g id="shape11-24" v:mID="11" v:groupContext="shape" v:layerMember="0" transform="translate(225.516,-543.26)">
+			<title>Connettore dinamico.11</title>
+			<desc>Success</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="7.08661" cy="608.031" width="40" height="17.6036"/>
+			<path d="M7.09 595.28 L7.09 614.75" class="st2"/>
+			<rect v:rectContext="textBkgnd" x="-5.35452" y="603.232" width="24.8824" height="9.59985" class="st6"/>
+			<text x="-5.35" y="610.43" class="st7" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Success</text>		</g>
+		<g id="shape12-31" v:mID="12" v:groupContext="shape" v:layerMember="0" transform="translate(225.516,-483.732)">
+			<title>Connettore dinamico.12</title>
+			<desc>Success</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="7.08661" cy="608.031" width="40" height="17.6036"/>
+			<path d="M7.09 595.28 L7.09 614.75" class="st2"/>
+			<rect v:rectContext="textBkgnd" x="-5.35452" y="603.232" width="24.8824" height="9.59985" class="st6"/>
+			<text x="-5.35" y="610.43" class="st7" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Success</text>		</g>
+		<g id="shape13-38" v:mID="13" v:groupContext="shape" v:layerMember="0" transform="translate(225.516,-424.205)">
+			<title>Connettore dinamico.13</title>
+			<desc>Button</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="7.08661" cy="608.031" width="40" height="17.6036"/>
+			<path d="M7.09 595.28 L7.09 614.75" class="st2"/>
+			<rect v:rectContext="textBkgnd" x="-4.0812" y="603.232" width="22.3355" height="9.59985" class="st6"/>
+			<text x="-4.08" y="610.43" class="st7" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Button</text>		</g>
+		<g id="shape14-45" v:mID="14" v:groupContext="shape" v:layerMember="0" transform="translate(175.91,-434.126)">
+			<title>Connettore dinamico.14</title>
+			<desc>Button</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="-22.2621" cy="588.189" width="40" height="17.6036"/>
+			<path d="M0 588.19 L-38.48 588.19" class="st2"/>
+			<rect v:rectContext="textBkgnd" x="-33.4299" y="583.389" width="22.3355" height="9.59985" class="st6"/>
+			<text x="-33.43" y="590.59" class="st7" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Button</text>		</g>
+		<g id="shape15-52" v:mID="15" v:groupContext="shape" v:layerMember="0" transform="translate(74.6929,-458.22)">
+			<title>Connettore dinamico.15</title>
+			<desc>Data request</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="29.3487" cy="552.756" width="51.86" height="17.6036"/>
+			<path d="M0 595.28 L0 552.76 L95.18 552.76" class="st2"/>
+			<rect v:rectContext="textBkgnd" x="8.32949" y="547.956" width="42.0386" height="9.59985" class="st6"/>
+			<text x="8.33" y="555.16" class="st7" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Data request</text>		</g>
+		<g id="shape16-59" v:mID="16" v:groupContext="shape" v:layerMember="0" transform="translate(282.209,-381.685)">
+			<title>Connettore dinamico.16</title>
+			<desc>When over</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="43.0866" cy="565.512" width="45.73" height="17.6036"/>
+			<path d="M7.09 595.28 L43.09 595.28 L43.09 535.75 L13.13 535.75" class="st2"/>
+			<rect v:rectContext="textBkgnd" x="25.1297" y="560.712" width="35.914" height="9.59985" class="st6"/>
+			<text x="25.13" y="567.91" class="st7" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>When over</text>		</g>
+	</g>
+</svg>
