@@ -1,0 +1,4 @@
+!.gitignore
+!README.md
+!deliverables
+.DS_Store
