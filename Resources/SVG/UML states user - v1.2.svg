@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<!-- Generato da Microsoft Visio, esportazione SVG UML states user - v1.1.svg Access data -->
+<!-- Generato da Microsoft Visio, esportazione SVG UML states user - v1.2.svg Access data -->
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
 		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="5.61786in" height="8.33099in"
 		viewBox="0 0 404.486 599.831" xml:space="preserve" color-interpolation-filters="sRGB" class="st16">
@@ -149,7 +149,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="7.08661" cy="641.472" width="47.15" height="17.6036"/>
 			<path d="M7.09 599.83 L7.09 677.07" class="st7"/>
-			<rect v:rectContext="textBkgnd" x="-11.5792" y="636.672" width="37.3318" height="9.59985" class="st9"/>
+			<rect v:rectContext="textBkgnd" x="-11.5792" y="636.672" width="37.3318" height="9.59985" class="st13"/>
 			<text x="-11.58" y="643.87" class="st10" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>New report</text>		</g>
 		<g id="shape14-44" v:mID="14" v:groupContext="shape" v:layerMember="0" transform="translate(170.061,-456.925)">
 			<title>Connettore dinamico.14</title>
@@ -157,7 +157,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="-6.66141" cy="617.264" width="62.2" height="17.6036"/>
 			<path d="M-6.66 599.83 L-6.66 617.83 L-7.51 617.83 L-7.51 627.81" class="st7"/>
-			<rect v:rectContext="textBkgnd" x="-32.8524" y="612.465" width="52.3823" height="9.59985" class="st9"/>
+			<rect v:rectContext="textBkgnd" x="-32.8524" y="612.465" width="52.3823" height="9.59985" class="st13"/>
 			<text x="-32.85" y="619.66" class="st10" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Change position</text>		</g>
 		<g id="shape15-51" v:mID="15" v:groupContext="shape" v:layerMember="0" transform="translate(98.7697,-405.901)">
 			<title>Connettore dinamico.15</title>
@@ -165,7 +165,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="-28.9134" cy="565.816" width="64.97" height="17.6036"/>
 			<path d="M7.09 599.83 L-28.91 599.83 L-28.91 531.8 L1.05 531.8" class="st7"/>
-			<rect v:rectContext="textBkgnd" x="-55.583" y="561.016" width="53.3392" height="9.59985" class="st13"/>
+			<rect v:rectContext="textBkgnd" x="-55.583" y="561.016" width="53.3392" height="9.59985" class="st9"/>
 			<text x="-55.58" y="568.22" class="st10" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>On confirmation  </text>		</g>
 		<g id="shape16-58" v:mID="16" v:groupContext="shape" v:layerMember="0" transform="translate(301.825,-373.644)">
 			<title>Connettore dinamico.16</title>
@@ -173,7 +173,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="7.08661" cy="558.191" width="45.73" height="17.6036"/>
 			<path d="M7.09 599.83 L7.09 522.59" class="st7"/>
-			<rect v:rectContext="textBkgnd" x="-10.8703" y="553.391" width="35.914" height="9.59985" class="st9"/>
+			<rect v:rectContext="textBkgnd" x="-10.8703" y="553.391" width="35.914" height="9.59985" class="st13"/>
 			<text x="-10.87" y="560.59" class="st10" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>When over</text>		</g>
 		<g id="shape19-65" v:mID="19" v:groupContext="shape" v:layerMember="0" transform="translate(169.64,-524.956)">
 			<title>Connettore dinamico.19</title>
@@ -315,7 +315,7 @@
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
 			<v:textRect cx="-7.08661" cy="613.119" width="40" height="17.6036"/>
 			<path d="M-7.09 599.83 L-7.09 620.37" class="st7"/>
-			<rect v:rectContext="textBkgnd" x="-15.1178" y="608.319" width="16.0623" height="9.59985" class="st13"/>
+			<rect v:rectContext="textBkgnd" x="-15.1178" y="608.319" width="16.0623" height="9.59985" class="st9"/>
 			<text x="-15.12" y="615.52" class="st10" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Send</text>		</g>
 		<g id="shape54-154" v:mID="54" v:groupContext="shape" v:layerMember="0" transform="translate(179.389,-90.4543)">
 			<title>Connettore dinamico.73</title>

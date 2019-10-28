@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Generato da Microsoft Visio, esportazione SVG UML states server - v1.2.svg Server -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="4.11521in" height="2.63858in"
+		viewBox="0 0 296.295 189.978" xml:space="preserve" color-interpolation-filters="sRGB" class="st10">
+	<v:documentProperties v:langID="1040" v:metric="true" v:viewMarkup="false">
+		<v:userDefs>
+			<v:ud v:nameU="msvNoAutoConnect" v:prompt="" v:val="VT0(0):26"/>
+		</v:userDefs>
+	</v:documentProperties>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#5b9bd5;stroke:#5b9bd5;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st2 {fill:#73ae42;stroke:#ffffff;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st3 {fill:#ffffff;font-family:Calibri;font-size:1.00001em}
+		.st4 {font-size:1em}
+		.st5 {marker-end:url(#mrkr4-18);stroke:#5592c9;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.5}
+		.st6 {fill:#5592c9;fill-opacity:1;stroke:#5592c9;stroke-opacity:1;stroke-width:0.16556291390728}
+		.st7 {fill:#ffffff;stroke:none;stroke-linecap:butt}
+		.st8 {fill:#41719d;font-family:Calibri;font-size:0.666664em}
+		.st9 {fill:#ffffff;stroke:none;stroke-linecap:butt;stroke-width:7.2}
+		.st10 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Markers">
+		<g id="lend4">
+			<path d="M 2 1 L 0 0 L 2 -1 L 2 1 " style="stroke:none"/>
+		</g>
+		<marker id="mrkr4-18" class="st6" v:arrowType="4" v:arrowSize="2" v:setback="12.08" refX="-12.08" orient="auto"
+				markerUnits="strokeWidth" overflow="visible">
+			<use xlink:href="#lend4" transform="scale(-6.04,-6.04) "/>
+		</marker>
+	</defs>
+	<g v:mID="6" v:index="3" v:groupContext="foregroundPage">
+		<v:userDefs>
+			<v:ud v:nameU="msvThemeOrder" v:val="VT0(0):26"/>
+		</v:userDefs>
+		<title>Server</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="Connettore" v:index="0"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(52.3907,-136.063)">
+			<title>Nodo iniziale</title>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<ellipse cx="17.0079" cy="172.97" rx="17.0079" ry="17.0079" class="st1"/>
+		</g>
+		<g id="shape2-3" v:mID="2" v:groupContext="shape" transform="translate(18.25,-77.981)">
+			<title>Azione</title>
+			<desc>Idle</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="129.898" cy="172.97" width="259.8" height="34.0157"/>
+			<rect x="0" y="155.962" width="259.795" height="34.0157" rx="8.50394" ry="8.50394" class="st2"/>
+			<text x="120.87" y="176.57" class="st3" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Idle</text>		</g>
+		<g id="shape4-6" v:mID="4" v:groupContext="shape" transform="translate(175.748,-137.712)">
+			<title>Azione.4</title>
+			<desc>Handle request</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="51.1486" cy="172.97" width="102.3" height="34.0157"/>
+			<rect x="0" y="155.962" width="102.297" height="34.0157" rx="8.50394" ry="8.50394" class="st2"/>
+			<text x="13.79" y="176.57" class="st3" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Handle request</text>		</g>
+		<g id="shape5-9" v:mID="5" v:groupContext="shape" transform="translate(18.25,-18.25)">
+			<title>Azione.5</title>
+			<desc>Cross data with municipalities</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="51.1486" cy="171.576" width="102.3" height="36.8038"/>
+			<rect x="0" y="153.174" width="102.297" height="36.8038" rx="8.50394" ry="8.50394" class="st2"/>
+			<text x="13.55" y="167.98" class="st3" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Cross data with <tspan
+						x="17.26" dy="1.2em" class="st4">municipalities</tspan></text>		</g>
+		<g id="shape7-13" v:mID="7" v:groupContext="shape" v:layerMember="0" transform="translate(62.3371,-136.063)">
+			<title>Connettore dinamico</title>
+			<desc>Startup</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="7.08661" cy="202.011" width="40" height="17.6036"/>
+			<path d="M7.06 189.98 L7.1 208" class="st5"/>
+			<rect v:rectContext="textBkgnd" x="-4.94445" y="197.211" width="24.0623" height="9.59985" class="st7"/>
+			<text x="-4.94" y="204.41" class="st8" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Startup</text>		</g>
+		<g id="shape8-21" v:mID="8" v:groupContext="shape" v:layerMember="0" transform="translate(234.063,-111.997)">
+			<title>Connettore dinamico.8</title>
+			<desc>On request</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="-7.08661" cy="177.12" width="46.09" height="17.6036"/>
+			<path d="M-7.01 189.98 L-7.13 170.3" class="st5"/>
+			<rect v:rectContext="textBkgnd" x="-25.223" y="172.32" width="36.273" height="9.59985" class="st9"/>
+			<text x="-25.22" y="179.52" class="st8" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>On request</text>		</g>
+		<g id="shape12-28" v:mID="12" v:groupContext="shape" v:layerMember="0" transform="translate(76.5476,-77.981)">
+			<title>Connettore dinamico.12</title>
+			<desc>Periodically</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="-7.08661" cy="201.441" width="47.32" height="17.6036"/>
+			<path d="M-7.02 189.98 L-7.12 206.86" class="st5"/>
+			<rect v:rectContext="textBkgnd" x="-25.8381" y="196.642" width="37.5032" height="9.59985" class="st9"/>
+			<text x="-25.84" y="203.84" class="st8" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Periodically</text>		</g>
+		<g id="shape13-35" v:mID="13" v:groupContext="shape" transform="translate(175.748,-18.25)">
+			<title>Azione.13</title>
+			<desc>Handle report</desc>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="51.1486" cy="171.576" width="102.3" height="36.8038"/>
+			<rect x="0" y="153.174" width="102.297" height="36.8038" rx="8.50394" ry="8.50394" class="st2"/>
+			<text x="17.02" y="175.18" class="st3" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>Handle report</text>		</g>
+		<g id="shape14-38" v:mID="14" v:groupContext="shape" v:layerMember="0" transform="translate(219.748,-77.981)">
+			<title>Connettore dinamico.14</title>
+			<desc>On receiving report</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="7.08661" cy="201.441" width="72.98" height="17.6036"/>
+			<path d="M7.02 189.98 L7.12 206.86" class="st5"/>
+			<rect v:rectContext="textBkgnd" x="-24.495" y="196.642" width="63.1634" height="9.59985" class="st9"/>
+			<text x="-24.49" y="203.84" class="st8" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>On receiving report</text>		</g>
+		<g id="shape15-45" v:mID="15" v:groupContext="shape" v:layerMember="0" transform="translate(175.748,-154.72)">
+			<title>Connettore dinamico.15</title>
+			<desc>When done</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="-27.2126" cy="215.948" width="47.73" height="17.6036"/>
+			<path d="M0 189.98 L-27.6 189.98 L-27.6 226.66" class="st5"/>
+			<rect v:rectContext="textBkgnd" x="-46.1713" y="211.148" width="37.9177" height="9.59985" class="st9"/>
+			<text x="-46.17" y="218.35" class="st8" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>When done</text>		</g>
+		<g id="shape16-52" v:mID="16" v:groupContext="shape" v:layerMember="0" transform="translate(120.547,-36.6519)">
+			<title>Connettore dinamico.16</title>
+			<path d="M0 189.98 L27.6 189.98 L27.6 154.69" class="st5"/>
+		</g>
+		<g id="shape17-57" v:mID="17" v:groupContext="shape" v:layerMember="0" transform="translate(175.748,-36.6519)">
+			<title>Connettore dinamico.17</title>
+			<desc>When data has been updated</desc>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="-27.6004" cy="169.172" width="58.65" height="27.2035"/>
+			<path d="M0 189.98 L-27.6 189.98 L-27.6 154.69" class="st5"/>
+			<rect v:rectContext="textBkgnd" x="-52.0162" y="159.572" width="48.8318" height="19.1997" class="st9"/>
+			<text x="-52.02" y="166.77" class="st8" v:langID="1040"><v:paragraph v:horizAlign="1"/><v:tabList/>When data has<v:newlineChar/><tspan
+						x="-50.34" dy="1.2em" class="st4">been updated</tspan></text>		</g>
+	</g>
+</svg>
