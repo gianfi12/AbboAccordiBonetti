@@ -120,9 +120,11 @@ fact eachFiscalCodeToAUser {
 	all f: FiscalCode | one u: User | u.fiscalCode=f
 }
 
+
 fact eachMunicipalityIsInADifferentCity {
 	all disj m1, m2: Municipality | m1.place.city != m2.place.city
 }
+
 
 fact eachPlaceHasDifferentPosition {
 	all disj p1, p2: Place | p1.position!=p2.position and (p1.city!=p2.city or p1.houseCode!=p2.houseCode or
@@ -130,30 +132,18 @@ fact eachPlaceHasDifferentPosition {
 }
 
 
-
-
-fact everyUserIsRegistered {
-	all u: User | one r: UserRegistration | r.user=u
-}
-
-fact everyMunicipalityIsRegistered {
-	all m: Municipality | one r: MunicipalityRegistration | r.municipality=m
-}
-
 fact licencePlateIsUnique {
 	all disj v1, v2: Vehicle | v1.licensePlate!=v2.licensePlate
 }
+
 
 fact eachLicencePlateToAVehicle {
 	all l: LicensePlate | one v: Vehicle | v.licensePlate=l
 }
 
+
 fact trafficTicketMadeByOneMunicipality {
 	all disj m1, m2: Municipality | m1.trafficTicket & m2.trafficTicket = none
-}
-
-fact theMunicipalityCanTakeReportedViolationOnlyOfItsCompetenceArea {
-	all m: Municipality | all v: Violation | v in m.takenReportedViolations implies v.place.city=m.place.city and v.reportedByUser!=none
 }
 
 
@@ -164,9 +154,11 @@ fact eachPhotoDateTimeVehicleToAReportOrViolation {
 	all ve: Vehicle | (one r: ViolationReport |  r.vehicle=ve) or (one v: Violation | v.vehicle=ve)
 }
 
+
 fact eachViolationTypeToAViolation {
 	all vT: ViolationType | one v: Violation | v.violationType=vT
 }
+
 
 fact eachCityHouseCodeStreetCityPositionToAPlace {
 	all c: City | one p : Place | p.city=c	
@@ -174,12 +166,6 @@ fact eachCityHouseCodeStreetCityPositionToAPlace {
 	all s: Street | one p : Place | p.street=s
 	all pos: Position | one p : Place | p.position=pos
 }
-
-fact eachUserWasIdentified {
-	all u: User | one s: Service | one idV: IdentityVerifier | s.serviceObject=u and
-		s.thirdPart=idV
-}
-
 
 
 fact eachViolationNotFromMunicipalityRefersToAReport {
@@ -189,13 +175,16 @@ fact eachViolationNotFromMunicipalityRefersToAReport {
 		v.violationReport=none
 }
 
+
 fact eachViolationReportToViolation {
 	all vR: ViolationReport | one v: Violation | v.violationReport=vR
 }
 
+
 fact eachTrafficTicketWasMadeByAMunicipality {
 	all t: TrafficTicket | one m: Municipality | t in m.trafficTicket
 }
+
 
 fact eachPlaceAndPositionAndTrafficPlateInAReportWereIdentified {
 	all p: Place | all vR: ViolationReport | p=vR.place implies 
@@ -222,21 +211,47 @@ fact eachViolationInSafeStreetsWasReportedByAnUserOrByAMunicipality {
 		(some tt: TrafficTicket | tt.refersToViolation = v)
 }
 
-fact acceptValidReports {
-	all vR:ViolationReport | one safeS: SafeStreets | some v:Violation | v.violationReport=vR and v in safeS.violation
-}
-
 fact trafficTicketsOnlyInTheCityOfTheMunicipality {
 	all m: Municipality | all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToViolation.place.city=m.place.city
 }
 
 
+//R7
+fact theMunicipalityCanTakeReportedViolationOnlyOfItsCompetenceArea {
+	all m: Municipality | all v: Violation | v in m.takenReportedViolations implies v.place.city=m.place.city and v.reportedByUser!=none
+}
+
+
+//R9
+fact acceptValidReports {
+	all vR:ViolationReport | one safeS: SafeStreets | some v:Violation | v.violationReport=vR and v in safeS.violation
+}
+
+
+//R14
+fact eachUserWasIdentified {
+	all u: User | one s: Service | one idV: IdentityVerifier | s.serviceObject=u and
+		s.thirdPart=idV
+}
+
+
+//R14
+fact everyUserIsRegistered {
+	all u: User | one r: UserRegistration | r.user=u
+}
+
+
+//R15
+fact everyMunicipalityIsRegistered {
+	all m: Municipality | one r: MunicipalityRegistration | r.municipality=m
+}
 
 
 --end of facts--
 
---Goals:--
 
+
+--Goals:--
 
 //G3
 assert theMunicipalityCanRetrieveSubmittedViolations {
@@ -265,6 +280,7 @@ pred theMunicipalityTakesTheReportedViolations[m: Municipality, vs: set Violatio
 	m.takenReportedViolations=m.takenReportedViolations+vs
 }
 
+
 pred safeStreetsRetrievesViolationsFromTheMunicipality[m: Municipality, safeS: SafeStreets] {
 	safeS.violation = safeS.violation+m.trafficTicket.refersToViolation
 } 
@@ -272,8 +288,8 @@ pred safeStreetsRetrievesViolationsFromTheMunicipality[m: Municipality, safeS: S
 --end of the operations--
 
 
-
 //Worlds:
+
 pred noMunicipality {
 	#Municipality=0
 }
