@@ -1,120 +1,279 @@
-//open util/integer
-//open util/boolean
-
 sig FiscalCode {}
 
-abstract sig Identified {}
+abstract sig ServiceObject{} //it means that it can be an object of the service offered by a third part
 
-sig IdentifiedYes extends Identified {}
-sig IdentifiedNo extends Identified {}
-
-sig User {
-	fiscalCode: one FiscalCode,
-	wasIdentified: one Identified
+sig User extends ServiceObject { //it can be verified by a third part
+	fiscalCode: one FiscalCode
 }
+
+sig Password {}
+
 
 sig Photo {}
 sig Date {}
 sig Time {}
-sig Position {}
-sig TrafficPlate {}
 
-sig ReportViolation {
+sig Position extends ServiceObject {} //specific position in the world, identified by some coordinates
+sig HouseCode{}
+sig Street{}
+sig City{}	
+sig Place extends ServiceObject {
+	city: one City,
+	houseCode: one HouseCode,
+	street: one Street,
+	position: one Position
+}
+
+abstract sig ViolationType {}
+sig ParkingViolationType extends ViolationType {} //violations reported by an user or verified by a Municipality
+sig AccidentViolationType extends ViolationType {} //violations verified by a Municipality
+
+sig LicensePlate extends ServiceObject {}
+sig Vehicle {
+	licensePlate: one LicensePlate
+}
+
+sig ViolationReport {
 	user: one User,
 	photo: some Photo,
 	date: one Date,
 	time: one Time,
-	position: one Position,
-	trafficPlate: one TrafficPlate
-}
-
-sig Municipality {
-
-}
-
-sig SafeStreet {
-
+	vehicle: one Vehicle,
+	place: one Place
 }
 
 sig Violation {
-
+	//if it is present it means that the violation was reported by an user
+	//and that there is also the report of the user
+	reportedByUser: lone User,
+	violationReport: lone ViolationReport,
+	photo: set Photo,
+	date: one Date,
+	time: one Time,
+	vehicle: one Vehicle,
+	place: one Place,
+	violationType: one ViolationType
 }
 
-sig IdentityVerifier {
-	verifiedUser: set User
-} {
-	#IdentityVerifier=1
+sig Municipality {
+	place: one Place,
+	trafficTicket: set TrafficTicket,
+	takenReportedViolations: set Violation //reports about violations taken by the Municipality from Safestreets
 }
 
-fact everyUserWasIdentified {
-	all u: User | u.wasIdentified in IdentifiedYes
-	User=IdentityVerifier.verifiedUser
-	
+sig UserRegistration {
+	user: one User,
+	password: one Password
 }
 
-fact fiscalCodeIsUnique {
-	all disj u1, u2: User | u1.fiscalCode != u2.fiscalCode
+sig MunicipalityRegistration {
+	municipality: one Municipality,
+	password: one Password
+}
+
+one sig SafeStreets {
+	suggestion: set Suggestion,
+	statistic: set Statistic,
+	violation: set Violation
+}
+
+abstract sig ThirdPart{}
+
+one sig IdentityVerifier extends ThirdPart {}
+
+one sig RecognitionPlateSystem extends ThirdPart {}
+
+one sig MapService extends ThirdPart {}
+
+//This means that the third part has done something on serviceObject
+sig Service {
+	serviceObject: one ServiceObject,
+	thirdPart: one ThirdPart
+}
+
+sig TrafficTicket {
+	refersToViolation: lone Violation
+}
+
+abstract sig Statistic {
+	forUser: lone User, //means that the stastic is for an user
+	forMunicipality: lone Municipality //means that the stastic is for an Municipality
+}
+
+sig streetStatistic extends Statistic{}
+sig effectivenessOfServiceStatistic extends Statistic{}
+sig vehicleStatistic extends Statistic{}
+
+
+sig Suggestion {
+	place: one Place //place where the suggestion refers
+}
+
+
+--Facts:--
+
+fact eachUserHasAnUniqueFiscalCode {
+	all disj u1, u2 : User | u1.fiscalCode != u2.fiscalCode
+}
+
+fact eachFiscalCodeToAUser {
+	all f: FiscalCode | one u: User | u.fiscalCode=f
+}
+
+fact eachMunicipalityIsInADifferentCity {
+	all disj m1, m2: Municipality | m1.place.city != m2.place.city
+}
+
+fact eachPlaceHasDifferentPosition {
+	all disj p1, p2: Place | p1.position!=p2.position and (p1.city!=p2.city or p1.houseCode!=p2.houseCode or
+		p1.street!=p2.street)
+}
+
+
+
+
+fact everyUserIsRegistered {
+	all u: User | one r: UserRegistration | r.user=u
+}
+
+fact everyMunicipalityIsRegistered {
+	all m: Municipality | one r: MunicipalityRegistration | r.municipality=m
 }
 
 fact licencePlateIsUnique {
+	all disj v1, v2: Vehicle | v1.licensePlate!=v2.licensePlate
+}
 
+fact eachLicencePlateToAVehicle {
+	all l: LicensePlate | one v: Vehicle | v.licensePlate=l
+}
+
+fact trafficTicketMadeByOneMunicipality {
+	all disj m1, m2: Municipality | m1.trafficTicket & m2.trafficTicket = none
+}
+
+fact theMunicipalityCanTakeReportedViolationOnlyOfItsCompetenceArea {
+	all m: Municipality | all v: Violation | v in m.takenReportedViolations implies v.place.city=m.place.city and v.reportedByUser!=none
 }
 
 
-assert chainOfCustodyNeverBroken {
-	
+fact eachPhotoDateTimeVehicleToAReportOrViolation {
+	all p: Photo | (one r: ViolationReport | p in r.photo) or (one v: Violation | p in v.photo)
+	all d: Date | (one r: ViolationReport |  r.date=d) or (one v: Violation | v.date=d)
+	all t: Time | (one r: ViolationReport |  r.time=t) or (one v: Violation | v.time=t)
+	all ve: Vehicle | (one r: ViolationReport |  r.vehicle=ve) or (one v: Violation | v.vehicle=ve)
 }
 
-assert eachUserWasIdentified {
+fact eachViolationTypeToAViolation {
+	all vT: ViolationType | one v: Violation | v.violationType=vT
+}
 
+fact eachCityHouseCodeStreetCityPositionToAPlace {
+	all c: City | one p : Place | p.city=c	
+	all hC: HouseCode | one p : Place | p.houseCode=hC
+	all s: Street | one p : Place | p.street=s
+	all pos: Position | one p : Place | p.position=pos
+}
+
+fact eachUserWasIdentified {
+	all u: User | one s: Service | one idV: IdentityVerifier | s.serviceObject=u and
+		s.thirdPart=idV
 }
 
 
-/*The report is complete if and only if:
-the report was made by an identified user, there is the date and the time of the report,
-there is at least one photo, there is the position of the violation and the 
-traffic plate of the car that has commited the violation
-*/
-assert eachReportIsComplete {
-	all r: ReportViolation | r.user.wasIdentified in IdentifiedYes
+
+fact eachViolationNotFromMunicipalityRefersToAReport {
+	all v: Violation | v.reportedByUser!=none implies 
+		(one r: ViolationReport | v.violationReport=r and v.photo=r.photo and v.date=r.date and v.time=r.time and v.vehicle=r.vehicle and
+			v.place=r.place and v.violationType in ParkingViolationType) else
+		v.violationReport=none
 }
 
-assert theUserCannotSeeSingleStoredViolations {
-
+fact eachViolationReportToViolation {
+	all vR: ViolationReport | one v: Violation | v.violationReport=vR
 }
 
-//Goals:
-//G1
-assert acceptCompleteReports {
-
+fact eachTrafficTicketWasMadeByAMunicipality {
+	all t: TrafficTicket | one m: Municipality | t in m.trafficTicket
 }
 
-//G2
-assert suggestInterventions {
+fact eachPlaceAndPositionAndTrafficPlateInAReportWereIdentified {
+	all p: Place | all vR: ViolationReport | p=vR.place implies 
+		one s: Service | one mS: MapService | s.thirdPart=mS and s.serviceObject=p
 
+	all p: Position | all vR: ViolationReport | p=vR.place.position implies 
+		one s: Service | one mS: MapService | s.thirdPart=mS and s.serviceObject=p
+
+	all tP: LicensePlate | all vR: ViolationReport | tP=vR.vehicle.licensePlate implies 
+		one s: Service | one rPS: RecognitionPlateSystem | s.thirdPart=rPS and s.serviceObject=tP
 }
+
+fact eachPasswordToAUser {
+	all p: Password | (one r: UserRegistration | r.password=p) or (one r: MunicipalityRegistration | r.password=p)
+}
+
+fact eachStatisticAndSuggestionToSafeStreets {
+	all stat: Statistic | one safeS: SafeStreets | stat in safeS.statistic
+	all sugg: Suggestion | one safeS: SafeStreets | sugg in safeS.suggestion
+}
+
+fact eachViolationInSafeStreetsWasReportedByAnUserOrByAMunicipality {
+	all v: Violation | all safeS: SafeStreets | v in safeS.violation implies v.reportedByUser!=none or 
+		(some tt: TrafficTicket | tt.refersToViolation = v)
+}
+
+fact acceptValidReports {
+	all vR:ViolationReport | one safeS: SafeStreets | some v:Violation | v.violationReport=vR and v in safeS.violation
+}
+
+fact trafficTicketsOnlyInTheCityOfTheMunicipality {
+	all m: Municipality | all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToViolation.place.city=m.place.city
+}
+
+
+
+
+--end of facts--
+
+--Goals:--
+
 
 //G3
 assert theMunicipalityCanRetrieveSubmittedViolations {
-
+	//After taken the violation, the Municipality has all and only the reported violations of its city
+	all m: Municipality | theMunicipalityTakesTheReportedViolations[m, Violation] implies 
+		(all v: Violation | v in m.takenReportedViolations implies v.place.city=m.place.city else v.place.city!=m.place.city)
 }
 
-//G4
-assert giveStatisticsToTheUser {
+check theMunicipalityCanRetrieveSubmittedViolations
 
-}
-
-//G5
-assert giveStatisticsToTheMunicipality {
-
-}
 
 //G6
 assert safeStreetsCanRetrieveViolationsFromTheMunicipality {
-
+	all safeS: SafeStreets | all m: Municipality | safeStreetsRetrievesViolationsFromTheMunicipality[m, safeS] implies
+		(all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToViolation in safeS.violation)
 }
 
+check safeStreetsCanRetrieveViolationsFromTheMunicipality
 
+--end of goals--
+
+
+--Operations:--
+
+pred theMunicipalityTakesTheReportedViolations[m: Municipality, vs: set Violation] {
+	m.takenReportedViolations=m.takenReportedViolations+vs
+}
+
+pred safeStreetsRetrievesViolationsFromTheMunicipality[m: Municipality, safeS: SafeStreets] {
+	safeS.violation = safeS.violation+m.trafficTicket.refersToViolation
+} 
+
+--end of the operations--
+
+
+
+//Worlds:
 pred noMunicipality {
 	#Municipality=0
 }
@@ -124,9 +283,16 @@ pred oneMunicipality {
 }
 
 pred moreMunicipalities {
-	#Municipality>1
+	#Municipality=2
+	#User=2
+	#Place=3
+	#LicensePlate>1
+	#Street=3
+	#Position=3
+	#ViolationReport=4
+	#TrafficTicket=2
+	#AccidentViolationType=1
 }
 
-run oneMunicipality for 10 but 1 ReportViolation
 
-check eachReportIsComplete
+run moreMunicipalities for 12
