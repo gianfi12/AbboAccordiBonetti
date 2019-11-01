@@ -106,7 +106,8 @@ sig vehicleStatistic extends Statistic{}
 
 
 sig Suggestion {
-	place: one Place //place where the suggestion refers
+	place: one Place, //place where the suggestion refers
+	forMunicipality: one Municipality
 }
 
 
@@ -215,6 +216,10 @@ fact trafficTicketsOnlyInTheCityOfTheMunicipality {
 	all m: Municipality | all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToViolation.place.city=m.place.city
 }
 
+fact suggestionForMunicipalityWithSameCity {
+	all s: Suggestion | s.place.city=s.forMunicipality.place.city
+}
+
 
 //R7
 fact theMunicipalityCanTakeReportedViolationOnlyOfItsCompetenceArea {
@@ -253,6 +258,20 @@ fact everyMunicipalityIsRegistered {
 
 --Goals:--
 
+//G1
+pred acceptCompleteReports {
+	#ViolationReport>0
+}
+
+run acceptCompleteReports for 4
+
+//G2
+pred suggestInterventions {
+	#Suggestion>0
+}
+
+run suggestInterventions for 2
+
 //G3
 assert theMunicipalityCanRetrieveSubmittedViolations {
 	//After taken the violation, the Municipality has all and only the reported violations of its city
@@ -262,6 +281,21 @@ assert theMunicipalityCanRetrieveSubmittedViolations {
 
 check theMunicipalityCanRetrieveSubmittedViolations
 
+//G4
+pred giveStatisticsToTheUser {
+	#Statistic>0
+	some s: Statistic | s.forUser!=none
+}
+
+run giveStatisticsToTheUser
+
+//G5
+pred giveStatisticsToTheMunicipality {
+	#Statistic>0
+	some s: Statistic | s.forMunicipality!=none
+}
+
+run giveStatisticsToTheMunicipality
 
 //G6
 assert safeStreetsCanRetrieveViolationsFromTheMunicipality {
