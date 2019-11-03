@@ -1,22 +1,32 @@
+//Italian fiscal code
 sig FiscalCode {}
 
-abstract sig ServiceObject{} //it means that it can be an object of the service offered by a third part
+//Object of a service offered by a third part
+abstract sig ServiceObject{}
 
-sig User extends ServiceObject { //it can be verified by a third part
+//User of the SafeStreets' System
+//He/she must be verified by a third part
+sig User extends ServiceObject {
 	fiscalCode: one FiscalCode
 }
 
+//Password of the registration in SafeStreets' System
 sig Password {}
 
-
+//Photo of a violation
 sig Photo {}
-sig Date {}
-sig Time {}
+//Time and date
+sig Timestamp {}
 
-sig Position extends ServiceObject {} //specific position in the world, identified by some coordinates
+//Specific position in the world, identified by some coordinates
+sig Position extends ServiceObject {}
+//House code
 sig HouseCode{}
+//Street
 sig Street{}
-sig City{}	
+//City
+sig City{}
+//Specific	place in the world, identified by a city, an house code and a street or by a position
 sig Place extends ServiceObject {
 	city: one City,
 	houseCode: one HouseCode,
@@ -24,57 +34,80 @@ sig Place extends ServiceObject {
 	position: one Position
 }
 
+//Type of violation
 abstract sig ViolationType {}
-sig ParkingViolationType extends ViolationType {} //violations reported by an user or verified by a Municipality
-sig AccidentViolationType extends ViolationType {} //violations verified by a Municipality
+//Type of violation referring to a parking violation
+sig ParkingViolationType extends ViolationType {}
+//Type of violation referring to an accident
+sig AccidentViolationType extends ViolationType {}
 
+//License plate of a vehicle
 sig LicensePlate extends ServiceObject {}
+//Vehicle
 sig Vehicle {
 	licensePlate: one LicensePlate
 }
-
-sig ViolationReport {
-	user: one User,
-	photo: some Photo,
-	date: one Date,
-	time: one Time,
+//Report referring to a violation
+abstract sig Report {
+	//Timestamp of when the violation was seen, if it is empty it means that it is equal to timeOfReport
+	timeOfWatchedViolation: lone Timestamp,
+	//Timestamp of when the report was made
+	timeOfReport: one Timestamp,
+	//Vehicle that has done the violation
 	vehicle: one Vehicle,
-	place: one Place
+	//Place where the violation was seen
+	place: one Place,
+	violation: one Violation
 }
 
+//Report made by an user
+sig ReportFromUser extends Report {
+	user: one User,
+	//Photos made by the user
+	photo: some Photo
+}
+
+//report made by a Municipality
+sig ReportFromMunicipality extends Report {
+	
+}
+
+//Real violation that happened in the world
 sig Violation {
-	//if it is present it means that the violation was reported by an user
-	//and that there is also the report of the user
-	reportedByUser: lone User,
-	violationReport: lone ViolationReport,
-	photo: set Photo,
-	date: one Date,
-	time: one Time,
-	vehicle: one Vehicle,
-	place: one Place,
 	violationType: one ViolationType
 }
 
+//Municipality
 sig Municipality {
+	//Place where the Municipality resides
 	place: one Place,
+	//TrafficTickets made by the Municipality
 	trafficTicket: set TrafficTicket,
-	takenReportedViolations: set Violation //reports about violations taken by the Municipality from Safestreets
+	//Reports taken by the Municipality from Safestreets
+	takenReportFromUser: set ReportFromUser
 }
 
+//Registration to the SafeStreets' System
+abstract sig Registration {
+	password: one Password
+}
+
+//Registration of an user
 sig UserRegistration {
-	user: one User,
-	password: one Password
+	user: one User
 }
 
+//Registration of a Municipality
 sig MunicipalityRegistration {
-	municipality: one Municipality,
-	password: one Password
+	municipality: one Municipality
 }
 
+//SafeStreets' System
 one sig SafeStreets {
 	suggestion: set Suggestion,
 	statistic: set Statistic,
-	violation: set Violation
+	reportedViolation: set ReportFromUser,
+	takenReportFromMunicipality: set ReportFromMunicipality
 }
 
 abstract sig ThirdPart{}
@@ -92,17 +125,20 @@ sig Service {
 }
 
 sig TrafficTicket {
-	refersToViolation: lone Violation
+	refersToReport: one Report
 }
 
 abstract sig Statistic {
 	forUser: lone User, //means that the stastic is for an user
 	forMunicipality: lone Municipality //means that the stastic is for an Municipality
+} {
+	#forUser=1 or #forMunicipality=1
 }
 
-sig streetStatistic extends Statistic{}
-sig effectivenessOfServiceStatistic extends Statistic{}
-sig vehicleStatistic extends Statistic{}
+sig StreetStatistic extends Statistic{}
+sig EffectivenessOfServiceStatistic extends Statistic{}
+sig VehicleStatistic extends Statistic{}
+sig CommonViolationStatistic extends Statistic{}
 
 
 sig Suggestion {
@@ -148,11 +184,10 @@ fact trafficTicketMadeByOneMunicipality {
 }
 
 
-fact eachPhotoDateTimeVehicleToAReportOrViolation {
-	all p: Photo | (one r: ViolationReport | p in r.photo) or (one v: Violation | p in v.photo)
-	all d: Date | (one r: ViolationReport |  r.date=d) or (one v: Violation | v.date=d)
-	all t: Time | (one r: ViolationReport |  r.time=t) or (one v: Violation | v.time=t)
-	all ve: Vehicle | (one r: ViolationReport |  r.vehicle=ve) or (one v: Violation | v.vehicle=ve)
+fact eachPhotoDateTimeVehicleToAReport {
+	all p: Photo | (one r: ReportFromUser | p in r.photo)
+	all t: Timestamp | (one r: Report |  r.timeOfWatchedViolation=t or r.timeOfReport=t)
+	all ve: Vehicle | (one r: Report |  r.vehicle=ve)
 }
 
 
@@ -169,17 +204,6 @@ fact eachCityHouseCodeStreetCityPositionToAPlace {
 }
 
 
-fact eachViolationNotFromMunicipalityRefersToAReport {
-	all v: Violation | v.reportedByUser!=none implies 
-		(one r: ViolationReport | v.violationReport=r and v.photo=r.photo and v.date=r.date and v.time=r.time and v.vehicle=r.vehicle and
-			v.place=r.place and v.violationType in ParkingViolationType) else
-		v.violationReport=none
-}
-
-
-fact eachViolationReportToViolation {
-	all vR: ViolationReport | one v: Violation | v.violationReport=vR
-}
 
 
 fact eachTrafficTicketWasMadeByAMunicipality {
@@ -188,18 +212,18 @@ fact eachTrafficTicketWasMadeByAMunicipality {
 
 
 fact eachPlaceAndPositionAndTrafficPlateInAReportWereIdentified {
-	all p: Place | all vR: ViolationReport | p=vR.place implies 
+	all p: Place | all vR: Report | p=vR.place implies 
 		one s: Service | one mS: MapService | s.thirdPart=mS and s.serviceObject=p
 
-	all p: Position | all vR: ViolationReport | p=vR.place.position implies 
+	all p: Position | all vR: Report | p=vR.place.position implies 
 		one s: Service | one mS: MapService | s.thirdPart=mS and s.serviceObject=p
 
-	all tP: LicensePlate | all vR: ViolationReport | tP=vR.vehicle.licensePlate implies 
+	all tP: LicensePlate | all vR: Report | tP=vR.vehicle.licensePlate implies 
 		one s: Service | one rPS: RecognitionPlateSystem | s.thirdPart=rPS and s.serviceObject=tP
 }
 
-fact eachPasswordToAUser {
-	all p: Password | (one r: UserRegistration | r.password=p) or (one r: MunicipalityRegistration | r.password=p)
+fact eachPasswordToARegistration {
+	all p: Password | one r: Registration | r.password=p
 }
 
 fact eachStatisticAndSuggestionToSafeStreets {
@@ -207,29 +231,40 @@ fact eachStatisticAndSuggestionToSafeStreets {
 	all sugg: Suggestion | one safeS: SafeStreets | sugg in safeS.suggestion
 }
 
-fact eachViolationInSafeStreetsWasReportedByAnUserOrByAMunicipality {
-	all v: Violation | all safeS: SafeStreets | v in safeS.violation implies v.reportedByUser!=none or 
-		(some tt: TrafficTicket | tt.refersToViolation = v)
-}
-
 fact trafficTicketsOnlyInTheCityOfTheMunicipality {
-	all m: Municipality | all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToViolation.place.city=m.place.city
+	all m: Municipality | all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToReport.place.city=m.place.city
 }
 
 fact suggestionForMunicipalityWithSameCity {
 	all s: Suggestion | s.place.city=s.forMunicipality.place.city
 }
 
+fact reportFromUserRefersToAParkingViolation {
+	all r: ReportFromUser | one pv: ParkingViolationType | r.violation.violationType=pv
+}
+
+fact vehicleStatisticNotForUsers {
+	all vS: VehicleStatistic | vS.forUser=none
+}
+
+fact trafficTicketsReferToReportInTheMunicipality {
+	all tt: TrafficTicket | tt.refersToReport in ReportFromMunicipality or (one m: Municipality | tt in m.trafficTicket and tt.refersToReport in m.takenReportFromUser) 
+}
+
+fact eachPlaceInMunicipalityOrReport {
+	all p: Place | (one m: Municipality | m.place=p) or (one r: Report | r.place=p)
+}
+
 
 //R7
 fact theMunicipalityCanTakeReportedViolationOnlyOfItsCompetenceArea {
-	all m: Municipality | all v: Violation | v in m.takenReportedViolations implies v.place.city=m.place.city and v.reportedByUser!=none
+	all m: Municipality | all r: ReportFromUser | r in m.takenReportFromUser implies r.place.city=m.place.city
 }
 
 
 //R9
 fact acceptValidReports {
-	all vR:ViolationReport | one safeS: SafeStreets | some v:Violation | v.violationReport=vR and v in safeS.violation
+	all r: ReportFromUser | one safeS: SafeStreets | r in safeS.reportedViolation
 }
 
 
@@ -260,7 +295,7 @@ fact everyMunicipalityIsRegistered {
 
 //G1
 pred acceptCompleteReports {
-	#ViolationReport>0
+	#ReportFromUser>0
 }
 
 run acceptCompleteReports for 4
@@ -276,7 +311,7 @@ run suggestInterventions for 2
 assert theMunicipalityCanRetrieveSubmittedViolations {
 	//After taken the violation, the Municipality has all and only the reported violations of its city
 	all m: Municipality | theMunicipalityTakesTheReportedViolations[m, Violation] implies 
-		(all v: Violation | v in m.takenReportedViolations implies v.place.city=m.place.city else v.place.city!=m.place.city)
+		(all r: ReportFromUser | r in m.takenReportFromUser implies r.place.city=m.place.city else r.place.city!=m.place.city)
 }
 
 check theMunicipalityCanRetrieveSubmittedViolations
@@ -300,10 +335,23 @@ run giveStatisticsToTheMunicipality
 //G6
 assert safeStreetsCanRetrieveViolationsFromTheMunicipality {
 	all safeS: SafeStreets | all m: Municipality | safeStreetsRetrievesViolationsFromTheMunicipality[m, safeS] implies
-		(all tt: TrafficTicket | tt in m.trafficTicket implies tt.refersToViolation in safeS.violation)
+		(all tt: TrafficTicket | tt in m.trafficTicket implies (tt.refersToReport in safeS.takenReportFromMunicipality or 
+			tt.refersToReport in safeS.reportedViolation))
 }
 
 check safeStreetsCanRetrieveViolationsFromTheMunicipality
+
+//G1 and G2 and G4 and G5
+pred goals1and2and4and5 {
+	#ReportFromUser>0
+	#Suggestion>0
+	#Statistic>0
+	some s: Statistic | s.forUser!=none
+	#Statistic>0
+	some s: Statistic | s.forMunicipality!=none
+}
+
+run goals1and2and4and5 for 4
 
 --end of goals--
 
@@ -311,13 +359,13 @@ check safeStreetsCanRetrieveViolationsFromTheMunicipality
 --Operations:--
 
 pred theMunicipalityTakesTheReportedViolations[m: Municipality, vs: set Violation] {
-	m.takenReportedViolations=m.takenReportedViolations+vs
+	m.takenReportFromUser=m.takenReportFromUser+vs
 }
 
 
 pred safeStreetsRetrievesViolationsFromTheMunicipality[m: Municipality, safeS: SafeStreets] {
-	safeS.violation = safeS.violation+m.trafficTicket.refersToViolation
-} 
+	safeS.reportedViolation = safeS.reportedViolation+m.trafficTicket.refersToReport
+}
 
 --end of the operations--
 
@@ -335,13 +383,8 @@ pred oneMunicipality {
 pred moreMunicipalities {
 	#Municipality=2
 	#User=2
-	#Place=3
-	#LicensePlate>1
-	#Street=3
-	#Position=3
-	#ViolationReport=4
+	#ReportFromUser=2
 	#TrafficTicket=2
-	#AccidentViolationType=1
 }
 
 
