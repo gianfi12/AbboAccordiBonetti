@@ -423,7 +423,7 @@ pred theMunicipalityTakesTheReportedViolations[m: Municipality, vs: set Violatio
 
 //SafeStreets retrives the reports from a Municipality
 pred safeStreetsRetrievesViolationsFromTheMunicipality[m: Municipality, safeS: SafeStreets] {
-	safeS.reportedViolation = safeS.reportedViolation+m.trafficTicket.refersToReport
+	safeS.takenReportFromMunicipality = safeS.takenReportFromMunicipality+m.trafficTicket.refersToReport
 }
 
 --end of the operations--
