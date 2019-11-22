@@ -2006,22 +2006,6 @@
           <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kHn44A0yEequJNdX5DpM-w" id="(0.0,0.5918367346938775)"/>
           <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_kHn44Q0yEequJNdX5DpM-w" id="(0.45,0.0)"/>
         </edges>
-        <edges xmi:type="notation:Edge" xmi:id="_5NuI4A0yEequJNdX5DpM-w" type="4001" element="_5MbIYA0yEequJNdX5DpM-w" source="_HmdI0A0OEequJNdX5DpM-w" target="_1qHxcAyREeqPwJJre9eQPQ">
-          <children xmi:type="notation:Node" xmi:id="_5NuI5A0yEequJNdX5DpM-w" type="6001">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_5NuI5Q0yEequJNdX5DpM-w" x="1" y="-21"/>
-          </children>
-          <children xmi:type="notation:Node" xmi:id="_5NuI5g0yEequJNdX5DpM-w" type="6002">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_5NuI5w0yEequJNdX5DpM-w" y="3"/>
-          </children>
-          <children xmi:type="notation:Node" xmi:id="_5NuI6A0yEequJNdX5DpM-w" type="6003">
-            <layoutConstraint xmi:type="notation:Bounds" xmi:id="_5NuI6Q0yEequJNdX5DpM-w" x="-1" y="-1"/>
-          </children>
-          <styles xmi:type="notation:ConnectorStyle" xmi:id="_5NuI4Q0yEequJNdX5DpM-w"/>
-          <styles xmi:type="notation:FontStyle" xmi:id="_5NuI4g0yEequJNdX5DpM-w" fontName=".AppleSystemUIFont"/>
-          <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_5NuI4w0yEequJNdX5DpM-w" points="[15, -11, -386, 269]$[336, -235, -65, 45]"/>
-          <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5NuI6g0yEequJNdX5DpM-w" id="(0.5,0.5)"/>
-          <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5NuI6w0yEequJNdX5DpM-w" id="(0.5,0.5)"/>
-        </edges>
         <edges xmi:type="notation:Edge" xmi:id="_692CsA0yEequJNdX5DpM-w" type="4001" element="_68lefA0yEequJNdX5DpM-w" source="_HmdI0A0OEequJNdX5DpM-w" target="_rBEvIAyREeqPwJJre9eQPQ">
           <children xmi:type="notation:Node" xmi:id="_692CtA0yEequJNdX5DpM-w" type="6001">
             <layoutConstraint xmi:type="notation:Bounds" xmi:id="_692CtQ0yEequJNdX5DpM-w" x="-2" y="-25"/>
@@ -2514,7 +2498,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:NodeMapping" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Component%20Diagram']/@defaultLayer/@nodeMappings[name='CO_RequiredInterface']"/>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNode" uid="_HkL38A0OEequJNdX5DpM-w" name="Interface14" outgoingEdges="_kHqfjA0OEequJNdX5DpM-w _5MbIYA0yEequJNdX5DpM-w _68lefA0yEequJNdX5DpM-w _KJ5WMg0zEequJNdX5DpM-w" width="3" height="3" resizeKind="NSEW">
+      <ownedDiagramElements xmi:type="diagram:DNode" uid="_HkL38A0OEequJNdX5DpM-w" name="Interface14" outgoingEdges="_kHqfjA0OEequJNdX5DpM-w _68lefA0yEequJNdX5DpM-w _KJ5WMg0zEequJNdX5DpM-w" width="3" height="3" resizeKind="NSEW">
         <target xmi:type="uml:Interface" href="model.uml#_HUEYUA0OEequJNdX5DpM-w"/>
         <semanticElements xmi:type="uml:Interface" href="model.uml#_HUEYUA0OEequJNdX5DpM-w"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -2617,7 +2601,7 @@
         </ownedStyle>
         <actualMapping xmi:type="description_1:ContainerMapping" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Component%20Diagram']/@defaultLayer/@containerMappings[name='CO_Component']"/>
       </ownedDiagramElements>
-      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_1pTSEAyREeqPwJJre9eQPQ" name="NewReportManager" outgoingEdges="_G0_3OAyUEeqPwJJre9eQPQ" incomingEdges="_DIu2PgyTEeqPwJJre9eQPQ _9aV6pgyTEeqPwJJre9eQPQ _F88ijA0QEequJNdX5DpM-w _5MbIYA0yEequJNdX5DpM-w" width="12" height="10">
+      <ownedDiagramElements xmi:type="diagram:DNodeContainer" uid="_1pTSEAyREeqPwJJre9eQPQ" name="NewReportManager" outgoingEdges="_G0_3OAyUEeqPwJJre9eQPQ" incomingEdges="_DIu2PgyTEeqPwJJre9eQPQ _9aV6pgyTEeqPwJJre9eQPQ _F88ijA0QEequJNdX5DpM-w" width="12" height="10">
         <target xmi:type="uml:Component" href="model.uml#_zdC14AyREeqPwJJre9eQPQ"/>
         <semanticElements xmi:type="uml:Component" href="model.uml#_zdC14AyREeqPwJJre9eQPQ"/>
         <arrangeConstraints>KEEP_LOCATION</arrangeConstraints>
@@ -3567,14 +3551,6 @@
         <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Component%20Diagram']/@defaultLayer/@edgeMappings[name='CO_IR_ComponentOrPort2Interface']/@style"/>
       </ownedStyle>
       <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Component%20Diagram']/@defaultLayer/@edgeMappings[name='CO_IR_ComponentOrPort2Interface']"/>
-    </ownedDiagramElements>
-    <ownedDiagramElements xmi:type="diagram:DEdge" uid="_5MbIYA0yEequJNdX5DpM-w" sourceNode="_HkL38A0OEequJNdX5DpM-w" targetNode="_1pTSEAyREeqPwJJre9eQPQ">
-      <target xmi:type="uml:Usage" href="model.uml#_5MG_UA0yEequJNdX5DpM-w"/>
-      <semanticElements xmi:type="uml:Usage" href="model.uml#_5MG_UA0yEequJNdX5DpM-w"/>
-      <ownedStyle xmi:type="diagram:EdgeStyle" uid="_5MbIYQ0yEequJNdX5DpM-w" targetArrow="NoDecoration" strokeColor="173,127,168">
-        <description xmi:type="style:EdgeStyleDescription" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Component%20Diagram']/@defaultLayer/@edgeMappings[name='CO_U_Interface2ComponentOrPort']/@style"/>
-      </ownedStyle>
-      <actualMapping xmi:type="description_1:EdgeMapping" href="platform:/plugin/org.obeonetwork.dsl.uml2.design/description/uml2.odesign#//@ownedViewpoints[name='Design']/@ownedRepresentations[name='Component%20Diagram']/@defaultLayer/@edgeMappings[name='CO_U_Interface2ComponentOrPort']"/>
     </ownedDiagramElements>
     <ownedDiagramElements xmi:type="diagram:DEdge" uid="_68lefA0yEequJNdX5DpM-w" sourceNode="_HkL38A0OEequJNdX5DpM-w" targetNode="_rARd4AyREeqPwJJre9eQPQ">
       <target xmi:type="uml:Usage" href="model.uml#_68QHQA0yEequJNdX5DpM-w"/>
