@@ -396,7 +396,7 @@
 			<text x="24.2" y="342.26" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>getAvailableStatistics(usrnma,psswrd)</text>		</g>
 		<g id="shape61-137" v:mID="61" v:groupContext="shape" v:layerMember="0" transform="translate(231.197,-63.3746)">
 			<title>Return Message.61</title>
-			<desc>json: statisticsType[*]</desc>
+			<desc>list: statisticsType[*]</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(1):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -404,10 +404,10 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="-83.8019" cy="325.688" width="80.14" height="17.6036"/>
+			<v:textRect cx="-83.8019" cy="325.688" width="76.15" height="17.6036"/>
 			<path d="M0 325.69 L-167.6 325.69" class="st10"/>
-			<rect v:rectContext="textBkgnd" x="-118.962" y="320.888" width="70.3199" height="9.59985" class="st7"/>
-			<text x="-118.96" y="328.09" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>json: statisticsType[*]</text>		</g>
+			<rect v:rectContext="textBkgnd" x="-116.969" y="320.888" width="66.3352" height="9.59985" class="st7"/>
+			<text x="-116.97" y="328.09" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>list: statisticsType[*]</text>		</g>
 		<g id="shape62-144" v:mID="62" v:groupContext="shape" transform="translate(284.748,56.5461) rotate(45)">
 			<title>Cross.62</title>
 			<v:userDefs>

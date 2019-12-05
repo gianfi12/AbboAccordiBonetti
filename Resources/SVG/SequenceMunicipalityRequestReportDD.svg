@@ -88,7 +88,7 @@
 		</g>
 		<g id="shape12-16" v:mID="12" v:groupContext="shape" v:layerMember="0" transform="translate(293.069,-306.587)">
 			<title>Message.56</title>
-			<desc>accessReport(usrnm,psswrd)</desc>
+			<desc>accessReports(usrnm,psswrd)</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(0):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -96,10 +96,10 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="108.335" cy="424.9" width="103.6" height="17.6036"/>
+			<v:textRect cx="108.335" cy="424.9" width="106.73" height="17.6036"/>
 			<path d="M0 424.9 L209.19 424.9" class="st5"/>
-			<rect v:rectContext="textBkgnd" x="61.4425" y="420.1" width="93.7845" height="9.59985" class="st7"/>
-			<text x="61.44" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>accessReport(usrnm,psswrd)</text>		</g>
+			<rect v:rectContext="textBkgnd" x="59.8781" y="420.1" width="96.9134" height="9.59985" class="st7"/>
+			<text x="59.88" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>accessReports(usrnm,psswrd)</text>		</g>
 		<g id="group15-24" transform="translate(239.211,-367.674)" v:mID="15" v:groupContext="group">
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
@@ -205,7 +205,7 @@
 		</g>
 		<g id="shape32-70" v:mID="32" v:groupContext="shape" v:layerMember="0" transform="translate(518.242,-270.587)">
 			<title>Message.36</title>
-			<desc>getPlace(usrnm)</desc>
+			<desc>getMunicipalityArea(usrnm)</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(0):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -213,10 +213,10 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="108.335" cy="424.9" width="62.97" height="17.6036"/>
+			<v:textRect cx="108.335" cy="424.9" width="101.35" height="17.6036"/>
 			<path d="M0 424.9 L209.19 424.9" class="st5"/>
-			<rect v:rectContext="textBkgnd" x="81.757" y="420.1" width="53.1554" height="9.59985" class="st7"/>
-			<text x="81.76" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>getPlace(usrnm)</text>		</g>
+			<rect v:rectContext="textBkgnd" x="62.5698" y="420.1" width="91.5298" height="9.59985" class="st7"/>
+			<text x="62.57" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>getMunicipalityArea(usrnm)</text>		</g>
 		<g id="group34-77" transform="translate(914.73,-367.674)" v:mID="34" v:groupContext="group">
 			<v:userDefs>
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
@@ -344,7 +344,7 @@
 		</g>
 		<g id="shape50-131" v:mID="50" v:groupContext="shape" v:layerMember="0" transform="translate(518.242,-176.76)">
 			<title>Message.50</title>
-			<desc>getReports(place)</desc>
+			<desc>getUserReports(query)</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(0):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -352,10 +352,10 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="335.634" cy="439.073" width="67.67" height="17.6036"/>
+			<v:textRect cx="335.634" cy="439.073" width="84.27" height="17.6036"/>
 			<path d="M0 439.07 L663.79 439.07" class="st5"/>
-			<rect v:rectContext="textBkgnd" x="306.707" y="434.274" width="57.8546" height="9.59985" class="st7"/>
-			<text x="306.71" y="441.47" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>getReports(place)</text>		</g>
+			<rect v:rectContext="textBkgnd" x="298.41" y="434.274" width="74.4486" height="9.59985" class="st7"/>
+			<text x="298.41" y="441.47" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>getUserReports(query)</text>		</g>
 		<g id="shape51-138" v:mID="51" v:groupContext="shape" transform="translate(761.775,316.313) rotate(-90)">
 			<title>Activation.51</title>
 			<v:userDefs>
@@ -381,7 +381,7 @@
 		</g>
 		<g id="shape53-142" v:mID="53" v:groupContext="shape" v:layerMember="0" transform="translate(1185.26,-126.587)">
 			<title>Return Message.53</title>
-			<desc>list: report[*]</desc>
+			<desc>list: userReport</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(1):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -389,13 +389,13 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="-333.508" cy="424.9" width="52.8" height="17.6036"/>
+			<v:textRect cx="-333.508" cy="424.9" width="59.56" height="17.6036"/>
 			<path d="M0 424.9 L-667.02 424.9" class="st10"/>
-			<rect v:rectContext="textBkgnd" x="-354.998" y="420.1" width="42.9804" height="9.59985" class="st7"/>
-			<text x="-355" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>list: report[*]</text>		</g>
+			<rect v:rectContext="textBkgnd" x="-358.381" y="420.1" width="49.7455" height="9.59985" class="st7"/>
+			<text x="-358.38" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>list: userReport</text>		</g>
 		<g id="shape54-149" v:mID="54" v:groupContext="shape" v:layerMember="0" transform="translate(509.738,-104.76)">
 			<title>Return Message.54</title>
-			<desc>list: report[*]</desc>
+			<desc>list: report</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(1):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -403,10 +403,10 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="-108.335" cy="439.073" width="52.8" height="17.6036"/>
+			<v:textRect cx="-108.335" cy="439.073" width="43.91" height="17.6036"/>
 			<path d="M0 439.07 L-216.67 439.07" class="st10"/>
-			<rect v:rectContext="textBkgnd" x="-129.825" y="434.274" width="42.9804" height="9.59985" class="st7"/>
-			<text x="-129.82" y="441.47" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>list: report[*]</text>		</g>
+			<rect v:rectContext="textBkgnd" x="-125.379" y="434.274" width="34.0895" height="9.59985" class="st7"/>
+			<text x="-125.38" y="441.47" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>list: report</text>		</g>
 		<g id="shape55-156" v:mID="55" v:groupContext="shape" transform="translate(1484.12,27.9657) rotate(45)">
 			<title>Cross.55</title>
 			<v:userDefs>
@@ -464,7 +464,7 @@
 		</g>
 		<g id="shape64-164" v:mID="64" v:groupContext="shape" v:layerMember="0" transform="translate(72.1083,-324.587)">
 			<title>Message.64</title>
-			<desc>requestReport(usrnm,psswrd)</desc>
+			<desc>accessReports(usrnm,psswrd)</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(0):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -472,10 +472,10 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="106.228" cy="424.9" width="107.73" height="17.6036"/>
+			<v:textRect cx="106.228" cy="424.9" width="106.73" height="17.6036"/>
 			<path d="M0 424.9 L204.98 424.9" class="st5"/>
-			<rect v:rectContext="textBkgnd" x="57.2717" y="420.1" width="97.9135" height="9.59985" class="st7"/>
-			<text x="57.27" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>requestReport(usrnm,psswrd)</text>		</g>
+			<rect v:rectContext="textBkgnd" x="57.7717" y="420.1" width="96.9134" height="9.59985" class="st7"/>
+			<text x="57.77" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>accessReports(usrnm,psswrd)</text>		</g>
 		<g id="shape65-171" v:mID="65" v:groupContext="shape" transform="translate(362.471,83.8859) rotate(45)">
 			<title>Cross.65</title>
 			<v:userDefs>
@@ -494,7 +494,7 @@
 		</g>
 		<g id="shape66-173" v:mID="66" v:groupContext="shape" v:layerMember="0" transform="translate(288.817,-72.5872)">
 			<title>Return Message.66</title>
-			<desc>json: report[*]</desc>
+			<desc>list: report</desc>
 			<v:userDefs>
 				<v:ud v:nameU="IsReturn" v:prompt="" v:val="VT0(1):5"/>
 				<v:ud v:nameU="IsAsync" v:prompt="" v:val="VT0(0):26"/>
@@ -502,9 +502,9 @@
 				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
 			</v:userDefs>
 			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
-			<v:textRect cx="-108.354" cy="424.9" width="56.78" height="17.6036"/>
+			<v:textRect cx="-108.354" cy="424.9" width="43.91" height="17.6036"/>
 			<path d="M0 424.9 L-216.71 424.9" class="st10"/>
-			<rect v:rectContext="textBkgnd" x="-131.837" y="420.1" width="46.9652" height="9.59985" class="st7"/>
-			<text x="-131.84" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>json: report[*]</text>		</g>
+			<rect v:rectContext="textBkgnd" x="-125.399" y="420.1" width="34.0895" height="9.59985" class="st7"/>
+			<text x="-125.4" y="427.3" class="st8" v:langID="1033"><v:paragraph v:horizAlign="1"/><v:tabList/>list: report</text>		</g>
 	</g>
 </svg>
