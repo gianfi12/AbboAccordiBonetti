@@ -189,10 +189,9 @@
   <packagedElement xmi:type="uml:Class" xmi:id="_Ny_k0A7VEeqT0cCYuIHxCw" name="PersonalInfo, email:String, username:String, password:Péassword"/>
   <packagedElement xmi:type="uml:Class" xmi:id="_U_JpgA7VEeqT0cCYuIHxCw" name="PersonalInfo, email:String, username:String, password:Password, idCard:Picture)"/>
   <packagedElement xmi:type="uml:Interface" xmi:id="_wxiLUA7VEeqT0cCYuIHxCw" name="DataIntegrationInterface" visibility="public">
-    <ownedOperation xmi:id="_yZ3m0A7wEeqT0cCYuIHxCw" name="getLatest">
-      <ownedParameter xmi:id="_0rBxIA7wEeqT0cCYuIHxCw" type="_s6EWQA7wEeqT0cCYuIHxCw" direction="return">
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_0rBxIQ7wEeqT0cCYuIHxCw"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_0rBxIg7wEeqT0cCYuIHxCw" value="*"/>
+    <ownedOperation xmi:id="_9eke8Bc2EeqDb8rF8sFdRQ" name="getLatestFromPlace">
+      <ownedParameter xmi:id="_FofzcBc3EeqDb8rF8sFdRQ" name="place" type="_-mlhgA7TEeqT0cCYuIHxCw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_IpjwsBc3EeqDb8rF8sFdRQ" value="1"/>
       </ownedParameter>
     </ownedOperation>
   </packagedElement>
@@ -247,6 +246,18 @@
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
       </ownedParameter>
       <ownedParameter xmi:id="_AqSfYRRKEeq1TMdbLIjHVw" type="_-mlhgA7TEeqT0cCYuIHxCw" direction="return"/>
+    </ownedOperation>
+    <ownedOperation xmi:id="_Nbrb4Bc3EeqDb8rF8sFdRQ" name="getDataIntegration">
+      <ownedParameter xmi:id="_PZXQkBc3EeqDb8rF8sFdRQ" name="place" type="_-mlhgA7TEeqT0cCYuIHxCw"/>
+      <ownedParameter xmi:id="_UA_tkBc4EeqDb8rF8sFdRQ" type="_H9y3gA-PEeq5XPtYKpecbQ" direction="return">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_WAxM8Bc4EeqDb8rF8sFdRQ" value="1"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:id="_Nsmz0Bc3EeqDb8rF8sFdRQ" name="getAllDataIntegrationInfo">
+      <ownedParameter xmi:id="_b6Hl8Bc4EeqDb8rF8sFdRQ" type="_H9y3gA-PEeq5XPtYKpecbQ" direction="return">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_b6INABc4EeqDb8rF8sFdRQ"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_b6INARc4EeqDb8rF8sFdRQ" value="*"/>
+      </ownedParameter>
     </ownedOperation>
   </packagedElement>
   <packagedElement xmi:type="uml:Interface" xmi:id="_5EF3YA7VEeqT0cCYuIHxCw" name="LicensePlateRecognizerInterface" visibility="public">
@@ -422,14 +433,19 @@
       </ownedParameter>
       <ownedParameter xmi:id="_1IMWMBavEeq98L0rWC0SzA" name="filter" type="_an-qEBazEeq98L0rWC0SzA"/>
     </ownedOperation>
+    <ownedOperation xmi:id="_i4LroBc1EeqDb8rF8sFdRQ" name="addMunicipalityReports">
+      <ownedParameter xmi:id="_k5VrEBc1EeqDb8rF8sFdRQ" name="reports" type="_s6EWQA7wEeqT0cCYuIHxCw">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zv1lQBc1EeqDb8rF8sFdRQ"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_umEPEBc1EeqDb8rF8sFdRQ" value="*"/>
+      </ownedParameter>
+    </ownedOperation>
   </packagedElement>
-  <packagedElement xmi:type="uml:Interface" xmi:id="_f_6M8A7wEeqT0cCYuIHxCw" name="MunicipalitiesInterface" visibility="public">
+  <packagedElement xmi:type="uml:Interface" xmi:id="_f_6M8A7wEeqT0cCYuIHxCw" name="MunicipalityInterface" visibility="public">
     <ownedOperation xmi:id="_n9P28A7wEeqT0cCYuIHxCw" name="getViolations">
       <ownedParameter xmi:id="_xB0OwA7wEeqT0cCYuIHxCw" type="_s6EWQA7wEeqT0cCYuIHxCw" direction="return">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_x639sA7wEeqT0cCYuIHxCw"/>
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_x7BusA7wEeqT0cCYuIHxCw" value="*"/>
       </ownedParameter>
-      <ownedParameter xmi:id="_OFgK8A7yEeqT0cCYuIHxCw" name="dataIntegration" type="_H9y3gA-PEeq5XPtYKpecbQ"/>
     </ownedOperation>
   </packagedElement>
   <packagedElement xmi:type="uml:Class" xmi:id="_s6EWQA7wEeqT0cCYuIHxCw" name="MunicipalityReport" visibility="public"/>
