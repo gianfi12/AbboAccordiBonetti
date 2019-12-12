@@ -1,4 +1,10 @@
 !.gitignore
+!pom.xml
 !README.md
+!.sh
+!.jar
+target/
 !deliverables
 .DS_Store
+.idea/
+*.iml
