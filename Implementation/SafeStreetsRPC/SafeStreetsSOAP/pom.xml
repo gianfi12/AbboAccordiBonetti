@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.example</groupId>
-  <artifactId>SafeStreetsAppServer</artifactId>
+  <artifactId>SafeStreetsSOAP</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>war</packaging>
 
-  <name>SafeStreetsAppServer Maven Webapp</name>
+  <name>SafeStreetsSOAP Maven Webapp</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
@@ -21,25 +21,31 @@
 
   <dependencies>
     <dependency>
+      <groupId>javax.enterprise</groupId>
+      <artifactId>cdi-api</artifactId>
+      <version>2.0.SP1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
+    <dependency>
       <groupId>javax.ejb</groupId>
       <artifactId>ejb-api</artifactId>
       <version>3.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.10.1</version>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>jaxws-rt</artifactId>
+      <version>2.3.2</version>
     </dependency>
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>2.10.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20190722</version>
+      <groupId>com.sun.xml.ws</groupId>
+      <artifactId>servlet</artifactId>
+      <version>2.3.2</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -48,24 +54,19 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <version>2.1.1</version>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
+      <version>2.2</version>
     </dependency>
-    <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-server</artifactId>
-      <version>1.2</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.naming</groupId>
-      <artifactId>jndi</artifactId>
-      <version>1.2.1</version>
-    </dependency>
+      <dependency>
+        <groupId>org.jdbi</groupId>
+        <artifactId>jdbi3-core</artifactId>
+        <version>3.1.0</version>
+      </dependency>
   </dependencies>
 
   <build>
-    <finalName>SafeStreetsAppServer</finalName>
+    <finalName>SafeStreetsSOAP</finalName>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <plugin>

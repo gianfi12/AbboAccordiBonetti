@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,17 +16,18 @@ import java.util.Iterator;
 import java.util.Map;
 
 @Path("/ServerService")
-public class Server {
+public class Dispatcher {
+
     @GET
-    @Produces("text/plain")
+    @Produces(MediaType.TEXT_XML)
     public String test() {
-        return "Server Up!";
+        return getClass().getResourceAsStream("index.jsp").toString();
     }
 
     @POST
     @Path("/userRegistration")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response userRgistration(InputStream incomingData) {
+    public Response userRegistration(InputStream incomingData) {
         StringBuilder objectReceived = new StringBuilder();
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(incomingData));
@@ -41,7 +44,11 @@ public class Server {
         }catch (JsonProcessingException pe){
             System.out.println("Error parsing JSON");
         }
-
+        try {
+            InitialContext.doLookup("com.SafeStreets.RegistrationManager");
+        }catch (NamingException e){
+            System.out.println("Error lookup!");
+        }
         return Response.status(200).entity(objectReceived.toString()).build();
     }
 
@@ -55,7 +62,6 @@ public class Server {
         while (fieldsIterator.hasNext()) {
 
             Map.Entry<String,JsonNode> field = fieldsIterator.next();
-            System.out.println("Key: " + field.getKey() + "\tValue:" + field.getValue());
         }
         return rootNode;
     }

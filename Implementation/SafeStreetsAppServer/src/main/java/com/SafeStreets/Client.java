@@ -1,30 +1,23 @@
 package com.SafeStreets;
 
-        import java.io.BufferedReader;
-        import java.io.FileInputStream;
-        import java.io.InputStream;
-        import java.io.InputStreamReader;
-        import java.io.OutputStreamWriter;
-        import java.net.URL;
-        import java.net.URLConnection;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
 
-        import org.json.JSONObject;
-
-/**
- * @author Crunchify.com
- *
- */
+import org.json.JSONObject;
 
 public class Client {
     public static void main(String[] args) {
         String string = "";
         try {
 
-            // Step1: Let's 1st read file from fileSystem
-            // Change CrunchifyJSON.txt path here
-            InputStream crunchifyInputStream = new FileInputStream("/home/gianfi/Documents/object.json");
-            InputStreamReader crunchifyReader = new InputStreamReader(crunchifyInputStream);
-            BufferedReader br = new BufferedReader(crunchifyReader);
+            InputStream InputStream = new FileInputStream("/home/gianfi/Documents/object.json");
+            InputStreamReader Reader = new InputStreamReader(InputStream);
+            BufferedReader br = new BufferedReader(Reader);
             String line;
             while ((line = br.readLine()) != null) {
                 string += line + "\n";
@@ -33,7 +26,6 @@ public class Client {
             JSONObject jsonObject = new JSONObject(string);
             System.out.println(jsonObject);
 
-            // Step2: Now pass JSON File Data to REST Service
             try {
                 URL url = new URL("http://localhost:8080/SafeStreetsAppServer/ServerService/userRegistration");
                 URLConnection connection = url.openConnection();
@@ -49,10 +41,10 @@ public class Client {
 
                 while (in.readLine() != null) {
                 }
-                System.out.println("\nCrunchify REST Service Invoked Successfully..");
+                System.out.println("\nREST Service Invoked Successfully..");
                 in.close();
             } catch (Exception e) {
-                System.out.println("\nError while calling Crunchify REST Service");
+                System.out.println("\nError while calling REST Service");
                 System.out.println(e);
             }
 
