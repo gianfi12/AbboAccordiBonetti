@@ -1,11 +1,13 @@
 
 package com.SafeStreets.Client;
 
+import java.util.List;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.bind.annotation.XmlSeeAlso;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Action;
 import javax.xml.ws.RequestWrapper;
 import javax.xml.ws.ResponseWrapper;
@@ -26,17 +28,173 @@ public interface Dispatcher {
 
     /**
      * 
+     * @param arg2
+     * @param arg1
      * @param arg0
      * @return
      *     returns java.lang.Boolean
      */
-    @WebMethod(operationName = "UserRegistration")
+    @WebMethod
     @WebResult(targetNamespace = "")
-    @RequestWrapper(localName = "UserRegistration", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.UserRegistration")
-    @ResponseWrapper(localName = "UserRegistrationResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.UserRegistrationResponse")
-    @Action(input = "http://SafeStreets.com/Dispatcher/UserRegistrationRequest", output = "http://SafeStreets.com/Dispatcher/UserRegistrationResponse")
+    @RequestWrapper(localName = "newReport", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.NewReport")
+    @ResponseWrapper(localName = "newReportResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.NewReportResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/newReportRequest", output = "http://SafeStreets.com/Dispatcher/newReportResponse")
+    public Boolean newReport(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        String arg2);
+
+    /**
+     * 
+     * @param arg3
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "accessReports", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.AccessReports")
+    @ResponseWrapper(localName = "accessReportsResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.AccessReportsResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/accessReportsRequest", output = "http://SafeStreets.com/Dispatcher/accessReportsResponse")
+    public List<String> accessReports(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        String arg2,
+        @WebParam(name = "arg3", targetNamespace = "")
+        String arg3);
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.lang.Boolean
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "userRegistration", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.UserRegistration")
+    @ResponseWrapper(localName = "userRegistrationResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.UserRegistrationResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/userRegistrationRequest", output = "http://SafeStreets.com/Dispatcher/userRegistrationResponse")
     public Boolean userRegistration(
         @WebParam(name = "arg0", targetNamespace = "")
-        String arg0);
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1);
+
+    /**
+     * 
+     * @param arg3
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getSuggestions", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.GetSuggestions")
+    @ResponseWrapper(localName = "getSuggestionsResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.GetSuggestionsResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/getSuggestionsRequest", output = "http://SafeStreets.com/Dispatcher/getSuggestionsResponse")
+    public List<String> getSuggestions(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        XMLGregorianCalendar arg2,
+        @WebParam(name = "arg3", targetNamespace = "")
+        XMLGregorianCalendar arg3);
+
+    /**
+     * 
+     * @param arg3
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.lang.Boolean
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "municipalityRegistration", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.MunicipalityRegistration")
+    @ResponseWrapper(localName = "municipalityRegistrationResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.MunicipalityRegistrationResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/municipalityRegistrationRequest", output = "http://SafeStreets.com/Dispatcher/municipalityRegistrationResponse")
+    public Boolean municipalityRegistration(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        String arg2,
+        @WebParam(name = "arg3", targetNamespace = "")
+        String arg3);
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "getAvailableStatistics", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.GetAvailableStatistics")
+    @ResponseWrapper(localName = "getAvailableStatisticsResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.GetAvailableStatisticsResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/getAvailableStatisticsRequest", output = "http://SafeStreets.com/Dispatcher/getAvailableStatisticsResponse")
+    public List<String> getAvailableStatistics(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1);
+
+    /**
+     * 
+     * @param arg3
+     * @param arg2
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.util.List<java.lang.String>
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "requestDataAnalysis", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.RequestDataAnalysis")
+    @ResponseWrapper(localName = "requestDataAnalysisResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.RequestDataAnalysisResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/requestDataAnalysisRequest", output = "http://SafeStreets.com/Dispatcher/requestDataAnalysisResponse")
+    public List<String> requestDataAnalysis(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1,
+        @WebParam(name = "arg2", targetNamespace = "")
+        String arg2,
+        @WebParam(name = "arg3", targetNamespace = "")
+        String arg3);
+
+    /**
+     * 
+     * @param arg1
+     * @param arg0
+     * @return
+     *     returns java.lang.String
+     */
+    @WebMethod
+    @WebResult(targetNamespace = "")
+    @RequestWrapper(localName = "login", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.Login")
+    @ResponseWrapper(localName = "loginResponse", targetNamespace = "http://SafeStreets.com/", className = "com.SafeStreets.Client.LoginResponse")
+    @Action(input = "http://SafeStreets.com/Dispatcher/loginRequest", output = "http://SafeStreets.com/Dispatcher/loginResponse")
+    public String login(
+        @WebParam(name = "arg0", targetNamespace = "")
+        String arg0,
+        @WebParam(name = "arg1", targetNamespace = "")
+        String arg1);
 
 }

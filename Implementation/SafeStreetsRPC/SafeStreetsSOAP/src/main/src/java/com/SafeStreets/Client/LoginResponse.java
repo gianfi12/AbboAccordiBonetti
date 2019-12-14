@@ -8,16 +8,16 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for userRegistrationResponse complex type.
+ * <p>Java class for loginResponse complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="userRegistrationResponse">
+ * &lt;complexType name="loginResponse">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
+ *         &lt;element name="return" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,23 +27,23 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "userRegistrationResponse", propOrder = {
+@XmlType(name = "loginResponse", propOrder = {
     "_return"
 })
-public class UserRegistrationResponse {
+public class LoginResponse {
 
     @XmlElement(name = "return")
-    protected Boolean _return;
+    protected String _return;
 
     /**
      * Gets the value of the return property.
      * 
      * @return
      *     possible object is
-     *     {@link Boolean }
+     *     {@link String }
      *     
      */
-    public Boolean isReturn() {
+    public String getReturn() {
         return _return;
     }
 
@@ -52,10 +52,10 @@ public class UserRegistrationResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link Boolean }
+     *     {@link String }
      *     
      */
-    public void setReturn(Boolean value) {
+    public void setReturn(String value) {
         this._return = value;
     }
 

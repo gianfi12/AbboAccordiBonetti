@@ -1,9 +1,8 @@
 package com.SafeStreets;
 
-import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable{
+public class User {
     private String username;
     private String email;
     private String firstName;
