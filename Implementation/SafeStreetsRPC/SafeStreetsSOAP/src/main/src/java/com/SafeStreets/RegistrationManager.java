@@ -8,7 +8,17 @@ public class RegistrationManager {
     public RegistrationManager() {
     }
 
-    public void startUserRegistration(String username) throws RegistrationError{
+    public void startUserRegistration(String username) throws IllegalStateException{
+        DataManagerAdapter dataManagerAdapter = new DataManagerAdapter();
+
+        throw new IllegalStateException();
+    }
+
+    public void finishUserRegistration(User info,String password) throws IllegalStateException{
+
+    }
+
+    public void abortUserRegistrtion(String username) throws IllegalStateException{
 
     }
 }

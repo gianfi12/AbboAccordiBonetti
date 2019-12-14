@@ -2,44 +2,39 @@ package com.SafeStreets;
 
 import javax.ejb.Stateless;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Stateless
 public class DataManagerAdapter {
+    private final static Logger LOGGER = Logger.getLogger(DataManagerAdapter.class.getName());
 
-    public boolean getPath() {
+
+    private boolean getPath() {
         try
         {
             Class.forName("com.mysql.cj.jdbc.Driver");
             Connection con=DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/SafeStreetsDB?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC","root","root");
 
-            // our SQL SELECT query.
-            // if you only need a few columns, specify them by name instead of using "*"
             String query = "SELECT * FROM UserReport";
 
-            // create the java statement
             Statement st = con.createStatement();
 
-            // execute the query, and get a java resultset
             ResultSet rs = st.executeQuery(query);
 
-            // iterate through the java resultset
             while (rs.next())
             {
                 int id = rs.getInt("id");
                 String mainPicturePath = rs.getString("mainPicture");
                 Timestamp dateCreated = rs.getTimestamp("reportTimeStamp");
-
-                // print the results
-                System.out.format(id+" "+mainPicturePath+" "+dateCreated+"\n");
             }
             st.close();
             return true;
         }
         catch (Exception e)
         {
-            System.err.println("Got an exception! ");
-            System.err.println(e.getMessage());
+            LOGGER.log(Level.INFO,"Error User registration in getPath!");
             return false;
         }
     }
