@@ -434,7 +434,7 @@
       <ownedParameter xmi:id="_1IMWMBavEeq98L0rWC0SzA" name="filter" type="_an-qEBazEeq98L0rWC0SzA"/>
     </ownedOperation>
     <ownedOperation xmi:id="_i4LroBc1EeqDb8rF8sFdRQ" name="addMunicipalityReports">
-      <ownedParameter xmi:id="_k5VrEBc1EeqDb8rF8sFdRQ" name="reports" type="_s6EWQA7wEeqT0cCYuIHxCw">
+      <ownedParameter xmi:id="_k5VrEBc1EeqDb8rF8sFdRQ" name="report" type="_s6EWQA7wEeqT0cCYuIHxCw">
         <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zv1lQBc1EeqDb8rF8sFdRQ"/>
         <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_umEPEBc1EeqDb8rF8sFdRQ" value="*"/>
       </ownedParameter>
