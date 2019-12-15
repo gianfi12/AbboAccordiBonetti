@@ -1,5 +1,6 @@
 package com.SafeStreets;
 
+import java.awt.image.BufferedImage;
 import java.util.Date;
 
 public class User {
@@ -9,18 +10,20 @@ public class User {
     private String lastName;
     private Place placeOfBirth;
     private Place placeOfResidence;
-    private Image imageIdCard;
+    private BufferedImage picture;
+    private BufferedImage imageIdCard;
     private String fiscalCode;
     private Date dateOfBirth;
     private String password;
 
-    public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, Image imageIdCard, String fiscalCode, Date dateOfBirth, String password) {
+    public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, BufferedImage picture, BufferedImage imageIdCard, String fiscalCode, Date dateOfBirth, String password) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.placeOfBirth = placeOfBirth;
         this.placeOfResidence = placeOfResidence;
+        this.picture=picture;
         this.imageIdCard = imageIdCard;
         this.fiscalCode = fiscalCode;
         this.dateOfBirth = dateOfBirth;
@@ -51,7 +54,11 @@ public class User {
         return placeOfResidence;
     }
 
-    public Image getImageIdCard() {
+    public BufferedImage getPicture() {
+        return picture;
+    }
+
+    public BufferedImage getImageIdCard() {
         return imageIdCard;
     }
 
@@ -66,4 +73,6 @@ public class User {
     public String getPassword() {
         return password;
     }
+
+
 }
