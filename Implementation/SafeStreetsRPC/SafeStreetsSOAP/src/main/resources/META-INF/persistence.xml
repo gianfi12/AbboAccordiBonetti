@@ -1,0 +1,17 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+             version="2.0">
+        <persistence-unit name="manager1" transaction-type="RESOURCE_LOCAL">
+            <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+            <class>com.SafeStreets.Vehicle</class>
+            <properties>
+                <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="javax.persistence.jdbc.user" value="root"/>
+                <property name="javax.persistence.jdbc.password" value="root"/>
+                <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/SafeStreetsDB?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;seLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>
+                <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+                <property name="hibernate.max_fetch_depth" value="3"/>
+            </properties>
+        </persistence-unit>
+    </persistence>
