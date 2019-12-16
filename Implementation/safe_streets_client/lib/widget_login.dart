@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import 'localized_strings.dart' as l;
-import 'logic.dart' as logic;
-import 'theme_presets.dart' as theme_presets;
+import 'handler_localization.dart' as l;
+import 'handler_backend.dart' as logic;
+import 'handler_presets.dart' as theme_presets;
 import 'widget_bottom.dart' as bottom;
 import 'widget_signup.dart' as sign_up;
 

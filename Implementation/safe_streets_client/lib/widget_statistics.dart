@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'localized_strings.dart' as l;
-import 'logic.dart' as logic;
-import 'theme_presets.dart' as theme_presets;
+import 'handler_model.dart' as data;
+import 'handler_localization.dart' as l;
+import 'handler_backend.dart' as logic;
 
 ///A widget that shows a statistic chosen by the user.
 ///A statistic is considered as a list of statistics item.
@@ -16,7 +16,7 @@ class Statistics extends StatefulWidget {
 ///A state for the statistics class.
 class StatisticsState extends State<Statistics> {
   ///The items for the current statistic.
-  List<logic.StatisticsItem> _statisticsItems = <logic.StatisticsItem>[];
+  List<data.StatisticsItem> _statisticsItems = <data.StatisticsItem>[];
 
   ///The items in the dropdown menu, the types of statistic available.
   List<String> _dropdownItems = <String>[];
@@ -86,9 +86,9 @@ class StatisticsState extends State<Statistics> {
 
   ///Builds a row of the list with the provided item.
   ///The main text is displayed on the left, localized, the secondary on the right.
-  Widget _buildRow(logic.StatisticsItem item) {
+  Widget _buildRow(data.StatisticsItem item) {
     return ListTile(
-      title: Text(l.localKey(item.item)),
+      title: Text(l.localKey(item.head)),
       trailing: Text(item.tail),
     );
   }

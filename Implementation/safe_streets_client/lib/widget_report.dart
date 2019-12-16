@@ -7,11 +7,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:safe_streets_client/logic.dart';
+import 'package:safe_streets_client/handler_backend.dart';
 
-import 'device_handler.dart' as device;
-import 'localized_strings.dart' as l;
-import 'theme_presets.dart' as theme_presets;
+import 'handler_model.dart' as data;
+import 'handler_device.dart' as device;
+import 'handler_localization.dart' as l;
+import 'handler_presets.dart' as theme_presets;
 
 ///Starts the new report process: asks permissions and opens the camera.
 ///The flow is as follows:
@@ -359,7 +360,7 @@ class AdditionalInputsState extends State<AdditionalInputs> {
 
   DateTime violationDateTime = DateTime.now();
   List<String> otherImages;
-  device.DevicePosition overridePosition;
+  data.DevicePosition overridePosition;
   String plateNumber;
 
   @override

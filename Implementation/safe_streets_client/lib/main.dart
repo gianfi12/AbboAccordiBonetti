@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 
-import 'theme_presets.dart' as theme_presets;
+import 'handler_presets.dart' as presets;
 import 'widget_login.dart' as login;
 
-//TODO: Testing
+/// The entry point for the app.
 void main() => runApp(MyApp());
 
-///When launched, the app shows the login page.
+/// The main app of the SafeStreets client.
+///
+/// This app is designed for mobile and for web. The web version will differ
+/// from the mobile depending on the capabilities of Flutter's infrastructure.
+/// When launched, the app shows the login page.
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,//TODO: remove
+      //debugShowCheckedModeBanner: false,//TODO: remove
       title: 'SafeStreets',
-      theme: theme_presets.getDefaultTheme(),
+      theme: presets.getDefaultTheme(),
       home: login.Login(),
     );
   }

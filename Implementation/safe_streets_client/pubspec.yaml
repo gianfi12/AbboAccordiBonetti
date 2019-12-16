@@ -1,5 +1,5 @@
 name: safe_streets_client
-description: SafeStreets project&#x27;s client app.
+description: SafeStreets project client app.
 
 # The following defines the version and build number for the application.
 # Both the version and the builder number may be overridden in flutter
@@ -18,29 +18,31 @@ dependencies:
   flutter:
     sdk: flutter
 
+  #The following allow to use the device camera and to take pictures.
   camera:
   path_provider:
   path:
-
-  #cupertino_icons: ^0.1.2
-
-  google_maps_flutter: ^0.5.21
-
-  geolocator: ^5.1.5
-
-  permission: ^0.1.5
-
   image_picker: ^0.6.2+3
 
-  intl: ^0.16.0
+  #cupertino_icons: ^0.1.2//TODO: remove
 
-  #TODO: remove
-  english_words: ^3.1.5
+  #The following allow to use the maps and retrieve the position.
+  google_maps_flutter: ^0.5.21
+  geolocator: ^5.1.5
+
+  #The following allows to request specific permissions.
+  permission: ^0.1.5
+
+  #The following allow to handle properly dates and time.
+  intl: ^0.16.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  #Unit testing and mocking.
+  test: ^1.9.4
+  mockito: ^4.1.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -48,37 +50,10 @@ dev_dependencies:
 # The following section is specific to Flutter.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # The following line ensures that the Material Icons font is included with your application, so
+  # that you can use the icons in the material Icons class.
   uses-material-design: true
 
   #The following allows to access the assets.
   assets:
     - assets/images/
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'localized_strings.dart' as l;
-import 'theme_presets.dart' as theme_presets;
+import 'handler_localization.dart' as l;
+import 'handler_presets.dart' as theme_presets;
 
 ///Allows to insert the data to do a login.
 class SignUp extends StatefulWidget {

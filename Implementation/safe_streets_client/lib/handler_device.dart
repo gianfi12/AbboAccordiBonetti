@@ -1,18 +1,20 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission/permission.dart';
 
-///Returns a future indicating whether the app has location permissions.
+import 'handler_model.dart' as model;
+
+/// Returns a future indicating whether the app has location permissions.
 Future<bool> hasPositionPermissions() => _checkPerm(PermissionName.Location);
 
-///Returns a future indicating whether the app has camera permissions.
+/// Returns a future indicating whether the app has camera permissions.
 Future<bool> hasCameraPermissions() => _checkPerm(PermissionName.Camera);
 
-///Returns a future indicating whether the app has the specified permission.
-///If an error occurs, this logs it and returns false.
+/// Returns a future indicating whether the app has the specified permission.
+/// If an exception is thrown, this logs it and returns false.
 Future<bool> _checkPerm(PermissionName name) {
+  assert(name != null);
   return Permission.requestPermissions([name]).then((permissions) {
     for (var p in permissions) {
       if (p.permissionName == name) {
@@ -23,32 +25,28 @@ Future<bool> _checkPerm(PermissionName name) {
       }
     }
     return false;
-  }).catchError((e) {
+  }).catchError((e) {//TODO add on
     log(e);
     return false;
   });
 }
 
-///Returns a future with the device position.
-///If an error occurs, this logs it and returns (0,0).
-Future<DevicePosition> getDevicePosition() {
+/// Returns a future with the device position.
+/// If an exception is thrown, this logs it and rethrows it.
+Future<model.DevicePosition> getDevicePosition() {
   Geolocator geo = Geolocator();
   geo.forceAndroidLocationManager = true;
   return geo
       .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-      .then((position) => DevicePosition(
-            latitude: position?.latitude,
-            longitude: position?.longitude,
-          ))
-      .catchError((e) {
+      .then((position) {
+    if (position != null)
+      return model.DevicePosition(
+        latitude: position?.latitude,
+        longitude: position?.longitude,
+      );
+    throw Exception('Position not available');
+  }).catchError((e) {
     log(e);
-    return DevicePosition(latitude: 0, longitude: 0);
+    throw (e);
   });
-}
-
-///A class that contains a position, expressed in latitude and longitude.
-class DevicePosition {
-  double latitude, longitude;
-
-  DevicePosition({@required this.latitude, @required this.longitude});
 }

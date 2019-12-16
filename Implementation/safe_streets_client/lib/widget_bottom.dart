@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'localized_strings.dart' as l;
+import 'handler_localization.dart' as l;
 import 'widget_around.dart' as around;
 import 'widget_report.dart' as report;
 import 'widget_statistics.dart' as statistics;

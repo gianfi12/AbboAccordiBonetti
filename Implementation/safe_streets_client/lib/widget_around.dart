@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:safe_streets_client/theme_presets.dart';
+import 'package:safe_streets_client/handler_presets.dart';
 
-import 'device_handler.dart' as device;
-import 'localized_strings.dart' as l;
+import 'handler_device.dart' as device;
+import 'handler_localization.dart' as l;
 
 ///A widget that contains the map and a way to change the current location.
 //TODO: Add top navigation.
@@ -107,6 +107,6 @@ class _AroundMeGoogleState extends State<AroundMe> {
           target: LatLng(position.latitude, position.longitude), zoom: 14));
       _controller.future.then((controller) => controller
           .animateCamera(CameraUpdate.newCameraPosition(_currentPosition)));
-    });
+    }).catchError(null);//FIXME does this work?
   }
 }
