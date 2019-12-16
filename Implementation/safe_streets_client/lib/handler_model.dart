@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-///A class that contains a position, expressed in latitude and longitude.
+/// A class that contains a position, expressed in latitude and longitude.
 class DevicePosition {
   final double latitude, longitude;
 
@@ -9,18 +9,17 @@ class DevicePosition {
         assert(longitude != null);
 }
 
-///An entry of a statistic, with main and secondary text.
+/// An entry of a statistic, with main and secondary text.
 class StatisticsItem {
-  ///The main text, mandatory.
+  /// The main text, mandatory.
   final String head;
 
-  ///The shorter secondary text, not mandatory.
+  /// The shorter secondary text, not mandatory: if absent is set to an empty string.
   final String tail;
 
   const StatisticsItem({@required this.head, tail})
       : assert(head != null),
-        tail = tail ?? "",
-        assert(tail != null);
+        tail = tail ?? '';
 }
 
 ///A report from the user.
@@ -47,7 +46,7 @@ class Report {
   String plateNumber;
 
   ///The author of the report.
-  String author; //TODO add author
+  String author;
 
   Report({
     @required this.deviceDateTime,
@@ -61,6 +60,6 @@ class Report {
   })  : assert(deviceDateTime != null),
         assert(mainImage != null),
         assert(devicePosition != null),
-        assert(violationDateTime != null),
+        assert(violationType != null),
         assert(author != null);
 }
