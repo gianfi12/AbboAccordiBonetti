@@ -181,7 +181,7 @@ class CameraModeState extends State<CameraMode> {
         ),
       );
     } catch (e) {
-      log(e);
+      log(e.toString());
     }
   }
 
