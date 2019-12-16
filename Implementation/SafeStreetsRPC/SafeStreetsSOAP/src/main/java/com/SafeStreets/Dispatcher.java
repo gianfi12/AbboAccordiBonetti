@@ -6,6 +6,9 @@ import com.google.gson.reflect.TypeToken;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.ejb.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +26,10 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean userRegistration(String info, String password) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
+        EntityManager em = emf.createEntityManager();
+
+        Vehicle v=em.find(Vehicle.class, "AP234IJ");
         RegistrationManager registrationManager= new RegistrationManager();
         Type type = new TypeToken<User>(){}.getType();
         User user = new Gson().fromJson(info,type);
