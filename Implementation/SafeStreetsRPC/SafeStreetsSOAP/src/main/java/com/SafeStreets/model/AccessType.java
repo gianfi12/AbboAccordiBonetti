@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.model;
 
 public enum AccessType {
     USER,

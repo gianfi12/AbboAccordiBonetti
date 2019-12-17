@@ -1,5 +1,8 @@
 package com.SafeStreets;
 
+import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.model.User;
+
 import javax.ejb.Stateless;
 
 @Stateless
@@ -14,7 +17,7 @@ public class RegistrationManager {
             throw new IllegalStateException();
     }
 
-    public void finishUserRegistration(User info,String password) throws IllegalStateException{
+    public void finishUserRegistration(User info, String password) throws IllegalStateException{
 
     }
 

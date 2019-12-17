@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.model;
 
 import java.awt.image.BufferedImage;
 import java.util.Date;

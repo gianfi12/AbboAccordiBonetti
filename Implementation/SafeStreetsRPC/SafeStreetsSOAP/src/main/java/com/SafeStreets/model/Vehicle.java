@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

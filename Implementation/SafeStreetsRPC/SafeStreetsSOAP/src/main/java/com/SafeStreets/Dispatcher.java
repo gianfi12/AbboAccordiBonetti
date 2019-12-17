@@ -1,5 +1,8 @@
 package com.SafeStreets;
 
+import com.SafeStreets.model.AccessType;
+import com.SafeStreets.model.User;
+import com.SafeStreets.model.Vehicle;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -27,10 +30,6 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean userRegistration(String info, String password) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
-        EntityManager em = emf.createEntityManager();
-
-        Vehicle v=em.find(Vehicle.class, "AP234IJ");
         RegistrationManager registrationManager= new RegistrationManager();
         Type type = new TypeToken<User>(){}.getType();
         User user = gson.fromJson(info,type);
