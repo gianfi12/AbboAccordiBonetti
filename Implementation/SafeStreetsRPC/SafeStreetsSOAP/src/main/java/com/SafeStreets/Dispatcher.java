@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 @WebService
 public class Dispatcher implements DispatcherInterface{
     private final static Logger LOGGER = Logger.getLogger(Dispatcher.class.getName());
+    private final static Gson gson = new Gson();
 
     public Dispatcher() {
     }
@@ -32,7 +33,7 @@ public class Dispatcher implements DispatcherInterface{
         Vehicle v=em.find(Vehicle.class, "AP234IJ");
         RegistrationManager registrationManager= new RegistrationManager();
         Type type = new TypeToken<User>(){}.getType();
-        User user = new Gson().fromJson(info,type);
+        User user = gson.fromJson(info,type);
         try {
             registrationManager.startUserRegistration(user.getUsername());
         }catch (IllegalStateException e){
@@ -50,7 +51,10 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public String login(String username, String password) {
-        return null;
+        AuthorizationManager authorizationManager = new AuthorizationManager();
+        AccessType accessType = authorizationManager.getAccessType(username,password);
+        Type type = new TypeToken<AccessType>(){}.getType();
+        return gson.toJson(accessType,type);
     }
 
     @WebMethod

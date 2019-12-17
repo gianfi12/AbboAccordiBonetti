@@ -1,4 +1,7 @@
 package com.SafeStreets;
 
-public class AccessType {
+public enum AccessType {
+    USER,
+    MUNICIPALITY,
+    NOT_REGISTERED;
 }

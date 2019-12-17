@@ -1,5 +1,7 @@
 package com.SafeStreets;
 
+import com.SafeStreets.exceptions.MunicipalityNotPresentException;
+import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
 
 import javax.ejb.Stateless;
@@ -8,18 +10,19 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.*;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Stateless
-public class DataManagerAdapter implements UserDataInterface {
+public class DataManagerAdapter implements UserDataInterface,MunicipalityDataInterface {
     private final static Logger LOGGER = Logger.getLogger(DataManagerAdapter.class.getName());
 
     private Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             return DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/SafeStreetsDB?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "max", "maxPass1Samp");
+                    "jdbc:mysql://localhost:3306/SafeStreetsDB?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "root");
 
         } catch (Exception e) {
             LOGGER.log(Level.INFO,"Error in the connection to the DataBase\n");
@@ -68,7 +71,7 @@ public class DataManagerAdapter implements UserDataInterface {
     }
 
     @Override
-    public User getUser(String username, String password) throws WrongPasswordException {
+    public User getUser(String username, String password) throws WrongPasswordException,UserNotPresentException {
         String query = "SELECT * FROM User as U, Place as pB, Place as pR, Coordinate as C  WHERE username="+"\""+username+"\""+" and " +
                 "u.placeOfBirth_id=pB.id and u.placeOfResidence_id=pR.id and pr.Coordinate_id=C.id";
 
@@ -148,15 +151,49 @@ public class DataManagerAdapter implements UserDataInterface {
                 st.close();
 
                 return user;
+            }else{
+                st.close();
+                throw new UserNotPresentException();
             }
-
-            st.close();
-
-
         } catch(SQLException e) {
             LOGGER.log(Level.INFO,"Error in executing the query");
             e.printStackTrace();
         }
+        return null;
+    }
+
+    @Override
+    public void addMunicipality(Place place, String username, String password) {
+
+    }
+
+    @Override
+    public Place getMunicipalityArea(String username) {
+        return null;
+    }
+
+    @Override
+    public void addDataIntegration(String username, DataIntegrationInfo dataIntegrationInfo) {
+
+    }
+
+    @Override
+    public Place checkContractCode(String code) {
+        return null;
+    }
+
+    @Override
+    public DataIntegrationInfo getDataIntegrationInfo(Place place) {
+        return null;
+    }
+
+    @Override
+    public List<DataIntegrationInfo> getAllDataIntegrationInfo() {
+        return null;
+    }
+
+    @Override
+    public Municipality getMunicipality(String username, String password) throws MunicipalityNotPresentException,WrongPasswordException {
         return null;
     }
 }

@@ -1,5 +1,8 @@
 package com.SafeStreets;
 
+import com.SafeStreets.exceptions.MunicipalityNotPresentException;
+import com.SafeStreets.exceptions.WrongPasswordException;
+
 import java.util.List;
 
 public interface MunicipalityDataInterface {
@@ -9,4 +12,5 @@ public interface MunicipalityDataInterface {
     Place checkContractCode(String code);
     DataIntegrationInfo getDataIntegrationInfo(Place place);
     List<DataIntegrationInfo> getAllDataIntegrationInfo();
+    Municipality getMunicipality(String username,String password) throws WrongPasswordException, MunicipalityNotPresentException;
 }
