@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// This file contains some presets used in the app, including the [ThemeData].
+/// This file contains some assets and presets used in the app, including the [ThemeData].
 
 /// The main color of the app.
 const MaterialColor accent = Colors.amber;
@@ -12,7 +12,10 @@ const String dateFormat = 'dd/MM/yyyy';
 const String timeFormat = 'HH:mm';
 
 /// The default theme is based on the dark theme with the main color of the app.
-ThemeData getDefaultTheme() => ThemeData.dark().copyWith(accentColor: accent);
+ThemeData getDefaultTheme() => ThemeData.dark().copyWith(
+      buttonTheme: ThemeData.dark().buttonTheme.copyWith(buttonColor: accent),
+      accentColor: accent,
+    );
 
 /// Returns the logo of the app on a transparent background.
 AssetImage getTransparentLogo() =>

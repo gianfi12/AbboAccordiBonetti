@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'handler_model.dart' as data;
-import 'handler_localization.dart' as l;
 import 'handler_backend.dart' as logic;
+import 'handler_localization.dart' as l;
+import 'handler_model.dart' as data;
 
 ///A widget that shows a statistic chosen by the user.
 ///A statistic is considered as a list of statistics item.
@@ -28,7 +28,7 @@ class StatisticsState extends State<Statistics> {
   @override
   void initState() {
     super.initState();
-    logic
+    logic.DispatcherInterface.getNew("", "") //TODO: pass the entity
         .getAvailableStatistics()
         .then((list) => setState(() => _dropdownItems.addAll(list)));
   }
@@ -95,10 +95,12 @@ class StatisticsState extends State<Statistics> {
 
   ///Called when the user selects a statistics type, changes the statistic displayed.
   void _valueChanged(String value) async {
-    logic.getStatisticsItems(value).then((items) => setState(() {
-          _selectedItem = value;
-          _statisticsItems.clear();
-          _statisticsItems.addAll(items);
-        }));
+    logic.DispatcherInterface.getNew("", "") //TODO pass the entity
+        .requestDataAnalysis(statisticsType: value, location: null)
+        .then((items) => setState(() {
+              _selectedItem = value;
+              _statisticsItems.clear();
+              _statisticsItems.addAll(items);
+            }));
   }
 }

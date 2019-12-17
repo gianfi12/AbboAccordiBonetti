@@ -63,3 +63,10 @@ class Report {
         assert(violationType != null),
         assert(author != null);
 }
+
+/// The type of access a client can have.
+enum AccessType {
+  USER,
+  MUNICIPALITY,
+  NOT_REGISTERED,
+}

@@ -7,6 +7,7 @@ import 'widget_statistics.dart' as statistics;
 
 ///The main page, with a bottom navigation bar.
 //TODO: web version.
+//TODO: confirm on back.
 class BottomNavigation extends StatefulWidget {
   BottomNavigation({Key key}) : super(key: key);
 
