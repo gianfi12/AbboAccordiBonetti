@@ -1,8 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:safe_streets_client/accessType.dart';
 
 import 'handler_model.dart' as model;
+
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+
 
 /// An interface that represents the backend.
 ///
@@ -115,11 +121,15 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<model.AccessType> login() {
-    return Future.delayed(Duration(seconds: 1), () {
+    loginRequest(this.username,this.password).then((s) {
+      print(s);
+    });
+    return Future(() => model.AccessType.NOT_REGISTERED);
+    /*return Future.delayed(Duration(seconds: 1), () {
       return username == 'no'
           ? model.AccessType.NOT_REGISTERED
           : model.AccessType.USER;
-    });
+    });*/
   }
 
   @override
@@ -198,17 +208,20 @@ Future<List<String>> getAvailableReportCategories() {
           ]);
 }
 
-/*//TODO: remove or implement.
-  String soap =
-      '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:userRegistration xmlns:ns2="http://SafeStreets.com/"><arg0>{"username":"Gian","email":"","firstName":"","lastName":"","placeOfBirth":{},"placeOfResidence":{},"fiscalCode":"","dateOfBirth":"Dec 16, 2019 4:44:10 PM","password":""}</arg0><arg1></arg1></ns2:userRegistration></S:Body></S:Envelope>''';
-
+Future<String> loginRequest(String username,String password) async {
   http.Response response = await http.post(
     'http://10.42.0.1:8080/SafeStreetsSOAP/DispatcherService',
     headers: {
       'content-type': 'text/xml',
-      'SOAPAction': 'http://SafeStreets.com/Dispatcher/userRegistrationRequest',
+      'SOAPAction': 'http://SafeStreets.com/Dispatcher/loginRequest',
     },
-    body: utf8.encode(soap),
+    body: utf8.encode(getSoapLogin(username, password)),
   );
-  print(response.body);
- */
+  if(response.statusCode!=200){
+    //TODO throw exception if the status code is wrong
+  }
+  return Future.value(response.body);
+}
+
+String getSoapLogin(String username,String password) => '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:login xmlns:ns2="http://SafeStreets.com/"><arg0>'''+ username +''''</arg0><arg1>'''+ password + ''''</arg1></ns2:login></S:Body></S:Envelope>''';
+
