@@ -1,5 +1,7 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.model.Coordinate;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -66,5 +68,9 @@ public class CoordinateEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, latitude, longitude, altitude);
+    }
+
+    public Coordinate toCoordinate() {
+        return new Coordinate(latitude.doubleValue(), longitude.doubleValue(), altitude.doubleValue());
     }
 }

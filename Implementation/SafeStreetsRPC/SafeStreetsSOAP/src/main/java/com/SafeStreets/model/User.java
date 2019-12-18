@@ -1,5 +1,8 @@
 package com.SafeStreets.model;
 
+import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.modelEntities.UserEntity;
+
 import java.awt.image.BufferedImage;
 import java.util.Date;
 
@@ -15,9 +18,8 @@ public class User {
     private BufferedImage imageIdCard;
     private String fiscalCode;
     private Date dateOfBirth;
-    private String password;
 
-    public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, BufferedImage picture, BufferedImage imageIdCard, String fiscalCode, Date dateOfBirth, String password) {
+    public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, BufferedImage picture, BufferedImage imageIdCard, String fiscalCode, Date dateOfBirth) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
@@ -28,7 +30,6 @@ public class User {
         this.imageIdCard = imageIdCard;
         this.fiscalCode = fiscalCode;
         this.dateOfBirth = dateOfBirth;
-        this.password = password;
     }
 
     public String getUsername() {
@@ -71,9 +72,28 @@ public class User {
         return dateOfBirth;
     }
 
-    public String getPassword() {
-        return password;
-    }
+    public UserEntity toUserEntity(String password, String picturePath, String imageIdCardPath) {
+        UserEntity newUserEntity=new UserEntity();
 
+        newUserEntity.setUsername(getUsername());
+        newUserEntity.setEmail(getEmail());
+        newUserEntity.setFirstname(getFirstName());
+        newUserEntity.setLastname(getLastName());
+
+
+        newUserEntity.setPlaceOfBirthEntity(getPlaceOfBirth().toPlaceEntity());
+        newUserEntity.setPlaceOfResidenceEntity(getPlaceOfResidence().toPlaceEntity());
+
+        newUserEntity.setPicture(picturePath);
+        newUserEntity.setIdCard(imageIdCardPath);
+
+        newUserEntity.setFiscalCode(getFiscalCode());
+
+        newUserEntity.setDateOfBirth(new java.sql.Date(getDateOfBirth().getTime()));
+        newUserEntity.setSalt(DataManagerAdapter.generateSalt());
+        newUserEntity.setPassword(DataManagerAdapter.generatePasswordHash(password, newUserEntity.getSalt()));
+
+        return newUserEntity;
+    }
 
 }

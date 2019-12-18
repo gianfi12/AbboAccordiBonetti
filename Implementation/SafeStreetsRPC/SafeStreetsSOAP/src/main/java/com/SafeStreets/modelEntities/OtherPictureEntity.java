@@ -9,6 +9,9 @@ public class OtherPictureEntity {
     private int id;
     private String picture;
 
+    @ManyToOne
+    private UserReportEntity userReportEntity;
+
     @Id
     @Column(name = "id")
     public int getId() {
@@ -27,6 +30,14 @@ public class OtherPictureEntity {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public UserReportEntity getUserReportEntity() {
+        return userReportEntity;
+    }
+
+    public void setUserReportEntity(UserReportEntity userReportEntity) {
+        this.userReportEntity = userReportEntity;
     }
 
     @Override

@@ -14,6 +14,13 @@ public class UserReportEntity {
     private String description;
     private String mainPicture;
 
+    @ManyToOne
+    private PlaceEntity place;
+    @ManyToOne
+    private VehicleEntity vehicleEntity;
+    @ManyToOne
+    private UserEntity userEntity;
+
     @Id
     @Column(name = "id")
     public int getId() {
@@ -72,6 +79,30 @@ public class UserReportEntity {
 
     public void setMainPicture(String mainPicture) {
         this.mainPicture = mainPicture;
+    }
+
+    public PlaceEntity getPlace() {
+        return place;
+    }
+
+    public void setPlace(PlaceEntity place) {
+        this.place = place;
+    }
+
+    public VehicleEntity getVehicleEntity() {
+        return vehicleEntity;
+    }
+
+    public void setVehicleEntity(VehicleEntity vehicleEntity) {
+        this.vehicleEntity = vehicleEntity;
+    }
+
+    public UserEntity getUserEntity() {
+        return userEntity;
+    }
+
+    public void setUserEntity(UserEntity userEntity) {
+        this.userEntity = userEntity;
     }
 
     @Override

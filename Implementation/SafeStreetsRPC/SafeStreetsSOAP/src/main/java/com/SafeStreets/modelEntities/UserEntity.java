@@ -1,6 +1,12 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.model.Place;
+import com.SafeStreets.model.User;
+
+import javax.imageio.ImageIO;
 import javax.persistence.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -11,12 +17,21 @@ public class UserEntity {
     private String email;
     private String firstname;
     private String lastname;
+
+    @ManyToOne
+    private PlaceEntity placeOfBirthEntity;
+
+    @ManyToOne
+    private PlaceEntity placeOfResidenceEntity;
+
     private String picture;
     private String idCard;
     private String fiscalCode;
     private Date dateOfBirth;
     private String password;
     private String salt;
+
+
 
     @Id
     @Column(name = "username")
@@ -118,6 +133,22 @@ public class UserEntity {
         this.salt = salt;
     }
 
+    public PlaceEntity getPlaceOfBirthEntity() {
+        return placeOfBirthEntity;
+    }
+
+    public void setPlaceOfBirthEntity(PlaceEntity placeOfBirthEntity) {
+        this.placeOfBirthEntity = placeOfBirthEntity;
+    }
+
+    public PlaceEntity getPlaceOfResidenceEntity() {
+        return placeOfResidenceEntity;
+    }
+
+    public void setPlaceOfResidenceEntity(PlaceEntity placeOfResidenceEntity) {
+        this.placeOfResidenceEntity = placeOfResidenceEntity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,5 +169,35 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(username, email, firstname, lastname, picture, idCard, fiscalCode, dateOfBirth, password, salt);
+    }
+
+
+    public User toUser() {
+        BufferedImage pictureImage = null;
+        try
+        {
+            pictureImage = ImageIO.read(new File(picture));
+        }
+        catch (Exception ignored)
+        {
+
+        }
+
+        BufferedImage idCardImage = null;
+        try
+        {
+            idCardImage = ImageIO.read(new File(idCard));
+        }
+        catch (Exception ignored)
+        {
+
+        }
+
+        Place placeOfBirth = placeOfBirthEntity.toPlace();
+
+        Place placeOfResidence = placeOfResidenceEntity.toPlace();
+
+
+        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, dateOfBirth, password);
     }
 }

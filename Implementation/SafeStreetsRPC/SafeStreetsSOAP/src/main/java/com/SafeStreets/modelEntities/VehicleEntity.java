@@ -1,5 +1,7 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.model.Vehicle;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,5 +34,9 @@ public class VehicleEntity {
     @Override
     public int hashCode() {
         return Objects.hash(licensePlate);
+    }
+
+    public Vehicle toVehicle() {
+        return new Vehicle(licensePlate);
     }
 }

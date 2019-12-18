@@ -1,19 +1,23 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.model.Municipality;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "Municipality", schema = "SafeStreetsDB")
 public class MunicipalityEntity {
+    private String contractCode;
     private String name;
     private String password;
     private String passSalt;
-    private String contractCode;
-    private String contractSalt;
 
-    @Id
-    @Column(name = "name")
+    @ManyToOne
+    private PlaceEntity placeEntity;
+
+
+    @Column(name = "name", unique=true)
     public String getName() {
         return name;
     }
@@ -42,7 +46,7 @@ public class MunicipalityEntity {
         this.passSalt = passSalt;
     }
 
-    @Basic
+    @Id
     @Column(name = "contractCode")
     public String getContractCode() {
         return contractCode;
@@ -51,15 +55,12 @@ public class MunicipalityEntity {
     public void setContractCode(String contractCode) {
         this.contractCode = contractCode;
     }
-
-    @Basic
-    @Column(name = "contractSalt")
-    public String getContractSalt() {
-        return contractSalt;
+    public PlaceEntity getPlaceEntity() {
+        return placeEntity;
     }
 
-    public void setContractSalt(String contractSalt) {
-        this.contractSalt = contractSalt;
+    public void setPlaceEntity(PlaceEntity placeEntity) {
+        this.placeEntity = placeEntity;
     }
 
     @Override
@@ -70,12 +71,15 @@ public class MunicipalityEntity {
         return Objects.equals(name, that.name) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(passSalt, that.passSalt) &&
-                Objects.equals(contractCode, that.contractCode) &&
-                Objects.equals(contractSalt, that.contractSalt);
+                Objects.equals(contractCode, that.contractCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, password, passSalt, contractCode, contractSalt);
+        return Objects.hash(name, password, passSalt, contractCode);
+    }
+
+    public Municipality toMunicipality() {
+        return new Municipality(name, placeEntity.toPlace());
     }
 }

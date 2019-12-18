@@ -1,5 +1,9 @@
 package com.SafeStreets.model;
 
+import com.SafeStreets.modelEntities.CoordinateEntity;
+
+import java.math.BigDecimal;
+
 public class Coordinate {
     private Double latitude;
     private Double longitude;
@@ -33,5 +37,14 @@ public class Coordinate {
 
     public void setAltitude(Double altitude) {
         this.altitude = altitude;
+    }
+
+    public CoordinateEntity toCoordinateEntity() {
+        CoordinateEntity coordinateEntity=new CoordinateEntity();
+        coordinateEntity.setLatitude(new BigDecimal(latitude));
+        coordinateEntity.setLongitude(new BigDecimal(longitude));
+        coordinateEntity.setAltitude(new BigDecimal(altitude));
+
+        return coordinateEntity;
     }
 }

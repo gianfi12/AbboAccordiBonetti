@@ -1,5 +1,8 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.model.Coordinate;
+import com.SafeStreets.model.Place;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,6 +13,10 @@ public class PlaceEntity {
     private String city;
     private String address;
     private String houseCode;
+
+    @OneToOne
+    @JoinColumn(name = "id")
+    private CoordinateEntity coordinateEntity;
 
     @Id
     @Column(name = "id")
@@ -51,6 +58,14 @@ public class PlaceEntity {
         this.houseCode = houseCode;
     }
 
+    public CoordinateEntity getCoordinateEntity() {
+        return coordinateEntity;
+    }
+
+    public void setCoordinateEntity(CoordinateEntity coordinateEntity) {
+        this.coordinateEntity = coordinateEntity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,5 +80,9 @@ public class PlaceEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, city, address, houseCode);
+    }
+
+    public Place toPlace() {
+        return new Place(city, address, houseCode, coordinateEntity.toCoordinate());
     }
 }

@@ -1,5 +1,7 @@
 package com.SafeStreets.model;
 
+import com.SafeStreets.modelEntities.PlaceEntity;
+
 public class Place {
     private String city;
     private String address;
@@ -46,5 +48,14 @@ public class Place {
 
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
+    }
+
+    public PlaceEntity toPlaceEntity() {
+        PlaceEntity placeEntity=new PlaceEntity();
+        placeEntity.setCity(city);
+        placeEntity.setAddress(address);
+        placeEntity.setHouseCode(houseCode);
+        placeEntity.setCoordinateEntity(coordinate.toCoordinateEntity());
+        return placeEntity;
     }
 }
