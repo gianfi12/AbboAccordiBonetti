@@ -17,7 +17,7 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "DispatcherService", targetNamespace = "http://SafeStreets.com/", wsdlLocation = "http://gianfi-notebook:8080/SafeStreetsSOAP/DispatcherService?wsdl")
+@WebServiceClient(name = "DispatcherService", targetNamespace = "http://SafeStreets.com/", wsdlLocation = "http://localhost:8080/SafeStreetsSOAP/DispatcherService?wsdl")
 public class DispatcherService
     extends Service
 {
@@ -30,7 +30,7 @@ public class DispatcherService
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("http://gianfi-notebook:8080/SafeStreetsSOAP/DispatcherService?wsdl");
+            url = new URL("http://localhost:8080/SafeStreetsSOAP/DispatcherService?wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }

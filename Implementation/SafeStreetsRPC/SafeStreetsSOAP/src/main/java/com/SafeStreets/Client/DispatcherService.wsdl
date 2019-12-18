@@ -163,7 +163,7 @@
 </binding>
 <service name="DispatcherService">
 <port name="DispatcherPort" binding="tns:DispatcherPortBinding">
-<soap:address location="http://gianfi-notebook:8080/SafeStreetsSOAP/DispatcherService"/>
+<soap:address location="http://localhost:8080/SafeStreetsSOAP/DispatcherService"/>
 </port>
 </service>
 </definitions>
