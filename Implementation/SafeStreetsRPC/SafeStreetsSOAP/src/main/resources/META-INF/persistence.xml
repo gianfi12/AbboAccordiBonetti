@@ -2,24 +2,22 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
              version="2.0">
-        <persistence-unit name="manager1" transaction-type="RESOURCE_LOCAL">
-            <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-            <class>com.SafeStreets.modelEntities.CoordinateEntity</class>
-            <class>com.SafeStreets.modelEntities.DataIntegrationInfoEntity</class>
-            <class>com.SafeStreets.modelEntities.MunicipalityEntity</class>
-            <class>com.SafeStreets.modelEntities.MunicipalityReportEntity</class>
-            <class>com.SafeStreets.modelEntities.OtherPictureEntity</class>
-            <class>com.SafeStreets.modelEntities.PlaceEntity</class>
-            <class>com.SafeStreets.modelEntities.UserEntity</class>
-            <class>com.SafeStreets.modelEntities.UserReportEntity</class>
-            <class>com.SafeStreets.modelEntities.VehicleEntity</class>
-            <properties>
-                <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="javax.persistence.jdbc.user" value="admin"/>
-                <property name="javax.persistence.jdbc.password" value="admin"/>
-                <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/SafeStreetsDB?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;seLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>
-                <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
-                <property name="hibernate.max_fetch_depth" value="3"/>
-            </properties>
-        </persistence-unit>
-    </persistence>
+    <persistence-unit name="manager1" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>com.SafeStreets.modelEntities.CoordinateEntity</class>
+        <class>com.SafeStreets.modelEntities.MunicipalityEntity</class>
+        <class>com.SafeStreets.modelEntities.OtherPictureEntity</class>
+        <class>com.SafeStreets.modelEntities.PlaceEntity</class>
+        <class>com.SafeStreets.modelEntities.UserEntity</class>
+        <class>com.SafeStreets.modelEntities.UserReportEntity</class>
+        <class>com.SafeStreets.modelEntities.VehicleEntity</class>
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="admin"/>
+            <property name="javax.persistence.jdbc.password" value="admin"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/SafeStreetsDB?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp;seLegacyDatetimeCode=false&amp;serverTimezone=UTC"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+            <property name="hibernate.max_fetch_depth" value="3"/>
+        </properties>
+    </persistence-unit>
+</persistence>
