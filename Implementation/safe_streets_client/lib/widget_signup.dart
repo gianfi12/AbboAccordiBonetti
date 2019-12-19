@@ -1,9 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
+import 'handler_backend.dart' as backend;
+import 'handler_device.dart' as device;
 import 'handler_localization.dart' as l;
-import 'handler_presets.dart' as theme_presets;
+import 'widget_bottom.dart' as bottom;
 
-///Allows to insert the data to do a login.
+/// A regular expression to identify valid email addresses.
+String emailRegex =
+    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+/// Allows the user to insert the data to sign up.
 class SignUp extends StatefulWidget {
   SignUp({Key key}) : super(key: key);
 
@@ -11,11 +19,18 @@ class SignUp extends StatefulWidget {
   _SignUpState createState() => _SignUpState();
 }
 
-///The state for the sign up widget.
+/// The state for the sign up widget.
 class _SignUpState extends State<SignUp> {
-  ///The key to validate the form.
+  /// The key to validate the form.
   final _formKey = GlobalKey<FormState>();
 
+  /// The key to later show a snack bar.
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  /// A list of the text fields to build.
+  List<_TextFormPlaceholder> textFields = [];
+
+  //Start of subscription contents.
   String _username;
   String _email;
   String _firstName;
@@ -25,13 +40,16 @@ class _SignUpState extends State<SignUp> {
   String _placeOfResidence;
   String _fiscalCode;
   String _idCard;
+  String _password;
 
-  List<_TextFormPlaceholder> textFields = [];
-
+  //TODO(hig): validate inputs based on json, especially dates and images.
+  //TODO(med): add user picture in registration.
+  //TODO(low): link elements.
+  //TODO(low): change keyboards.
   @override
   void initState() {
     super.initState();
-    textFields = [
+    textFields = <_TextFormPlaceholder>[
       _TextFormPlaceholder(
         label: l.AvailableStrings.LOGIN_USERNAME,
         error: l.AvailableStrings.SIGN_REQUIRED,
@@ -39,8 +57,13 @@ class _SignUpState extends State<SignUp> {
       ),
       _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_EMAIL,
-        error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _email = s,
+        validator: (value) {
+          if (value.isEmpty) return l.local(l.AvailableStrings.SIGN_REQUIRED);
+          if (!RegExp(emailRegex).hasMatch(value))
+            return l.local(l.AvailableStrings.SIGN_EMAIL_WRONG);
+          return null;
+        },
       ),
       _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_FIRST_NAME,
@@ -53,7 +76,7 @@ class _SignUpState extends State<SignUp> {
         onSaved: (s) => _placeOfBirth = s,
       ),
       _TextFormPlaceholder(
-        label: l.AvailableStrings.SIGN_DATE_BIRTH, //TODO
+        label: l.AvailableStrings.SIGN_DATE_BIRTH,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _dateOfBirth = s,
       ),
@@ -67,116 +90,152 @@ class _SignUpState extends State<SignUp> {
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _fiscalCode = s,
       ),
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.LOGIN_PASSWORD,
+        error: l.AvailableStrings.SIGN_REQUIRED,
+        onSaved: (s) => _password = s,
+      ),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text(l.local(l.AvailableStrings.LOGIN_SIGN_UP)),
       ),
-      body: ListView(
-        children: [
-          Form(
-            key: _formKey,
-            child: Column(
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child: SizedBox(
+            width: 400,
+            child: ListView(
               children: _buildItems(),
             ),
-          )
-        ],
+          ),
+        ),
       ),
     );
   }
 
+  /// Builds the text field and some buttons.
   List<Widget> _buildItems() {
     var list = textFields.map((e) => e.buildTextForm()).toList();
-    list.addAll([
+    list.addAll(<Widget>[
       Padding(
         padding: EdgeInsets.all(8.0),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(4.0),
-          ),
-          Text(l.local(l.AvailableStrings.SIGN_DOCUMENT)),
-        ],
-      ),
-      ButtonBar(
-
-        alignment: MainAxisAlignment.spaceBetween,
-        layoutBehavior: ButtonBarLayoutBehavior.constrained,
-        children: [
-          RaisedButton(
-            color: theme_presets.accent,
-            textColor: theme_presets
-                .getDefaultTheme()
-                .accentTextTheme
-                .body1
-                .color, //FIXME theme
-            child:
-                Text(l.local(l.AvailableStrings.INFO_IMAGES_CAM).toUpperCase()),
-            onPressed: () => null, //Todo add images;
-          ),
-          RaisedButton(
-            color: theme_presets.accent,
-            textColor: theme_presets
-                .getDefaultTheme()
-                .accentTextTheme
-                .body1
-                .color, //FIXME theme
-            child:
-                Text(l.local(l.AvailableStrings.INFO_IMAGES_DEV).toUpperCase(), ),
-            onPressed: () => null, //Todo add images;
-          ),
-        ],
       ),
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           width: double.maxFinite,
           child: RaisedButton(
-            color: theme_presets.accent,
-            textColor: theme_presets
-                .getDefaultTheme()
-                .accentTextTheme
-                .body1
-                .color, //FIXME theme
-            child:
-            Text(l.local(l.AvailableStrings.LOGIN_SIGN_UP).toUpperCase()),
-            onPressed: () => null, //Todo send;
+            child: Text(
+              l.local(l.AvailableStrings.SIGN_DOCUMENT).toUpperCase(),
+            ),
+            onPressed: _onImageButton,
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.maxFinite,
+          child: RaisedButton(
+            child: Text(
+              l.local(l.AvailableStrings.LOGIN_SIGN_UP).toUpperCase(),
+            ),
+            onPressed: _onSendButton,
           ),
         ),
       ),
     ]);
     return list;
   }
+
+  /// Called when the button for the document photo is pressed.
+  ///
+  /// Asks the user to choose a photo and saves it.
+  void _onImageButton() async {
+    device.chooseImage(context).then((file) {
+      if (file != null) {
+        _idCard = base64Encode(file.readAsBytesSync());
+      }
+    });
+  }
+
+  /// Called when the send button is pressed.
+  ///
+  /// If the form is complete and valid, sends the registration request.
+  /// If the registration is accepted, shows the main screen and removes the
+  /// navigation stack behind it.
+  void _onSendButton() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      var server = backend.DispatcherInterface.getNew(_username, _password);
+      server
+          .userRegistration(
+        username: _username,
+        email: _email,
+        firstName: _firstName,
+        lastName: _lastName,
+        placeOfBirth: _placeOfBirth,
+        placeOfResidence: _placeOfResidence,
+        picture: null,
+        idCard: _idCard,
+        fiscalCode: _fiscalCode,
+        dateOfBirth: DateTime.parse(_dateOfBirth),
+        password: _password,
+      )
+          .then((outcome) {
+        if (outcome) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => bottom.BottomNavigation()),
+            (r) => false,
+          );
+        } else {
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(l.local(l.AvailableStrings.SIGN_ERROR)),
+          ));
+        }
+      });
+    }
+  }
 }
 
+/// An item that represents a [TextFormField].
 class _TextFormPlaceholder {
+  /// The label of the field.
   l.AvailableStrings label;
+
+  /// The error message displayed by the default validator.
   l.AvailableStrings error;
+
+  /// The action taken when saved.
   FormFieldSetter onSaved;
-  FormFieldValidator validator;
+
+  /// The validator for the field.
+  ///
+  /// If not specified, a default is used, that prints [error] if the field is empty.
+  FormFieldValidator<String> validator;
 
   _TextFormPlaceholder({
     @required this.label,
-    @required this.error,
+    this.error,
     @required this.onSaved,
     this.validator,
-  });
+  }) {
+    validator ??= (value) => value.isEmpty ? l.local(error) : null;
+  }
 
+  /// Returns a [TextFormField] with the properties of this class.
   Widget buildTextForm() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
-        validator: validator ??
-            (value) {
-              if (value.isEmpty) return l.local(error);
-              return null;
-            },
+        validator: validator,
         decoration: InputDecoration(
           filled: true,
           border: OutlineInputBorder(),
@@ -185,5 +244,145 @@ class _TextFormPlaceholder {
         onSaved: onSaved,
       ),
     );
+  }
+}
+
+/// Allows the municipality to insert the data to sign up.
+class MunSignUp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => MunSignUpState();
+}
+
+/// The state of the municipality sign up widget.
+class MunSignUpState extends State<MunSignUp> {
+  /// The key to validate the form.
+  final _formKey = GlobalKey<FormState>();
+
+  /// The key to later show a snack bar.
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  /// A list of the text fields to build.
+  List<_TextFormPlaceholder> textFields = [];
+
+  //Start of subscription contents.
+  String _code;
+  String _username;
+  String _password;
+  String _dataIntegrationIp;
+  String _dataIntegrationPort;
+  String _dataIntegrationPassword;
+
+  //TODO(low): link elements.
+  //TODO(low): change keyboards.
+  @override
+  void initState() {
+    super.initState();
+    textFields = <_TextFormPlaceholder>[
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.SIGN_CODE,
+        error: l.AvailableStrings.SIGN_REQUIRED,
+        onSaved: (s) => _code = s,
+      ),
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.LOGIN_USERNAME,
+        error: l.AvailableStrings.SIGN_REQUIRED,
+        onSaved: (s) => _username = s,
+      ),
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.LOGIN_PASSWORD,
+        error: l.AvailableStrings.SIGN_REQUIRED,
+        onSaved: (s) => _password = s,
+      ),
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.SIGN_DI_IP,
+        onSaved: (s) => _dataIntegrationIp = s,
+        validator: null,
+      ),
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.SIGN_DI_PORT,
+        onSaved: (s) => _dataIntegrationPort = s,
+        validator: null,
+      ),
+      _TextFormPlaceholder(
+        label: l.AvailableStrings.SIGN_DI_PASSWORD,
+        onSaved: (s) => _dataIntegrationPassword = s,
+        validator: null,
+      ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(l.local(l.AvailableStrings.LOGIN_SIGN_UP)),
+      ),
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child: SizedBox(
+            width: 400,
+            child: ListView(
+              children: _buildItems(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Builds the text field and some buttons.
+  List<Widget> _buildItems() {
+    var list = textFields.map((e) => e.buildTextForm()).toList();
+    list.addAll(<Widget>[
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.maxFinite,
+          child: RaisedButton(
+            child: Text(
+              l.local(l.AvailableStrings.LOGIN_SIGN_UP).toUpperCase(),
+            ),
+            onPressed: _onSendButton,
+          ),
+        ),
+      ),
+    ]);
+    return list;
+  }
+
+  /// Called when the send button is pressed.
+  ///
+  /// If the form is complete and valid, sends the registration request.
+  /// If the registration is accepted, shows the main screen and removes the
+  /// navigation stack behind it.
+  void _onSendButton() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      var server = backend.DispatcherInterface.getNew(_username, _password);
+      server
+          .municipalityRegistration(
+        code: _code,
+        username: _username,
+        password: _password,
+        dataIntegrationIp: _dataIntegrationIp,
+        dataIntegrationPort: _dataIntegrationPort,
+        dataIntegrationPassword: _dataIntegrationPassword,
+      )
+          .then((outcome) {
+        if (outcome) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => bottom.BottomNavigation()),
+            (r) => false,
+          );
+        } else {
+          _scaffoldKey.currentState.showSnackBar(SnackBar(
+            content: Text(l.local(l.AvailableStrings.SIGN_ERROR)),
+          ));
+        }
+      });
+    }
   }
 }

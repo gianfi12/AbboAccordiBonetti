@@ -1,9 +1,13 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission/permission.dart';
 
+import 'handler_localization.dart' as l;
 import 'handler_model.dart' as model;
 
 /// Returns a future indicating whether the app has location permissions.
@@ -64,4 +68,29 @@ Future<model.DevicePosition> getPos(Future<Position> result) {
     log(e.toString());
     throw (e);
   });
+}
+
+/// Prompts the user to choose a picture from the camera or the device.
+///
+/// If the user does not choose a picture, this returns null.
+Future<File> chooseImage(BuildContext context) async {
+  assert(context != null);
+  final imageSource = await showDialog<ImageSource>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(l.local(l.AvailableStrings.PHOTO_TEXT)),
+      actions: <Widget>[
+        MaterialButton(
+          child: Text(l.local(l.AvailableStrings.PHOTO_CAMERA)),
+          onPressed: () => Navigator.pop(context, ImageSource.camera),
+        ),
+        MaterialButton(
+          child: Text(l.local(l.AvailableStrings.PHOTO_DEVICE)),
+          onPressed: () => Navigator.pop(context, ImageSource.gallery),
+        ),
+      ],
+    ),
+  );
+
+  return ImagePicker.pickImage(source: imageSource);
 }

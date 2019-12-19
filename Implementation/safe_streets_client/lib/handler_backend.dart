@@ -1,14 +1,10 @@
 import 'dart:async';
-
-import 'package:flutter/foundation.dart';
-import 'package:safe_streets_client/accessType.dart';
-
-import 'handler_model.dart' as model;
-
-import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+import 'handler_model.dart' as model;
 
 /// An interface that represents the backend.
 ///
@@ -121,28 +117,22 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<model.AccessType> login() {
-    loginRequest(this.username,this.password).then((s) {
-      print(s);
-    });
-    return Future(() => model.AccessType.NOT_REGISTERED);
-    /*return Future.delayed(Duration(seconds: 1), () {
+    return Future.delayed(Duration(seconds: 1), () {
       return username == 'no'
           ? model.AccessType.NOT_REGISTERED
           : model.AccessType.USER;
-    });*/
+    });
   }
 
   @override
   Future<bool> municipalityRegistration(
-      {String code,
-      String username,
-      String password,
-      String dataIntegrationIp,
-      String dataIntegrationPort,
-      String dataIntegrationPassword}) {
-    // TODO: implement municipalityRegistration
-    throw UnimplementedError();
-  }
+          {String code,
+          String username,
+          String password,
+          String dataIntegrationIp,
+          String dataIntegrationPort,
+          String dataIntegrationPassword}) =>
+      Future(() => true);
 
   @override
   Future<bool> newReport({model.Report report}) {
@@ -177,20 +167,18 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<bool> userRegistration(
-      {String username,
-      String email,
-      String firstName,
-      String lastName,
-      String placeOfBirth,
-      String placeOfResidence,
-      String picture,
-      String idCard,
-      String fiscalCode,
-      DateTime dateOfBirth,
-      String password}) {
-    // TODO: implement userRegistration
-    throw UnimplementedError();
-  }
+          {String username,
+          String email,
+          String firstName,
+          String lastName,
+          String placeOfBirth,
+          String placeOfResidence,
+          String picture,
+          String idCard,
+          String fiscalCode,
+          DateTime dateOfBirth,
+          String password}) =>
+      Future(() => true);
 }
 
 Future<List<String>> getAvailableReportCategories() {
@@ -208,7 +196,81 @@ Future<List<String>> getAvailableReportCategories() {
           ]);
 }
 
-Future<String> loginRequest(String username,String password) async {
+class _SOAPTest implements DispatcherInterface {
+  String _username, _password;
+
+  _SOAPTest(this._username, this._password);
+
+  @override
+  Future<List<model.Report>> accessReports({DateTime from, DateTime until}) {
+    // TODO: implement accessReports
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<String>> getAvailableStatistics() {
+    // TODO: implement getAvailableStatistics
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<String>> getSuggestions() {
+    // TODO: implement getSuggestions
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<model.AccessType> login() {
+    loginRequest(this._username, this._password).then((s) {
+      print(s);
+    });
+    return Future(() => model.AccessType.NOT_REGISTERED);
+  }
+
+  @override
+  Future<bool> municipalityRegistration(
+      {String code,
+      String username,
+      String password,
+      String dataIntegrationIp,
+      String dataIntegrationPort,
+      String dataIntegrationPassword}) {
+    // TODO: implement municipalityRegistration
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> newReport({model.Report report}) {
+    // TODO: implement newReport
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<model.StatisticsItem>> requestDataAnalysis(
+      {String statisticsType, model.DevicePosition location}) {
+    // TODO: implement requestDataAnalysis
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<bool> userRegistration(
+      {String username,
+      String email,
+      String firstName,
+      String lastName,
+      String placeOfBirth,
+      String placeOfResidence,
+      String picture,
+      String idCard,
+      String fiscalCode,
+      DateTime dateOfBirth,
+      String password}) {
+    // TODO: implement userRegistration
+    throw UnimplementedError();
+  }
+}
+
+Future<String> loginRequest(String username, String password) async {
   http.Response response = await http.post(
     'http://10.42.0.1:8080/SafeStreetsSOAP/DispatcherService',
     headers: {
@@ -217,11 +279,15 @@ Future<String> loginRequest(String username,String password) async {
     },
     body: utf8.encode(getSoapLogin(username, password)),
   );
-  if(response.statusCode!=200){
+  if (response.statusCode != 200) {
     //TODO throw exception if the status code is wrong
   }
   return Future.value(response.body);
 }
 
-String getSoapLogin(String username,String password) => '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:login xmlns:ns2="http://SafeStreets.com/"><arg0>'''+ username +''''</arg0><arg1>'''+ password + ''''</arg1></ns2:login></S:Body></S:Envelope>''';
-
+String getSoapLogin(String username, String password) =>
+    '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:login xmlns:ns2="http://SafeStreets.com/"><arg0>''' +
+    username +
+    ''''</arg0><arg1>''' +
+    password +
+    ''''</arg1></ns2:login></S:Body></S:Envelope>''';
