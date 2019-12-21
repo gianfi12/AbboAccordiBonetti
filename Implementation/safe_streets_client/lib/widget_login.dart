@@ -164,7 +164,10 @@ class _LoginFormState extends State<_LoginForm> {
         if (outcome != model.AccessType.NOT_REGISTERED) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => bottom.BottomNavigation()),
+            MaterialPageRoute(
+                builder: (context) => bottom.BottomNavigation(
+                      dispatcher: server,
+                    )),
             (r) => false,
           );
         } else {

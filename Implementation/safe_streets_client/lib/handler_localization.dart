@@ -39,6 +39,7 @@ enum AvailableStrings {
   REQUEST_PERMISSIONS,
   STATISTICS_DROPDOWN_HINT,
   STATISTICS_EMPTY_DROPDOWN,
+  STATISTICS_ERROR,
   REPORT_PICTURE_PREVIEW,
   CATEGORY_CHOOSE,
   ADD_INFO,
@@ -79,7 +80,8 @@ const _values = {
   AvailableStrings.LOGIN_SIGN_UP: 'Sign up!',
   AvailableStrings.LOGIN: 'Login',
   AvailableStrings.LOGIN_ERROR: 'Invalid username or password! Retry.',
-  AvailableStrings.LOGIN_MUNICIPALITY_MESSAGE: 'Do you have a municipality activation code? Follow ',
+  AvailableStrings.LOGIN_MUNICIPALITY_MESSAGE:
+      'Do you have a municipality activation code? Follow ',
   AvailableStrings.LOGIN_MUNICIPALITY_LINK: 'this link!',
   AvailableStrings.SIGN_EMAIL: 'Email',
   AvailableStrings.SIGN_FIRST_NAME: 'Name',
@@ -107,6 +109,7 @@ const _values = {
   AvailableStrings.STATISTICS_DROPDOWN_HINT: 'Choose a statistics type',
   AvailableStrings.STATISTICS_EMPTY_DROPDOWN:
       'The statistics will be displayed here',
+  AvailableStrings.STATISTICS_ERROR: "Unable to fetch the statistic",
   AvailableStrings.REPORT_PICTURE_PREVIEW: 'Preview the picture',
   AvailableStrings.CATEGORY_CHOOSE: 'Choose the category',
   AvailableStrings.ADD_INFO: 'Add informations',
