@@ -17,7 +17,7 @@ class StatisticsItem {
   /// The shorter secondary text, not mandatory: if absent is set to an empty string.
   final String tail;
 
-  const StatisticsItem({@required this.head, tail})
+  const StatisticsItem({@required this.head, String tail})
       : assert(head != null),
         tail = tail ?? '';
 }
