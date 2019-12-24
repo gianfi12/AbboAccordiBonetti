@@ -36,6 +36,9 @@ dependencies:
   #The following allow to handle properly dates and time.
   intl: ^0.16.0
 
+  #The following allows to show a web page in Flutter.
+  webview_flutter: ^0.3.18+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -57,3 +60,4 @@ flutter:
   #The following allows to access the assets.
   assets:
     - assets/images/
+    - assets/code.html

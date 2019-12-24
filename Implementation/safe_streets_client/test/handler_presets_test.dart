@@ -1,8 +1,11 @@
+import 'package:flutter/services.dart';
+import 'package:mockito/mockito.dart';
+import 'package:safe_streets_client/handler_model.dart';
 import 'package:safe_streets_client/handler_presets.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('Not null except assets', () {
+  group('Not null', () {
     test('accent must not be null', () {
       expect(accent, isNotNull);
     });
@@ -47,4 +50,27 @@ void main() {
       expect(getFormattedAppName, returnsNormally);
     });
   });
+
+  group('Tests on getHeatMapUri', () {
+    test('values are correctly substituted', () {
+      var mock = MockAssetBundle();
+      when(mock.loadString('code.html')).thenAnswer((str) => Future.value(
+          'before/*DATA_PLACEHOLDER*/middle/*POSITION_PLACEHOLDER*/end'));
+      var result = getHeatMapURI(
+        mock,
+        true,
+        Future.value([DevicePosition(latitude: 1, longitude: 2)]),
+        DevicePosition(latitude: 3, longitude: 4),
+      ).then((uri) => uri.data.contentText
+          .replaceAll('%20', ' ')
+          .replaceAll('%7B', '{')
+          .replaceAll('%7D', '}'));
+      expect(
+          result,
+          completion(
+              'beforenew google.maps.LatLng(1.0, 2.0),middlecenter: {lat: 3.0, lng: 4.0},end'));
+    });
+  });
 }
+
+class MockAssetBundle extends Mock implements AssetBundle {}
