@@ -5,6 +5,7 @@ import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.MunicipalityEntity;
 import com.SafeStreets.modelEntities.UserEntity;
+import com.SafeStreets.modelEntities.UserReportEntity;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -96,13 +97,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
 
     @Override
-    public boolean checkContractCode(String code) throws MunicipalityNotPresentException {
+    public boolean checkContractCode(String code) {
         MunicipalityEntity municipalityEntity= em.find(MunicipalityEntity.class, code);
 
-        if(municipalityEntity==null)
-            throw new MunicipalityNotPresentException();
-
-        return code.equals(municipalityEntity.getContractCode());
+        return municipalityEntity!=null;
     }
 
 
@@ -201,7 +199,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public void addUserReport(UserReport userReport) {
-
+        em.persist(userReport);
     }
 
     @Override
