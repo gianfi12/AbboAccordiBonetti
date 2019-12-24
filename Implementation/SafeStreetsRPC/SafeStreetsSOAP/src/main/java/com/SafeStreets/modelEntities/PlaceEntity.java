@@ -14,8 +14,6 @@ public class PlaceEntity {
     private String address;
     private String houseCode;
 
-    @OneToOne
-    @JoinColumn(name = "id")
     private CoordinateEntity coordinateEntity;
 
     @Id
@@ -58,6 +56,8 @@ public class PlaceEntity {
         this.houseCode = houseCode;
     }
 
+    @OneToOne
+    @JoinColumn(name = "id")
     public CoordinateEntity getCoordinateEntity() {
         return coordinateEntity;
     }

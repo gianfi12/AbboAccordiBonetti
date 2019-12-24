@@ -9,7 +9,6 @@ public class OtherPictureEntity {
     private int id;
     private String picture;
 
-    @ManyToOne
     private UserReportEntity userReportEntity;
 
     @Id
@@ -32,6 +31,7 @@ public class OtherPictureEntity {
         this.picture = picture;
     }
 
+    @ManyToOne
     public UserReportEntity getUserReportEntity() {
         return userReportEntity;
     }

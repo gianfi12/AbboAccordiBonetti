@@ -18,10 +18,8 @@ public class UserEntity {
     private String firstname;
     private String lastname;
 
-    @ManyToOne
     private PlaceEntity placeOfBirthEntity;
 
-    @ManyToOne
     private PlaceEntity placeOfResidenceEntity;
 
     private String picture;
@@ -133,6 +131,7 @@ public class UserEntity {
         this.salt = salt;
     }
 
+    @ManyToOne
     public PlaceEntity getPlaceOfBirthEntity() {
         return placeOfBirthEntity;
     }
@@ -141,6 +140,7 @@ public class UserEntity {
         this.placeOfBirthEntity = placeOfBirthEntity;
     }
 
+    @ManyToOne
     public PlaceEntity getPlaceOfResidenceEntity() {
         return placeOfResidenceEntity;
     }
@@ -198,6 +198,6 @@ public class UserEntity {
         Place placeOfResidence = placeOfResidenceEntity.toPlace();
 
 
-        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, dateOfBirth, password);
+        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, dateOfBirth);
     }
 }

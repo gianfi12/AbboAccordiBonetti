@@ -14,11 +14,10 @@ public class UserReportEntity {
     private String description;
     private String mainPicture;
 
-    @ManyToOne
     private PlaceEntity place;
-    @ManyToOne
+
     private VehicleEntity vehicleEntity;
-    @ManyToOne
+
     private UserEntity userEntity;
 
     @Id
@@ -81,6 +80,7 @@ public class UserReportEntity {
         this.mainPicture = mainPicture;
     }
 
+    @ManyToOne
     public PlaceEntity getPlace() {
         return place;
     }
@@ -89,6 +89,7 @@ public class UserReportEntity {
         this.place = place;
     }
 
+    @ManyToOne
     public VehicleEntity getVehicleEntity() {
         return vehicleEntity;
     }
@@ -97,6 +98,7 @@ public class UserReportEntity {
         this.vehicleEntity = vehicleEntity;
     }
 
+    @ManyToOne
     public UserEntity getUserEntity() {
         return userEntity;
     }

@@ -13,7 +13,6 @@ public class MunicipalityEntity {
     private String password;
     private String passSalt;
 
-    @ManyToOne
     private PlaceEntity placeEntity;
 
 
@@ -55,6 +54,8 @@ public class MunicipalityEntity {
     public void setContractCode(String contractCode) {
         this.contractCode = contractCode;
     }
+
+    @ManyToOne
     public PlaceEntity getPlaceEntity() {
         return placeEntity;
     }
