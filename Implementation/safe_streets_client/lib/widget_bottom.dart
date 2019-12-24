@@ -39,14 +39,12 @@ class _BottomNavigationState extends State<BottomNavigation> {
       _ExtendedBNI.widget(
         icon: const Icon(Icons.place),
         title: Text(l.local(l.AvailableStrings.NAV_AROUND_ME)),
-        child: () => around.AroundMe(),
+        child: () => around.AroundMe(dispatcher: widget.dispatcher),
       ),
       _ExtendedBNI.widget(
         icon: const Icon(Icons.poll),
         title: Text(l.local(l.AvailableStrings.NAV_STATISTICS)),
-        child: () => statistics.Statistics(
-          dispatcher: widget.dispatcher,
-        ),
+        child: () => statistics.Statistics(dispatcher: widget.dispatcher),
       ),
     ];
   }

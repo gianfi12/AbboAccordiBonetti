@@ -52,10 +52,11 @@ void main() {
   });
 
   group('Tests on getHeatMapUri', () {
+    var mock = MockAssetBundle();
+    when(mock.loadString('code.html')).thenAnswer((str) => Future.value(
+        'before/*DATA_PLACEHOLDER*/middle/*POSITION_PLACEHOLDER*/end'));
+
     test('values are correctly substituted', () {
-      var mock = MockAssetBundle();
-      when(mock.loadString('code.html')).thenAnswer((str) => Future.value(
-          'before/*DATA_PLACEHOLDER*/middle/*POSITION_PLACEHOLDER*/end'));
       var result = getHeatMapURI(
         mock,
         true,
@@ -69,6 +70,20 @@ void main() {
           result,
           completion(
               'beforenew google.maps.LatLng(1.0, 2.0),middlecenter: {lat: 3.0, lng: 4.0},end'));
+    });
+
+    test('with empty list', () {
+      var result = getHeatMapURI(
+        mock,
+        true,
+        Future.value([]),
+        DevicePosition(latitude: 3, longitude: 4),
+      ).then((uri) => uri.data.contentText
+          .replaceAll('%20', ' ')
+          .replaceAll('%7B', '{')
+          .replaceAll('%7D', '}'));
+      expect(
+          result, completion('beforemiddlecenter: {lat: 3.0, lng: 4.0},end'));
     });
   });
 }

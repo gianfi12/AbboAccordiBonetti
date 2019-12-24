@@ -33,7 +33,7 @@ dependencies:
   #The following allows to request specific permissions.
   permission: ^0.1.5
 
-  #The following allow to handle properly dates and time.
+  #The following allows to handle properly dates and time.
   intl: ^0.16.0
 
   #The following allows to show a web page in Flutter.

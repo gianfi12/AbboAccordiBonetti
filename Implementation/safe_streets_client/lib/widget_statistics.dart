@@ -14,13 +14,13 @@ class Statistics extends StatefulWidget {
   const Statistics({Key key, @required this.dispatcher}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => StatisticsState();
+  State<StatefulWidget> createState() => _StatisticsState();
 }
 
 //TODO(hig): decide and implement how to handle web version (no position).
 //TODO(low): side bar menu.
 /// A state for the statistics class.
-class StatisticsState extends State<Statistics> {
+class _StatisticsState extends State<Statistics> {
   /// The items for the current statistic.
   final List<model.StatisticsItem> _statisticsItems = <model.StatisticsItem>[];
 
@@ -100,7 +100,7 @@ class StatisticsState extends State<Statistics> {
   /// Called when the user selects a statistics type, changes the statistic displayed.
   void _valueChanged(String value) async {
     device.hasPositionPermissions().then((has) async {
-      var pos = await device.getDevicePosition();
+      var pos = await device.getDevicePosition(context);
       widget.dispatcher
           .requestDataAnalysis(statisticsType: value, location: pos)
           .then((items) => setState(() {

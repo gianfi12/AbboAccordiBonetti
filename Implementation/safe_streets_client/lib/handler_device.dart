@@ -11,9 +11,10 @@ import 'handler_localization.dart' as l;
 import 'handler_model.dart' as model;
 
 /// Returns a future indicating whether the app has location permissions.
-Future<bool> hasPositionPermissions() => checkPerm(
-    Permission.requestPermissions([PermissionName.Location]),
-    PermissionName.Location);
+Future<bool> hasPositionPermissions() => kIsWeb
+    ? Future.value(true)
+    : checkPerm(Permission.requestPermissions([PermissionName.Location]),
+        PermissionName.Location);
 
 /// Returns a future indicating whether the app has camera permissions.
 Future<bool> hasCameraPermissions() => checkPerm(
@@ -44,12 +45,29 @@ Future<bool> checkPerm(Future<List<Permissions>> result, PermissionName name) {
   });
 }
 
+//TODO(med): method to input the position for web.
 /// Returns a future with the device position.
-/// If an exception is thrown, this logs it and rethrows it.
-Future<model.DevicePosition> getDevicePosition() {
+/// If an exception is thrown, this shows a dialog to input the position manually.
+Future<model.DevicePosition> getDevicePosition(BuildContext context) async {
+  assert(context != null);
   Geolocator geo = Geolocator();
   geo.forceAndroidLocationManager = true;
-  return getPos(geo.getCurrentPosition(desiredAccuracy: LocationAccuracy.best));
+  if (!kIsWeb && await geo.isLocationServiceEnabled()) {
+    return getPos(
+        geo.getCurrentPosition(desiredAccuracy: LocationAccuracy.best));
+  }
+  return await showDialog<model.DevicePosition>(
+    context: context,
+    builder: (context) => AlertDialog(
+      actions: <Widget>[
+        MaterialButton(
+          child: Text('Send Default'),
+          onPressed: () => Navigator.pop(context,
+              model.DevicePosition(latitude: 37.775, longitude: -122.434)),
+        ),
+      ],
+    ),
+  );
 }
 
 /// Returns a future with the device position.

@@ -64,7 +64,7 @@ abstract class DispatcherInterface {
   /// Requests a statistics type for the provided [location].
   ///
   /// The [statisticsType] must be in the list returned by [getAvailableStatistics].
-  Future<List<model.StatisticsItem>> requestDataAnalysis({
+  Future<List<model.StatisticsItem>>  requestDataAnalysis({
     @required String statisticsType,
     @required model.DevicePosition location,
   });
@@ -146,6 +146,7 @@ class _MockServer implements DispatcherInterface {
       {String statisticsType, model.DevicePosition location}) {
     switch (statisticsType) {
       case 'STREETS_STAT':
+        //NOTE: for a map centered on DevicePosition(latitude: 37.775, longitude: -122.434)
         var spots = [
           new LatLng(37.782551, -122.445368),
           new LatLng(37.782745, -122.444586),
