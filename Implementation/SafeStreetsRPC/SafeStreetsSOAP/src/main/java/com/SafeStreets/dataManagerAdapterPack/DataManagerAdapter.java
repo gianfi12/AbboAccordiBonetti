@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Stateless
-public class DataManagerAdapter implements UserDataInterface, MunicipalityDataInterface {
+public class DataManagerAdapter implements UserDataInterface, MunicipalityDataInterface, ReportsDataInterface {
     private static final Logger LOGGER = Logger.getLogger(DataManagerAdapter.class.getName());
 
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
@@ -96,13 +96,13 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
 
     @Override
-    public Place checkContractCode(String code) throws MunicipalityNotPresentException {
+    public boolean checkContractCode(String code) throws MunicipalityNotPresentException {
         MunicipalityEntity municipalityEntity= em.find(MunicipalityEntity.class, code);
 
         if(municipalityEntity==null)
             throw new MunicipalityNotPresentException();
 
-        return municipalityEntity.getPlaceEntity().toPlace();
+        return code.equals(municipalityEntity.getContractCode());
     }
 
 
@@ -197,5 +197,25 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         int n=(int)d;
         char c=(char)n;
         return Character.toString(c);
+    }
+
+    @Override
+    public void addUserReport(UserReport userReport) {
+
+    }
+
+    @Override
+    public List<Report> getReports(QueryFilter filter) {
+        return null;
+    }
+
+    @Override
+    public List<UserReport> getUserReports(QueryFilter filter) {
+        return null;
+    }
+
+    @Override
+    public String getAggregatedResult(QueryFilter filter) {
+        return null;
     }
 }
