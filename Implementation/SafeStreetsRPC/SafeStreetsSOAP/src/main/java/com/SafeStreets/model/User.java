@@ -90,7 +90,7 @@ public class User {
 
         newUserEntity.setFiscalCode(getFiscalCode());
 
-        newUserEntity.setDateOfBirth(Date.valueOf(getDateOfBirth()));
+        newUserEntity.setDateOfBirth(DataManagerAdapter.toDateFromLocalDate(getDateOfBirth()));
         newUserEntity.setSalt(DataManagerAdapter.generateSalt());
         newUserEntity.setPassword(DataManagerAdapter.generatePasswordHash(password, newUserEntity.getSalt()));
 

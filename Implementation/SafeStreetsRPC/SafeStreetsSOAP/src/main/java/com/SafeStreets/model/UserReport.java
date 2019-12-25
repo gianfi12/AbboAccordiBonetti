@@ -1,10 +1,11 @@
 package com.SafeStreets.model;
 
+import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.modelEntities.UserReportEntity;
 
 import java.awt.image.BufferedImage;
-import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class UserReport extends Report{
@@ -12,8 +13,8 @@ public class UserReport extends Report{
     private BufferedImage mainPicture;
     private List<BufferedImage> otherPictures;
 
-    public UserReport(Instant reportInstant, Instant instantOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle, User authorUser, BufferedImage mainPicture, List<BufferedImage> otherPictures) {
-        super(reportInstant, instantOfWatchedViolation, place, violationType, description, vehicle);
+    public UserReport(OffsetDateTime reportOffsetDateTime, OffsetDateTime odtOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle, User authorUser, BufferedImage mainPicture, List<BufferedImage> otherPictures) {
+        super(reportOffsetDateTime, odtOfWatchedViolation, place, violationType, description, vehicle);
         this.authorUser = authorUser;
         this.mainPicture = mainPicture;
         this.otherPictures = otherPictures;
@@ -34,8 +35,8 @@ public class UserReport extends Report{
 
     public UserReportEntity toUserReportEntity(String mainPicturePath) {
         UserReportEntity userReportEntity=new UserReportEntity();
-        userReportEntity.setReportTimeStamp(Timestamp.from(getReportInstant()));
-        userReportEntity.setTimeStampOfWatchedViolation(Timestamp.from(getInstantOfWatchedViolation()));
+        userReportEntity.setReportTimeStamp(DataManagerAdapter.toTimestampFromOffsetDateTime(getReportOffsetDateTime()));
+        userReportEntity.setTimeStampOfWatchedViolation(DataManagerAdapter.toTimestampFromOffsetDateTime(getOdtOfWatchedViolation()));
         userReportEntity.setViolationType(getViolationType().toString());
         userReportEntity.setDescription(getDescription());
         userReportEntity.setMainPicture(mainPicturePath);
@@ -47,7 +48,7 @@ public class UserReport extends Report{
     }
 
     public Report toReport() {
-            return new Report(getReportInstant(), getInstantOfWatchedViolation(), getPlace(), getViolationType(),
+            return new Report(getReportOffsetDateTime(), getOdtOfWatchedViolation(), getPlace(), getViolationType(),
                     getDescription(), getVehicle());
     }
 }

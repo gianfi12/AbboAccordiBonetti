@@ -189,6 +189,6 @@ public class UserEntity {
         Place placeOfResidence = placeOfResidenceEntity.toPlace();
 
 
-        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, dateOfBirth.toLocalDate());
+        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, DataManagerAdapter.toLocalDateFromDate(dateOfBirth));
     }
 }

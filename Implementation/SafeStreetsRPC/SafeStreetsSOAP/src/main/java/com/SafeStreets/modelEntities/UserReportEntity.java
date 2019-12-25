@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -139,15 +140,15 @@ public class UserReportEntity {
 
     public UserReport toUserReportWithoutImages() throws ImageReadException {
         List<BufferedImage> otherPictures = new ArrayList<>();
-        Instant instantOfWatchedViolation=null;
+        OffsetDateTime odtOfWatchedViolation=null;
         if(timeStampOfWatchedViolation!=null)
-            instantOfWatchedViolation=timeStampOfWatchedViolation.toInstant();
+            odtOfWatchedViolation=DataManagerAdapter.toOffsetDateTimeFromTimestamp(timeStampOfWatchedViolation);
 
         Vehicle vehicle=null;
         if(vehicleEntity!=null)
             vehicle=vehicleEntity.toVehicle();
 
-        return new UserReport(reportTimeStamp.toInstant(), instantOfWatchedViolation,
+        return new UserReport(DataManagerAdapter.toOffsetDateTimeFromTimestamp(reportTimeStamp), odtOfWatchedViolation,
                 place.toPlace(), ViolationType.valueOf(violationType), description,
                 vehicle,
                 userEntity.toUser(), null, otherPictures);

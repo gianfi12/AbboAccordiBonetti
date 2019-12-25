@@ -1,30 +1,31 @@
 package com.SafeStreets.model;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
 
 public class Report {
-    private Instant reportInstant;
-    private Instant instantOfWatchedViolation;
+    private OffsetDateTime reportOffsetDateTime;
+    private OffsetDateTime odtOfWatchedViolation;
     private Place place;
     private ViolationType violationType;
     private String description;
     private Vehicle vehicle;
 
-    public Report(Instant reportInstant, Instant instantOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle) {
-        this.reportInstant = reportInstant;
-        this.instantOfWatchedViolation = instantOfWatchedViolation;
+    public Report(OffsetDateTime reportOffsetDateTime, OffsetDateTime odtOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle) {
+        this.reportOffsetDateTime = reportOffsetDateTime;
+        this.odtOfWatchedViolation = odtOfWatchedViolation;
         this.place = place;
         this.violationType = violationType;
         this.description = description;
         this.vehicle = vehicle;
     }
 
-    public Instant getReportInstant() {
-        return reportInstant;
+    public OffsetDateTime getReportOffsetDateTime() {
+        return reportOffsetDateTime;
     }
 
-    public Instant getInstantOfWatchedViolation() {
-        return instantOfWatchedViolation;
+    public OffsetDateTime getOdtOfWatchedViolation() {
+        return odtOfWatchedViolation;
     }
 
     public Place getPlace() {

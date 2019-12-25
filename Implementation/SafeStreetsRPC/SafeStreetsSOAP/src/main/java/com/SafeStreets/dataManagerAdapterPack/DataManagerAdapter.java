@@ -14,8 +14,13 @@ import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Logger;
 
 @Stateless
@@ -38,6 +43,8 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private static final String EMPTY_PICTURE_FILENAME ="empty";
     private static final String PICTURE_FORMAT ="png";
     private static final String DOT =".";
+
+    private static final ZoneId ZONEID=TimeZone.getTimeZone("Europe/Rome").toZoneId();
 
 
     @Override
@@ -293,9 +300,23 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
-        String queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
-                "' AND place.city='"+filter.getPlace().getCity()+"'";
+        String queryString="";
+        if(filter.getPlace().getAddress()==null)
+            queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
+                    "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                    "' AND place.city='"+filter.getPlace().getCity()+"'";
+        else if(filter.getPlace().getHouseCode()==null) {
+            queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
+                    "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                    "' AND place.city='"+filter.getPlace().getCity()+"'" +
+                    " AND place.address='"+filter.getPlace().getAddress()+"'";
+        } else {
+            queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
+                    "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                    "' AND place.city='"+filter.getPlace().getCity()+"'" +
+                    " AND place.address='"+filter.getPlace().getAddress()+"'" +
+                    " AND place.houseCode='"+filter.getPlace().getHouseCode()+"'";
+        }
 
         TypedQuery<UserReportEntity> query = em.createQuery(queryString, UserReportEntity.class);
 
@@ -313,5 +334,33 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     @Override
     public String getAggregatedResult(QueryFilter filter) {
         return null;
+    }
+
+    public static OffsetDateTime toOffsetDateTimeFromTimestamp(Timestamp timestamp) {
+        OffsetDateTime odt = OffsetDateTime.ofInstant(timestamp.toInstant(), ZONEID);
+        return odt;
+    }
+
+    public static Timestamp toTimestampFromOffsetDateTime(OffsetDateTime odt) {
+        Timestamp timestamp = Timestamp.valueOf(odt.atZoneSameInstant(ZONEID).toLocalDateTime());
+        return timestamp;
+    }
+
+    public static Date toDateFromLocalDate(LocalDate localDate) {
+        Date date= Date.valueOf(localDate);
+        return date;
+    }
+
+    public static LocalDate toLocalDateFromDate(Date date) {
+        LocalDate localDate=date.toLocalDate();
+        return localDate;
+    }
+
+    public static OffsetDateTime toOffsetDateTimeFromLocalDate(LocalDate localDate) {
+        Instant instant = Instant.now();
+        ZoneOffset currentOffsetForMyZone = ZONEID.getRules().getOffset(instant);
+
+        OffsetDateTime odt=OffsetDateTime.of(localDate, LocalTime.MIDNIGHT, currentOffsetForMyZone);
+        return odt;
     }
 }
