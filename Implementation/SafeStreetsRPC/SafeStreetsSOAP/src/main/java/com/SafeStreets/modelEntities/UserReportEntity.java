@@ -1,7 +1,15 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.exceptions.ImageReadException;
+import com.SafeStreets.model.*;
+
 import javax.persistence.*;
+import java.awt.image.BufferedImage;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -21,6 +29,7 @@ public class UserReportEntity {
     private UserEntity userEntity;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;
@@ -80,7 +89,8 @@ public class UserReportEntity {
         this.mainPicture = mainPicture;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "Place_id")
     public PlaceEntity getPlace() {
         return place;
     }
@@ -89,7 +99,8 @@ public class UserReportEntity {
         this.place = place;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "Vehicle_licensePlate")
     public VehicleEntity getVehicleEntity() {
         return vehicleEntity;
     }
@@ -99,6 +110,7 @@ public class UserReportEntity {
     }
 
     @ManyToOne
+    @JoinColumn(name = "User")
     public UserEntity getUserEntity() {
         return userEntity;
     }
@@ -123,5 +135,21 @@ public class UserReportEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, reportTimeStamp, timeStampOfWatchedViolation, violationType, description, mainPicture);
+    }
+
+    public UserReport toUserReportWithoutImages() throws ImageReadException {
+        List<BufferedImage> otherPictures = new ArrayList<>();
+        Instant instantOfWatchedViolation=null;
+        if(timeStampOfWatchedViolation!=null)
+            instantOfWatchedViolation=timeStampOfWatchedViolation.toInstant();
+
+        Vehicle vehicle=null;
+        if(vehicleEntity!=null)
+            vehicle=vehicleEntity.toVehicle();
+
+        return new UserReport(reportTimeStamp.toInstant(), instantOfWatchedViolation,
+                place.toPlace(), ViolationType.valueOf(violationType), description,
+                vehicle,
+                userEntity.toUser(), null, otherPictures);
     }
 }

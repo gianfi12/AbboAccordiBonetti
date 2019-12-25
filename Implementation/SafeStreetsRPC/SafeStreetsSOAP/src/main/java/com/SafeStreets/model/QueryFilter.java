@@ -1,23 +1,23 @@
 package com.SafeStreets.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class QueryFilter {
-    private Date from;
-    private Date until;
+    private LocalDate from;
+    private LocalDate until;
     private Place place;
 
-    public QueryFilter(Date from, Date until, Place place) {
+    public QueryFilter(LocalDate from, LocalDate until, Place place) {
         this.from = from;
         this.until = until;
         this.place = place;
     }
 
-    public Date getFrom() {
+    public LocalDate getFrom() {
         return from;
     }
 
-    public Date getUntil() {
+    public LocalDate getUntil() {
         return until;
     }
 

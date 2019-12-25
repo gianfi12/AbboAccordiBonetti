@@ -55,7 +55,8 @@ public class MunicipalityEntity {
         this.contractCode = contractCode;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name="Place_id")
     public PlaceEntity getPlaceEntity() {
         return placeEntity;
     }

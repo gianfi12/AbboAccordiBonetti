@@ -17,6 +17,7 @@ public class PlaceEntity {
     private CoordinateEntity coordinateEntity;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;
@@ -56,8 +57,8 @@ public class PlaceEntity {
         this.houseCode = houseCode;
     }
 
-    @OneToOne
-    @JoinColumn(name = "id")
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "Coordinate_id")
     public CoordinateEntity getCoordinateEntity() {
         return coordinateEntity;
     }
@@ -83,6 +84,9 @@ public class PlaceEntity {
     }
 
     public Place toPlace() {
-        return new Place(city, address, houseCode, coordinateEntity.toCoordinate());
+        Coordinate coordinate=null;
+        if(coordinateEntity!=null)
+            coordinate=coordinateEntity.toCoordinate();
+        return new Place(city, address, houseCode, coordinate);
     }
 }

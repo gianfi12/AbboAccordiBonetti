@@ -1,9 +1,9 @@
 package com.SafeStreets.dataManagerAdapterPack;
 
-import com.SafeStreets.*;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.MunicipalityEntity;
+import com.SafeStreets.modelEntities.OtherPictureEntity;
 import com.SafeStreets.modelEntities.UserEntity;
 import com.SafeStreets.modelEntities.UserReportEntity;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
@@ -14,45 +14,56 @@ import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Stateless
 public class DataManagerAdapter implements UserDataInterface, MunicipalityDataInterface, ReportsDataInterface {
     private static final Logger LOGGER = Logger.getLogger(DataManagerAdapter.class.getName());
 
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
+    private static final String PERSISTENCE_UNIT_NAME ="manager1";
+
+    private EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     private EntityManager em = emf.createEntityManager();
 
-    private static final String PICTURESDATAPATH="/Users/max/Desktop/forSE2proj/picturesData/";
-    private static final int SALTLENGTH=16;
+    private static final String PICTURESDATA_PATH ="/Users/max/Desktop/forSE2proj/picturesData/";
+    private static final int SALT_LENGTH =16;
+
+    private static final String PICTURE_FOR_USER ="Picture";
+    private static final String IDCARD_FOR_USER ="IdCard";
+    private static final String MAIN_PICTURE_FOR_REPORT ="MainPicture";
+    private static final String OTHER_PICTURE_FOR_REPORT ="OtherPicture";
+
+    private static final String EMPTY_PICTURE_FILENAME ="empty";
+    private static final String PICTURE_FORMAT ="png";
+    private static final String DOT =".";
+
 
     @Override
     public void addUser(User info, String password) throws ImageStoreException, UserAlreadyPresentException {
         if(exists(info.getUsername()))
             throw new UserAlreadyPresentException();
 
-        String picturePath=saveImage(info.getPicture(), info.getUsername()+"Picture");
+        String picturePath=saveImage(info.getPicture(), info.getUsername()+ PICTURE_FOR_USER);
 
-        String imageIdCardPath=saveImage(info.getImageIdCard(), info.getUsername()+"IdCard");
+        String imageIdCardPath=saveImage(info.getImageIdCard(), info.getUsername()+ IDCARD_FOR_USER);
 
+        em.getTransaction().begin();
         em.persist(info.toUserEntity(password, picturePath, imageIdCardPath));
+        em.getTransaction().commit();
     }
 
-    private String saveImage(BufferedImage image, String id) throws ImageStoreException {
+    private String saveImage(BufferedImage image, String filename) throws ImageStoreException {
         if(image==null) {
-            return PICTURESDATAPATH + "empty.png";
+            return PICTURESDATA_PATH + EMPTY_PICTURE_FILENAME+DOT+PICTURE_FORMAT;
         }
 
-        String imagePath=PICTURESDATAPATH+id;
+        String imagePath= PICTURESDATA_PATH+filename+DOT+PICTURE_FORMAT;
         try
         {
             File outputFile = new File(imagePath);
-            ImageIO.write(image, "png", outputFile);
+            ImageIO.write(image, PICTURE_FORMAT, outputFile);
         }
         catch (Exception e)
         {
@@ -62,9 +73,27 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         return imagePath;
     }
 
+    public static BufferedImage readImage(String imagePath) throws ImageReadException {
+
+        BufferedImage bufferedImage = null;
+        try
+        {
+            bufferedImage = ImageIO.read(new File(imagePath));
+        }
+        catch (Exception e)
+        {
+            throw new ImageReadException();
+        }
+
+        return bufferedImage;
+    }
+
     @Override
-    public User getUser(String username, String password) throws WrongPasswordException, UserNotPresentException  {
+    public User getUser(String username, String password) throws WrongPasswordException, UserNotPresentException, ImageReadException {
+        em.getTransaction().begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
+        em.getTransaction().commit();
+
 
         if(userEntity==null)
             throw new UserNotPresentException();
@@ -76,16 +105,18 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     @Override
-    public void addMunicipality(Place place, String username, String password) throws MunicipalityAlreadyPresentException {
+    public void addMunicipality(Place place, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
         if(exists(username))
             throw new MunicipalityAlreadyPresentException();
 
-        MunicipalityEntity municipalityEntity=new MunicipalityEntity();
+        MunicipalityEntity municipalityEntity=getMunicipalityByPlace(place.getCity());
         municipalityEntity.setName(username);
         municipalityEntity.setPassSalt(generateSalt());
         municipalityEntity.setPassword(generatePasswordHash(password, municipalityEntity.getPassSalt()));
 
+        em.getTransaction().begin();
         em.persist(municipalityEntity);
+        em.getTransaction().commit();
     }
 
     @Override
@@ -98,22 +129,39 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean checkContractCode(String code) {
+        em.getTransaction().begin();
         MunicipalityEntity municipalityEntity= em.find(MunicipalityEntity.class, code);
+        em.getTransaction().commit();
 
         return municipalityEntity!=null;
     }
 
 
 
-    private MunicipalityEntity getMunicipalityByUsername(String name) throws MunicipalityNotPresentException{
-        String queryString = "SELECT * FROM Municipality WHERE name=\""+name+"\"";
+    private MunicipalityEntity getMunicipalityByUsername(String name) throws MunicipalityNotPresentException {
+        String queryString = "FROM MunicipalityEntity WHERE name='"+name+"'";
 
         TypedQuery<MunicipalityEntity> query = em.createQuery(queryString, MunicipalityEntity.class);
 
         List<MunicipalityEntity> municipalityEntityList= query.getResultList();
 
-        if(municipalityEntityList==null || municipalityEntityList.get(0)==null)
+        if(municipalityEntityList==null || municipalityEntityList.isEmpty()
+                || municipalityEntityList.get(0)==null)
             throw new MunicipalityNotPresentException();
+
+        return municipalityEntityList.get(0);
+    }
+
+    private MunicipalityEntity getMunicipalityByPlace(String city) throws PlaceForMunicipalityNotPresentException {
+        String queryString = "FROM MunicipalityEntity WHERE placeEntity.city='"+city+"'";
+
+        TypedQuery<MunicipalityEntity> query = em.createQuery(queryString, MunicipalityEntity.class);
+
+        List<MunicipalityEntity> municipalityEntityList= query.getResultList();
+
+        if(municipalityEntityList==null || municipalityEntityList.isEmpty()
+                || municipalityEntityList.get(0)==null)
+            throw new PlaceForMunicipalityNotPresentException();
 
         return municipalityEntityList.get(0);
     }
@@ -134,7 +182,9 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean checkPassword(String username, String password) {
+        em.getTransaction().begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
+        em.getTransaction().commit();
 
         if(userEntity==null) {
             MunicipalityEntity municipalityEntity;
@@ -152,11 +202,17 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean exists(String username) {
+        em.getTransaction().begin();
         boolean isPresent=em.find(UserEntity.class, username)!=null;
+        em.getTransaction().commit();
+
+        if(isPresent)
+            return true;
+
         try {
-            isPresent=isPresent||getMunicipalityByUsername(username)!=null;
+            isPresent=getMunicipalityByUsername(username)!=null;
         } catch (MunicipalityNotPresentException ignored) {
-            //empty
+            isPresent=false;
         }
 
         return isPresent;
@@ -174,7 +230,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     public static String generateSalt() {
-        return getRandomString(SALTLENGTH);
+        return getRandomString(SALT_LENGTH);
     }
 
     private static String doHash(String stringToHash) {
@@ -198,18 +254,60 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     @Override
-    public void addUserReport(UserReport userReport) {
-        em.persist(userReport);
+    public void addUserReport(UserReport userReport) throws ImageStoreException {
+
+        String mainPicturePath=saveImage(userReport.getMainPicture(), userReport.getAuthorUser().getUsername()+ MAIN_PICTURE_FOR_REPORT);
+
+        em.getTransaction().begin();
+        UserReportEntity userReportEntity=userReport.toUserReportEntity(mainPicturePath);
+        em.persist(userReportEntity);
+        em.getTransaction().commit();
+
+        List<BufferedImage> otherPicturesImages =userReport.getOtherPictures();
+        if(otherPicturesImages!=null) {
+            String otherPicturePath;
+            for(int i=0; i<otherPicturesImages.size(); i++) {
+                otherPicturePath=saveImage(otherPicturesImages.get(i), userReport.getAuthorUser().getUsername()+OTHER_PICTURE_FOR_REPORT+i);
+                OtherPictureEntity otherPictureEntity=new OtherPictureEntity();
+                otherPictureEntity.setPicture(otherPicturePath);
+                otherPictureEntity.setUserReportEntity(userReportEntity);
+
+                em.getTransaction().begin();
+                em.persist(otherPictureEntity);
+                em.getTransaction().commit();
+            }
+        }
+
     }
 
     @Override
-    public List<Report> getReports(QueryFilter filter) {
-        return null;
+    public List<Report> getReports(QueryFilter filter) throws ImageReadException {
+        List<UserReport> userReportList=getUserReports(filter);
+        List<Report> reportList=new ArrayList<>();
+
+        for(UserReport userReport : userReportList)
+            reportList.add(userReport.toReport());
+
+        return reportList;
     }
 
     @Override
-    public List<UserReport> getUserReports(QueryFilter filter) {
-        return null;
+    public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
+        String queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
+                "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                "' AND place.city='"+filter.getPlace().getCity()+"'";
+
+        TypedQuery<UserReportEntity> query = em.createQuery(queryString, UserReportEntity.class);
+
+        List<UserReportEntity> userReportEntityList= query.getResultList();
+
+        List<UserReport> userReportList=new ArrayList<>();
+
+        for (UserReportEntity userReportEntity : userReportEntityList) {
+            userReportList.add(userReportEntity.toUserReportWithoutImages());
+        }
+
+        return userReportList;
     }
 
     @Override

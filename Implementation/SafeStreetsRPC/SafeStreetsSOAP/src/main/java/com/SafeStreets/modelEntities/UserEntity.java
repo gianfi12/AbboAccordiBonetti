@@ -1,12 +1,12 @@
 package com.SafeStreets.modelEntities;
 
+import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.Place;
 import com.SafeStreets.model.User;
 
-import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.sql.Date;
 import java.util.Objects;
 
@@ -131,7 +131,8 @@ public class UserEntity {
         this.salt = salt;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "placeOfBirth_id")
     public PlaceEntity getPlaceOfBirthEntity() {
         return placeOfBirthEntity;
     }
@@ -140,7 +141,8 @@ public class UserEntity {
         this.placeOfBirthEntity = placeOfBirthEntity;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "placeOfResidence_id")
     public PlaceEntity getPlaceOfResidenceEntity() {
         return placeOfResidenceEntity;
     }
@@ -172,32 +174,21 @@ public class UserEntity {
     }
 
 
-    public User toUser() {
-        BufferedImage pictureImage = null;
-        try
-        {
-            pictureImage = ImageIO.read(new File(picture));
-        }
-        catch (Exception ignored)
-        {
-
-        }
+    public User toUser() throws ImageReadException {
+        BufferedImage pictureImage=null;
+        if(picture!=null && !picture.equals(""))
+            pictureImage = DataManagerAdapter.readImage(picture);
 
         BufferedImage idCardImage = null;
-        try
-        {
-            idCardImage = ImageIO.read(new File(idCard));
-        }
-        catch (Exception ignored)
-        {
 
-        }
+        if(idCard!=null && !idCard.equals(""))
+            idCardImage=DataManagerAdapter.readImage(idCard);
 
         Place placeOfBirth = placeOfBirthEntity.toPlace();
 
         Place placeOfResidence = placeOfResidenceEntity.toPlace();
 
 
-        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, dateOfBirth);
+        return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, pictureImage, idCardImage, fiscalCode, dateOfBirth.toLocalDate());
     }
 }

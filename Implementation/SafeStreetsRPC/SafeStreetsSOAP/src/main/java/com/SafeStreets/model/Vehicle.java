@@ -1,5 +1,7 @@
 package com.SafeStreets.model;
 
+import com.SafeStreets.modelEntities.VehicleEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -23,5 +25,11 @@ public class Vehicle {
 
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
+    }
+
+    public VehicleEntity toVehicleEntity() {
+        VehicleEntity vehicleEntity=new VehicleEntity();
+        vehicleEntity.setLicensePlate(licensePlate);
+        return vehicleEntity;
     }
 }

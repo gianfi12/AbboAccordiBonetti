@@ -58,4 +58,10 @@ public class Place {
         placeEntity.setCoordinateEntity(coordinate.toCoordinateEntity());
         return placeEntity;
     }
+
+    public boolean isEqual(Place placeToCompare) {
+        return city.equals(placeToCompare.city)&&address.equals(placeToCompare.address)
+                &&houseCode.equals(placeToCompare.houseCode)
+                &&coordinate.isEqual(placeToCompare.coordinate);
+    }
 }

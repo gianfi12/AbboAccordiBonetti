@@ -1,6 +1,7 @@
 package com.SafeStreets;
 
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
@@ -23,6 +24,8 @@ public class AuthorizationManager {
             LOGGER.log(Level.INFO,"Wrong password!");
         }catch (UserNotPresentException x ){
             LOGGER.log(Level.INFO,"User not present!");
+        } catch (ImageReadException e) {
+            e.printStackTrace();
         }
         try{
             dataManagerAdapter.getMunicipality(username,password);

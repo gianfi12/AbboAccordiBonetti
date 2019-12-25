@@ -1,43 +1,30 @@
 package com.SafeStreets.model;
 
-import java.time.LocalTime;
-import java.util.Date;
+import java.time.Instant;
 
 public class Report {
-    private Date reportDate;
-    private LocalTime reportTime;
-    private Date dateOfWatchedViolation;
-    private LocalTime timeOfWatchedViolation;
+    private Instant reportInstant;
+    private Instant instantOfWatchedViolation;
     private Place place;
     private ViolationType violationType;
     private String description;
     private Vehicle vehicle;
 
-    public Report(Date reportDate, LocalTime reportTime, Date dateOfWatchedViolation, LocalTime timeOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle) {
-        this.reportDate = reportDate;
-        this.reportTime = reportTime;
-        this.dateOfWatchedViolation = dateOfWatchedViolation;
-        this.timeOfWatchedViolation = timeOfWatchedViolation;
+    public Report(Instant reportInstant, Instant instantOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle) {
+        this.reportInstant = reportInstant;
+        this.instantOfWatchedViolation = instantOfWatchedViolation;
         this.place = place;
         this.violationType = violationType;
         this.description = description;
         this.vehicle = vehicle;
     }
 
-    public Date getReportDate() {
-        return reportDate;
+    public Instant getReportInstant() {
+        return reportInstant;
     }
 
-    public LocalTime getReportTime() {
-        return reportTime;
-    }
-
-    public Date getDateOfWatchedViolation() {
-        return dateOfWatchedViolation;
-    }
-
-    public LocalTime getTimeOfWatchedViolation() {
-        return timeOfWatchedViolation;
+    public Instant getInstantOfWatchedViolation() {
+        return instantOfWatchedViolation;
     }
 
     public Place getPlace() {

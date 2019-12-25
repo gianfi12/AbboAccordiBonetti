@@ -12,6 +12,7 @@ public class OtherPictureEntity {
     private UserReportEntity userReportEntity;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     public int getId() {
         return id;
@@ -32,6 +33,7 @@ public class OtherPictureEntity {
     }
 
     @ManyToOne
+    @JoinColumn(name="UserReport_id")
     public UserReportEntity getUserReportEntity() {
         return userReportEntity;
     }

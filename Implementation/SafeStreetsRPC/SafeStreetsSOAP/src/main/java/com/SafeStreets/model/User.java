@@ -4,7 +4,8 @@ import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.modelEntities.UserEntity;
 
 import java.awt.image.BufferedImage;
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class User {
 
@@ -17,9 +18,9 @@ public class User {
     private BufferedImage picture;
     private BufferedImage imageIdCard;
     private String fiscalCode;
-    private Date dateOfBirth;
+    private LocalDate dateOfBirth;
 
-    public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, BufferedImage picture, BufferedImage imageIdCard, String fiscalCode, Date dateOfBirth) {
+    public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, BufferedImage picture, BufferedImage imageIdCard, String fiscalCode, LocalDate dateOfBirth) {
         this.username = username;
         this.email = email;
         this.firstName = firstName;
@@ -68,7 +69,7 @@ public class User {
         return fiscalCode;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
@@ -89,11 +90,21 @@ public class User {
 
         newUserEntity.setFiscalCode(getFiscalCode());
 
-        newUserEntity.setDateOfBirth(new java.sql.Date(getDateOfBirth().getTime()));
+        newUserEntity.setDateOfBirth(Date.valueOf(getDateOfBirth()));
         newUserEntity.setSalt(DataManagerAdapter.generateSalt());
         newUserEntity.setPassword(DataManagerAdapter.generatePasswordHash(password, newUserEntity.getSalt()));
 
         return newUserEntity;
+    }
+
+    public boolean isEqual(User userToCompare) {
+        return username.equals(userToCompare.username)&&email.equals(userToCompare.email)
+                &&firstName.equals(userToCompare.firstName)
+                &&lastName.equals(userToCompare.lastName)
+                &&placeOfBirth.isEqual(userToCompare.placeOfBirth)
+                &&placeOfResidence.isEqual(userToCompare.placeOfResidence)
+                &&fiscalCode.equals(userToCompare.fiscalCode)
+                &&dateOfBirth.isEqual(userToCompare.dateOfBirth);
     }
 
 }

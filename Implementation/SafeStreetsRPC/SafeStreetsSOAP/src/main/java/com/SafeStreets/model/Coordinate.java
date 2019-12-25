@@ -47,4 +47,9 @@ public class Coordinate {
 
         return coordinateEntity;
     }
+
+    public boolean isEqual(Coordinate coordinateToCompare) {
+        return latitude.equals(coordinateToCompare.latitude)&&longitude.equals(coordinateToCompare.longitude)
+                &&altitude.equals(coordinateToCompare.altitude);
+    }
 }
