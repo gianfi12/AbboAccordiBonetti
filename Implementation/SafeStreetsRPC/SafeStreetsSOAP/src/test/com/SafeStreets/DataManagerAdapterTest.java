@@ -10,7 +10,7 @@ import javax.persistence.Persistence;
 
 public class DataManagerAdapterTest {
 
-    @Test
+/*    @Test
     public void getVehicleTest() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
         EntityManager em = emf.createEntityManager();
@@ -18,6 +18,6 @@ public class DataManagerAdapterTest {
 
         System.out.println(v.getLicensePlate());
 
-    }
+    }*/
 
 }

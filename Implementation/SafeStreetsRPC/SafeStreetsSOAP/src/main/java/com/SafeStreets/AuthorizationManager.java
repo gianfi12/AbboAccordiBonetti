@@ -6,8 +6,6 @@ import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.AccessType;
-import org.bouncycastle.jcajce.provider.digest.SHA3;
-import org.bouncycastle.util.encoders.Hex;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
