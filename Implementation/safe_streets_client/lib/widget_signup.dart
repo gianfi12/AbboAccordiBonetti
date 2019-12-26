@@ -192,7 +192,9 @@ class _SignUpState extends State<SignUp> {
         if (outcome) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => bottom.BottomNavigation()),
+            MaterialPageRoute(
+                builder: (context) =>
+                    bottom.BottomNavigation(dispatcher: server)),
             (r) => false,
           );
         } else {
@@ -249,6 +251,8 @@ class _TextFormPlaceholder {
 
 /// Allows the municipality to insert the data to sign up.
 class MunSignUp extends StatefulWidget {
+  MunSignUp({Key key}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => MunSignUpState();
 }
@@ -374,7 +378,10 @@ class MunSignUpState extends State<MunSignUp> {
         if (outcome) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => bottom.BottomNavigation()),
+            MaterialPageRoute(
+                builder: (context) => bottom.BottomNavigation(
+                      dispatcher: server,
+                    )),
             (r) => false,
           );
         } else {

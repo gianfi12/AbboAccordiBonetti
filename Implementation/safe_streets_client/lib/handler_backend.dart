@@ -54,6 +54,8 @@ abstract class DispatcherInterface {
   Future<model.AccessType> login();
 
   /// Sends a new user report and returns true on success.
+  ///
+  /// This must set the [model.Report.author] field.
   Future<bool> newReport({
     @required model.Report report,
   });

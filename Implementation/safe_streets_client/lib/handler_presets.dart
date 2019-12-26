@@ -18,9 +18,11 @@ const String timeFormat = 'HH:mm';
 
 /// The default theme is based on the dark theme with the main color of the app.
 ThemeData getDefaultTheme() => ThemeData.dark().copyWith(
-      buttonTheme: ThemeData.dark().buttonTheme.copyWith(buttonColor: accent),
-      accentColor: accent,
-    );
+    buttonTheme: ThemeData.dark().buttonTheme.copyWith(buttonColor: accent),
+    accentColor: accent,
+    floatingActionButtonTheme: ThemeData.dark()
+        .floatingActionButtonTheme
+        .copyWith(backgroundColor: accent));
 
 /// Returns the logo of the app on a transparent background.
 AssetImage getTransparentLogo() =>

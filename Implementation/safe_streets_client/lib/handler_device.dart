@@ -46,6 +46,7 @@ Future<bool> checkPerm(Future<List<Permissions>> result, PermissionName name) {
 }
 
 //TODO(med): method to input the position for web.
+//TODO(med): handle permissions internally.
 /// Returns a future with the device position.
 /// If an exception is thrown, this shows a dialog to input the position manually.
 Future<model.DevicePosition> getDevicePosition(BuildContext context) async {
@@ -90,25 +91,34 @@ Future<model.DevicePosition> getPos(Future<Position> result) {
 
 /// Prompts the user to choose a picture from the camera or the device.
 ///
+/// If [onlyDevice] is true, then the picture can be chosen only from the gallery.
 /// If the user does not choose a picture, this returns null.
-Future<File> chooseImage(BuildContext context) async {
+Future<File> chooseImage(
+  BuildContext context, {
+  bool onlyDevice = false,
+}) async {
   assert(context != null);
-  final imageSource = await showDialog<ImageSource>(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: Text(l.local(l.AvailableStrings.PHOTO_TEXT)),
-      actions: <Widget>[
-        MaterialButton(
-          child: Text(l.local(l.AvailableStrings.PHOTO_CAMERA)),
-          onPressed: () => Navigator.pop(context, ImageSource.camera),
-        ),
-        MaterialButton(
-          child: Text(l.local(l.AvailableStrings.PHOTO_DEVICE)),
-          onPressed: () => Navigator.pop(context, ImageSource.gallery),
-        ),
-      ],
-    ),
-  );
+  var imageSource;
+  if (onlyDevice) {
+    imageSource = ImageSource.gallery;
+  } else {
+    imageSource = await showDialog<ImageSource>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.local(l.AvailableStrings.PHOTO_TEXT)),
+        actions: <Widget>[
+          MaterialButton(
+            child: Text(l.local(l.AvailableStrings.PHOTO_CAMERA)),
+            onPressed: () => Navigator.pop(context, ImageSource.camera),
+          ),
+          MaterialButton(
+            child: Text(l.local(l.AvailableStrings.PHOTO_DEVICE)),
+            onPressed: () => Navigator.pop(context, ImageSource.gallery),
+          ),
+        ],
+      ),
+    );
+  }
 
   return ImagePicker.pickImage(source: imageSource);
 }

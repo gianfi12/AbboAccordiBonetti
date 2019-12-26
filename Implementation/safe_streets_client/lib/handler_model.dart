@@ -30,10 +30,10 @@ class Report {
   ///The time and date of when the violation happened if different from the report's.
   DateTime violationDateTime;
 
-  ///The image containing the license plate.
+  ///The local path of the image containing the license plate.
   String mainImage;
 
-  ///Other optional images.
+  ///Other local paths of optional images.
   List<String> otherImages;
 
   ///The position of the device or the one inserted by the user.
@@ -56,12 +56,27 @@ class Report {
     @required this.devicePosition,
     @required this.violationType,
     this.plateNumber,
-    @required this.author,
+    this.author,
   })  : assert(deviceDateTime != null),
         assert(mainImage != null),
         assert(devicePosition != null),
-        assert(violationType != null),
-        assert(author != null);
+        assert(violationType != null);
+
+  @override
+  String toString() {
+    return
+      'Report{\n'
+          'deviceDateTime: $deviceDateTime,\n'
+          'violationDateTime: $violationDateTime,\n'
+          'mainImage: $mainImage,\n'
+          'otherImages: $otherImages,\n'
+          'devicePosition: $devicePosition,\n'
+          'violationType: $violationType,\n'
+          'plateNumber: $plateNumber,\n'
+          'author: $author\n}\n';
+  }
+
+
 }
 
 /// The type of access a client can have.
