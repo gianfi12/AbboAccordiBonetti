@@ -1,6 +1,8 @@
 package com.SafeStreets;
 
 import com.SafeStreets.exceptions.MunicipalityNotPresentException;
+import com.SafeStreets.exceptions.RegistrationException;
+import com.SafeStreets.exceptions.UserAlreadyPresentException;
 import com.SafeStreets.model.AccessType;
 import com.SafeStreets.model.User;
 import com.google.gson.Gson;
@@ -41,15 +43,18 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean userRegistration(String info, String password) {
-        RegistrationManager registrationManager= new RegistrationManager();
+        RegistrationManagerInterface registrationManager= new RegistrationManager();
         Type type = new TypeToken<User>(){}.getType();
         User user = gson.fromJson(info,type);
         try {
-            registrationManager.startUserRegistration(user.getUsername());
-        }catch (IllegalStateException e){
+            registrationManager.startUserRegistration(user);
+            registrationManager.finishUserRegistration(user);
+            return true;
+        }catch (UserAlreadyPresentException | RegistrationException e){
             LOGGER.log(Level.INFO,"Error User registration!");
+            registrationManager.abortUserRegistration(user.getUsername());
+            return false;
         }
-        return true;
     }
 
     /**
@@ -63,7 +68,7 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean municipalityRegistration(String code, String username, String password, String dataIntegrationInfo) {
-        RegistrationManager registrationManager = new RegistrationManager();
+        RegistrationManagerInterface registrationManager = new RegistrationManager();
         try{
             registrationManager.municipalityRegistration(code,username,password);
         }catch (MunicipalityNotPresentException e){
@@ -87,33 +92,64 @@ public class Dispatcher implements DispatcherInterface{
         return gson.toJson(accessType,type);
     }
 
+    /**
+     * This method is called by the client when the user prompt a new report that need to be registered
+     * @param username Is the username of the user that send the report
+     * @param password Is the password of the user
+     * @param userReport Is the report send by the user
+     * @return A boolean that indicates if the report has been correctly registered
+     */
     @WebMethod
     @Override
     public Boolean newReport(String username, String password, String userReport) {
         return null;
     }
 
+    /**
+     * getAvailableStatistics is called by the client in order to retreive the possible statistics that the use can perform
+     * @param username Is the username of the user that wants to perform some statistics
+     * @param password Is the password of the user
+     * @return Is a JSON string of a string that contains the available Statistics Type to the user
+     */
     @WebMethod
     @Override
     public List<String> getAvailableStatistics(String username, String password) {
         return null;
     }
 
+    /**
+     * Is the method that perform the analysis request made by the user
+     * @param username Is the username of the use requesting the statistics
+     * @param password Is the user's password
+     * @param statisticsType Is the type of the statistics requested by the user
+     * @param location Is the geographical location on which the analysis must be performed
+     * @return Is a JSON string with the result of the analysis
+     */
     @WebMethod
     @Override
     public List<String> requestDataAnalysis(String username, String password, String statisticsType, String location) {
         return null;
     }
 
-    @WebMethod
-    @Override
-    public List<String> accessReports(String username, String password, String type, String location) {
+    /**
+     * The accessReports method is called when a Municipality wants to get the reports made by the user about their zone
+     * @param username Is the username of the client
+     * @param password Is the password of the client
+     * @param from This date indicates that the municipality is interested in the reports from this date on
+     * @param until This date indicates that the municipality is interested in the reports up to this date
+     * @return Is a list that contains the request reports as a JSON string
+     */
+    public List<String> accessReports(String username,String password,Date from,Date until){
         return null;
     }
 
-    @WebMethod
-    @Override
-    public List<String> getSuggestions(String username, String password, Date from, Date until) {
+    /**
+     * This is the method is used by the municipality to retrieve the suggestions elaborated by the system
+     * @param username Is the username of the municipality
+     * @param password Is the passowrd of the municipality
+     * @return Is a JSON list with the suggestions elaborated by the system
+     */
+    public List<String> getSuggestions(String username, String password){
         return null;
     }
 }

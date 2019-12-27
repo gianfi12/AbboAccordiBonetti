@@ -6,13 +6,15 @@ import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.AccessType;
+import com.SafeStreets.model.Place;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AuthorizationManager {
+public class AuthorizationManager implements AuthorizationManagerInterface{
     private final static Logger LOGGER = Logger.getLogger(AuthorizationManager.class.getName());
 
+    @Override
     public AccessType getAccessType(String username, String password){
         DataManagerAdapter dataManagerAdapter = new DataManagerAdapter();
         try {
@@ -36,4 +38,8 @@ public class AuthorizationManager {
         return AccessType.NOT_REGISTERED;
     }
 
+    @Override
+    public Place getMunicipality(String username) {
+        return null;
+    }
 }
