@@ -190,12 +190,11 @@ class _SignUpState extends State<SignUp> {
       )
           .then((outcome) {
         if (outcome) {
-          Navigator.pushAndRemoveUntil(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    bottom.BottomNavigation(dispatcher: server)),
+            bottom.BottomNavigation.name,
             (r) => false,
+            arguments: server,
           );
         } else {
           _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -376,13 +375,11 @@ class MunSignUpState extends State<MunSignUp> {
       )
           .then((outcome) {
         if (outcome) {
-          Navigator.pushAndRemoveUntil(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-            MaterialPageRoute(
-                builder: (context) => bottom.BottomNavigation(
-                      dispatcher: server,
-                    )),
+            bottom.BottomNavigation.name,
             (r) => false,
+            arguments: server,
           );
         } else {
           _scaffoldKey.currentState.showSnackBar(SnackBar(

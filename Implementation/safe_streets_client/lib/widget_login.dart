@@ -162,13 +162,11 @@ class _LoginFormState extends State<_LoginForm> {
       var server = backend.DispatcherInterface.getNew(_username, _password);
       server.login().then((outcome) {
         if (outcome != model.AccessType.NOT_REGISTERED) {
-          Navigator.pushAndRemoveUntil(
+          Navigator.pushNamedAndRemoveUntil(
             context,
-            MaterialPageRoute(
-                builder: (context) => bottom.BottomNavigation(
-                      dispatcher: server,
-                    )),
+            bottom.BottomNavigation.name,
             (r) => false,
+            arguments: server,
           );
         } else {
           Scaffold.of(context).showSnackBar(SnackBar(

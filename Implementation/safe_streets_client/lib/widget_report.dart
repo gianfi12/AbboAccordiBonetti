@@ -23,7 +23,9 @@ import 'handler_presets.dart' as presets;
 /// * AdditionalInput
 /// * Main route
 class NewReport extends StatefulWidget {
-  NewReport({Key key}) : super(key: key);
+  final backend.DispatcherInterface dispatcher;
+
+  NewReport({Key key, @required this.dispatcher}) : super(key: key);
 
   @override
   _NewReportState createState() => _NewReportState();
@@ -48,7 +50,7 @@ class _NewReportState extends State<NewReport> {
   @override
   Widget build(BuildContext context) {
     if (_hasPermissions && camera != null) {
-      return _CameraMode(camera: camera);
+      return _CameraMode(dispatcher: widget.dispatcher, camera: camera);
     }
 
     //No permissions: show button to get permissions.
@@ -73,10 +75,13 @@ class _NewReportState extends State<NewReport> {
 
 /// A widget to take the first picture, go back or select from device.
 class _CameraMode extends StatefulWidget {
+  final backend.DispatcherInterface dispatcher;
+
   /// The provided camera.
   final CameraDescription camera;
 
-  const _CameraMode({Key key, @required this.camera}) : super(key: key);
+  const _CameraMode({Key key, @required this.camera, @required this.dispatcher})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CameraModeState();
@@ -186,6 +191,7 @@ class _CameraModeState extends State<_CameraMode> {
             this.context,
             MaterialPageRoute(
               builder: (context) => _ChooseCategory(
+                dispatcher: widget.dispatcher,
                 imagePath: imagePath,
               ),
             ),
@@ -215,9 +221,9 @@ class _DisplayPictureScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const IconButton(
+        leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: _abortReport,
+          onPressed: () => _abortReport(context),
         ),
         title: Text(l.local(l.AvailableStrings.REPORT_PICTURE_PREVIEW)),
       ),
@@ -254,10 +260,14 @@ class _DisplayPictureScreen extends StatelessWidget {
 /// Once a category is selected, the user can choose to add information or send
 /// the report. The user can go back to the previous screen or abort the process.
 class _ChooseCategory extends StatefulWidget {
+  final backend.DispatcherInterface dispatcher;
+
   /// The path of the image to preview.
   final String imagePath;
 
-  _ChooseCategory({Key key, @required this.imagePath}) : super(key: key);
+  _ChooseCategory(
+      {Key key, @required this.imagePath, @required this.dispatcher})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ChooseCategoryState();
@@ -284,9 +294,9 @@ class _ChooseCategoryState extends State<_ChooseCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const IconButton(
+        leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: _abortReport,
+          onPressed: () => _abortReport(context),
         ),
         title: Text(l.local(l.AvailableStrings.CATEGORY_CHOOSE)),
       ),
@@ -344,6 +354,7 @@ class _ChooseCategoryState extends State<_ChooseCategory> {
       this.context,
       MaterialPageRoute(
         builder: (context) => AdditionalInputs(
+          dispatcher: widget.dispatcher,
           imagePath: widget.imagePath,
           category: _selected,
           currentPosition: pos,
@@ -355,17 +366,23 @@ class _ChooseCategoryState extends State<_ChooseCategory> {
   /// Requests the position and sends the report.
   void _onSave() async {
     final pos = await device.getDevicePosition(this.context);
-    _sendReport(model.Report(
-      devicePosition: pos,
-      mainImage: widget.imagePath,
-      violationType: _selected,
-      deviceDateTime: DateTime.now(),
-    ));
+    _sendReport(
+      this.context,
+      widget.dispatcher,
+      model.Report(
+        devicePosition: pos,
+        mainImage: widget.imagePath,
+        violationType: _selected,
+        deviceDateTime: DateTime.now(),
+      ),
+    );
   }
 }
 
 /// This allows to insert additional information.
 class AdditionalInputs extends StatefulWidget {
+  final backend.DispatcherInterface dispatcher;
+
   /// The path of the image to preview.
   final String imagePath;
 
@@ -377,6 +394,7 @@ class AdditionalInputs extends StatefulWidget {
 
   AdditionalInputs({
     Key key,
+    @required this.dispatcher,
     @required this.imagePath,
     @required this.category,
     this.currentPosition,
@@ -386,7 +404,6 @@ class AdditionalInputs extends StatefulWidget {
   State<StatefulWidget> createState() => _AdditionalInputsState();
 }
 
-//TODO(hig): parse position.
 //TODO(low): add links between fields.
 //TODO(low): validate non critical fields.
 //TODO(low): set keyboard types.
@@ -442,9 +459,9 @@ class _AdditionalInputsState extends State<AdditionalInputs> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const IconButton(
+        leading: IconButton(
           icon: const Icon(Icons.close),
-          onPressed: _abortReport,
+          onPressed: () => _abortReport(context),
         ),
         title: Text(l.local(l.AvailableStrings.ADD_INFO)),
       ),
@@ -575,6 +592,13 @@ class _AdditionalInputsState extends State<AdditionalInputs> {
     );
   }
 
+  @override
+  void dispose() {
+    dateController.dispose();
+    timeController.dispose();
+    super.dispose();
+  }
+
   /// Allows to pick a date between 2019 and now.
   void _onCalendarDate() async {
     showDatePicker(
@@ -625,25 +649,80 @@ class _AdditionalInputsState extends State<AdditionalInputs> {
   void _onSave() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      _sendReport(model.Report(
-        violationType: widget.category,
-        mainImage: widget.imagePath,
-        devicePosition: widget.currentPosition,
-        deviceDateTime: reportDateTime,
-        plateNumber: plateNumber,
-        violationDateTime: violationDateTime,
-        otherImages: otherImages,
-      ));
+      if (overridePosition == null) {
+        _sendReport(
+          this.context,
+          widget.dispatcher,
+          model.Report(
+            violationType: widget.category,
+            mainImage: widget.imagePath,
+            devicePosition: widget.currentPosition,
+            deviceDateTime: reportDateTime,
+            plateNumber: plateNumber,
+            violationDateTime: violationDateTime,
+            otherImages: otherImages,
+          ),
+        );
+      } else {
+        _sendReport(
+          this.context,
+          widget.dispatcher,
+          model.Report(
+            violationType: widget.category,
+            mainImage: widget.imagePath,
+            position: overridePosition,
+            deviceDateTime: reportDateTime,
+            plateNumber: plateNumber,
+            violationDateTime: violationDateTime,
+            otherImages: otherImages,
+          ),
+        );
+      }
     }
   }
 }
 
-void _abortReport() {
-  print('abort');
-  //TODO(hig): ask confirmation and pop until main.
+/// Asks confirmation and closes the report process without sending it.
+void _abortReport(BuildContext context) async {
+  var exit = await showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(l.local(l.AvailableStrings.CONFIRM_ABORT)),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text(l.local(l.AvailableStrings.CONFIRM_YES)),
+              onPressed: () => Navigator.pop(context, true),
+            ),
+            SimpleDialogOption(
+              child: Text(l.local(l.AvailableStrings.CONFIRM_NO)),
+              onPressed: () => Navigator.pop(context, false),
+            ),
+          ],
+        );
+      });
+  if (exit) Navigator.popUntil(context, (route) => route.isFirst);
 }
 
-void _sendReport(model.Report report) {
-  print('send $report');
-  //TODO(hig): send report.
+/// Tries to send the report and closes the route.
+void _sendReport(BuildContext context, backend.DispatcherInterface dispatcher,
+    model.Report report) async {
+  var success = await dispatcher.newReport(report: report);
+  if (!success) {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: Text(l.local(l.AvailableStrings.REPORT_ERROR)),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text(l.local(l.AvailableStrings.CONFIRM_YES)),
+              onPressed: () => Navigator.pop(context, null),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Navigator.popUntil(context, (route) => route.isFirst);
 }

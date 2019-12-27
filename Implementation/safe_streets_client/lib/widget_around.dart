@@ -149,9 +149,11 @@ class HeatMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      initialData: Center(child: CircularProgressIndicator()),
       future: _widgets.future,
-      builder: (context, wid) => wid.data,
+      builder: (context, wid) {
+        if (wid.connectionState == ConnectionState.done) return wid.data;
+        return const Center(child: const CircularProgressIndicator());
+      },
     );
   }
 

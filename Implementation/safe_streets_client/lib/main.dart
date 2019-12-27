@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'handler_backend.dart' as backend;
 import 'handler_presets.dart' as presets;
+import 'widget_bottom.dart' as bottom;
 import 'widget_login.dart' as login;
 
 /// The entry point for the app.
@@ -19,6 +21,17 @@ class MyApp extends StatelessWidget {
       title: 'SafeStreets',
       theme: presets.getDefaultTheme(),
       home: login.Login(),
+      onGenerateRoute: (settings) {
+        if (settings.name == bottom.BottomNavigation.name) {
+          final backend.DispatcherInterface dispatcher = settings.arguments;
+          return MaterialPageRoute(
+            builder: (context) => bottom.BottomNavigation(
+              dispatcher: dispatcher,
+            ),
+          );
+        }
+        return null;
+      },
     );
   }
 }

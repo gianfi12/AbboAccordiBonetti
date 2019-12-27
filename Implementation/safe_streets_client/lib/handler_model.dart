@@ -22,30 +22,33 @@ class StatisticsItem {
         tail = tail ?? '';
 }
 
-///A report from the user.
+/// A report from the user.
 class Report {
-  ///The time and date of the report.
+  /// The time and date of the report.
   DateTime deviceDateTime;
 
-  ///The time and date of when the violation happened if different from the report's.
+  /// The time and date of when the violation happened if different from the report's.
   DateTime violationDateTime;
 
-  ///The local path of the image containing the license plate.
+  /// The local path of the image containing the license plate.
   String mainImage;
 
-  ///Other local paths of optional images.
+  /// Other local paths of optional images.
   List<String> otherImages;
 
-  ///The position of the device or the one inserted by the user.
+  /// The position of the device.
   DevicePosition devicePosition;
 
-  ///The type of violation.
+  /// The position as a string to be parsed.
+  String position;
+
+  /// The type of violation.
   String violationType;
 
-  ///The plate number if inserted by the user.
+  /// The plate number if inserted by the user.
   String plateNumber;
 
-  ///The author of the report.
+  /// The author of the report.
   String author;
 
   Report({
@@ -53,30 +56,27 @@ class Report {
     this.violationDateTime,
     @required this.mainImage,
     this.otherImages,
-    @required this.devicePosition,
+    this.devicePosition,
+    this.position,
     @required this.violationType,
     this.plateNumber,
     this.author,
   })  : assert(deviceDateTime != null),
         assert(mainImage != null),
-        assert(devicePosition != null),
         assert(violationType != null);
 
   @override
   String toString() {
-    return
-      'Report{\n'
-          'deviceDateTime: $deviceDateTime,\n'
-          'violationDateTime: $violationDateTime,\n'
-          'mainImage: $mainImage,\n'
-          'otherImages: $otherImages,\n'
-          'devicePosition: $devicePosition,\n'
-          'violationType: $violationType,\n'
-          'plateNumber: $plateNumber,\n'
-          'author: $author\n}\n';
+    return 'Report{\n'
+        'deviceDateTime: $deviceDateTime,\n'
+        'violationDateTime: $violationDateTime,\n'
+        'mainImage: $mainImage,\n'
+        'otherImages: $otherImages,\n'
+        'devicePosition: $devicePosition,\n'
+        'violationType: $violationType,\n'
+        'plateNumber: $plateNumber,\n'
+        'author: $author\n}\n';
   }
-
-
 }
 
 /// The type of access a client can have.

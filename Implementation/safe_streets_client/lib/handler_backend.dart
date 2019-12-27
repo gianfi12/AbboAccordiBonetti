@@ -66,7 +66,7 @@ abstract class DispatcherInterface {
   /// Requests a statistics type for the provided [location].
   ///
   /// The [statisticsType] must be in the list returned by [getAvailableStatistics].
-  Future<List<model.StatisticsItem>>  requestDataAnalysis({
+  Future<List<model.StatisticsItem>> requestDataAnalysis({
     @required String statisticsType,
     @required model.DevicePosition location,
   });
@@ -96,8 +96,18 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<List<model.Report>> accessReports({DateTime from, DateTime until}) {
-    // TODO: implement accessReports
-    throw UnimplementedError();
+    List<model.Report> rep = [];
+    for (var i = 0; i < 10; i++) {
+      rep.add(model.Report(
+        deviceDateTime: DateTime.now(),
+        violationDateTime: from.subtract(Duration(hours: i)),
+        mainImage: 'main image',
+        violationType: 'PARKING_NOT_PAYED',
+        position: 'my position $i',
+      ));
+    }
+
+    return Future.delayed(Duration(seconds: 1), () => rep);
   }
 
   @override
@@ -114,16 +124,22 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<List<String>> getSuggestions() {
-    // TODO: implement getSuggestions
-    throw UnimplementedError();
+    List<String> rep = [];
+    for (var i = 0; i < 10; i++) rep.add('Suggestion $i');
+    return Future.delayed(Duration(seconds: 1), () => rep);
   }
 
   @override
   Future<model.AccessType> login() {
     return Future.delayed(Duration(seconds: 1), () {
-      return username == 'no'
-          ? model.AccessType.NOT_REGISTERED
-          : model.AccessType.USER;
+      switch (username) {
+        case 'no':
+          return model.AccessType.NOT_REGISTERED;
+        case 'admin':
+          return model.AccessType.MUNICIPALITY;
+        default:
+          return model.AccessType.USER;
+      }
     });
   }
 
@@ -139,8 +155,8 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<bool> newReport({model.Report report}) {
-    // TODO: implement newReport
-    throw UnimplementedError();
+    print('send $report');
+    return Future.value(true);
   }
 
   @override

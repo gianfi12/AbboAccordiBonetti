@@ -1,13 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'handler_backend.dart' as backend;
 import 'handler_localization.dart' as l;
+import 'handler_model.dart' as model;
 import 'widget_around.dart' as around;
+import 'widget_municipality.dart' as municipality;
 import 'widget_report.dart' as report;
 import 'widget_statistics.dart' as statistics;
 
 /// The main page, with a bottom navigation or a side bar depending on the orientation.
 class BottomNavigation extends StatefulWidget {
+  static final String name = '/bottomNavigation';
   final backend.DispatcherInterface dispatcher;
 
   BottomNavigation({Key key, @required this.dispatcher}) : super(key: key);
@@ -16,7 +20,6 @@ class BottomNavigation extends StatefulWidget {
   _BottomNavigationState createState() => _BottomNavigationState();
 }
 
-//TODO(hig): check permissions
 //TODO(low): ask confirmation before closing when going back.
 /// The state for the main page.
 class _BottomNavigationState extends State<BottomNavigation> {
@@ -24,41 +27,72 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int _currentItem = 1;
 
   /// The items of the bottom bar and their actions.
-  List<_ExtendedBNI> _navigationItems;
+  List<_ExtendedBNI> _navigationItems = [];
+
+  /// THis future controls the setup of the page.
+  Future<void> _ready;
 
   /// Initializes the navigation items.
   @override
   void initState() {
     super.initState();
-    _navigationItems = [
-      _ExtendedBNI.route(
-        icon: const Icon(Icons.photo_camera),
-        title: Text(l.local(l.AvailableStrings.NAV_NEW_REPORT)),
-        child: () => report.NewReport(),
-      ),
-      _ExtendedBNI.widget(
-        icon: const Icon(Icons.place),
-        title: Text(l.local(l.AvailableStrings.NAV_AROUND_ME)),
-        child: () => around.AroundMe(dispatcher: widget.dispatcher),
-      ),
-      _ExtendedBNI.widget(
-        icon: const Icon(Icons.poll),
-        title: Text(l.local(l.AvailableStrings.NAV_STATISTICS)),
-        child: () => statistics.Statistics(dispatcher: widget.dispatcher),
-      ),
-    ];
+    _ready = widget.dispatcher.login().then((accessType) {
+      if (accessType == model.AccessType.USER && !kIsWeb) {
+        _navigationItems.add(_ExtendedBNI.route(
+          icon: const Icon(Icons.photo_camera),
+          title: Text(l.local(l.AvailableStrings.NAV_NEW_REPORT)),
+          child: () => report.NewReport(dispatcher: widget.dispatcher),
+        ));
+      }
+      _navigationItems.addAll([
+        _ExtendedBNI.widget(
+          icon: const Icon(Icons.place),
+          title: Text(l.local(l.AvailableStrings.NAV_AROUND_ME)),
+          child: () => around.AroundMe(dispatcher: widget.dispatcher),
+        ),
+        _ExtendedBNI.widget(
+          icon: const Icon(Icons.poll),
+          title: Text(l.local(l.AvailableStrings.NAV_STATISTICS)),
+          child: () => statistics.Statistics(dispatcher: widget.dispatcher),
+        ),
+      ]);
+      if (accessType == model.AccessType.MUNICIPALITY) {
+        _navigationItems.addAll([
+          _ExtendedBNI.widget(
+            icon: const Icon(Icons.build),
+            title: Text(l.local(l.AvailableStrings.NAV_SUGGESTIONS)),
+            child: () =>
+                municipality.Suggestions(dispatcher: widget.dispatcher),
+          ),
+          _ExtendedBNI.widget(
+            icon: const Icon(Icons.report_problem),
+            title: Text(l.local(l.AvailableStrings.NAV_REPORTS)),
+            child: () =>
+                municipality.AccessReports(dispatcher: widget.dispatcher),
+          ),
+        ]);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        switch (orientation) {
-          case Orientation.landscape:
-            return _buildLandscape();
-          default:
-            return _buildPortrait();
+    return FutureBuilder(
+      future: _ready,
+      builder: (context, connection) {
+        if (connection.connectionState == ConnectionState.done) {
+          return OrientationBuilder(
+            builder: (context, orientation) {
+              switch (orientation) {
+                case Orientation.landscape:
+                  return _buildLandscape();
+                default:
+                  return _buildPortrait();
+              }
+            },
+          );
         }
+        return const Center(child: const CircularProgressIndicator());
       },
     );
   }
@@ -74,7 +108,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
             width: 200,
             child: ListView.separated(
               separatorBuilder: (context, index) => const Divider(),
-              itemCount: 3,
+              itemCount: _navigationItems.length,
               itemBuilder: (context, index) => FlatButton.icon(
                 color: (index == _currentItem)
                     ? Theme.of(context).accentColor
