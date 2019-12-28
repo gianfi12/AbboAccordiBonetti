@@ -55,9 +55,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
         String imageIdCardPath=saveImage(info.getImageIdCard(), info.getUsername()+ IDCARD_FOR_USER);
 
-        em.getTransaction().begin();
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         em.persist(info.toUserEntity(password, picturePath, imageIdCardPath));
-        em.getTransaction().commit();
+        transaction.commit();
     }
 
     private String saveImage(BufferedImage image, String filename) throws ImageStoreException {
@@ -96,9 +97,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public User getUser(String username, String password) throws WrongPasswordException, UserNotPresentException, ImageReadException {
-        em.getTransaction().begin();
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
-        em.getTransaction().commit();
+        transaction.commit();
 
 
         if(userEntity==null)
@@ -111,16 +113,21 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     @Override
-    public void addMunicipality(Place place, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
+    public void addMunicipality(String contractCode, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
         if(exists(username))
             throw new MunicipalityAlreadyPresentException();
 
-        MunicipalityEntity municipalityEntity=getMunicipalityByPlace(place.getCity());
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        MunicipalityEntity municipalityEntity=em.find(MunicipalityEntity.class, contractCode);
+        transaction.commit();
+
         municipalityEntity.setName(username);
         municipalityEntity.setPassSalt(generateSalt());
         municipalityEntity.setPassword(generatePasswordHash(password, municipalityEntity.getPassSalt()));
 
-        em.getTransaction().begin();
+        transaction=em.getTransaction();
+        transaction.begin();
         em.persist(municipalityEntity);
         em.getTransaction().commit();
     }
@@ -135,9 +142,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean checkContractCode(String code) {
-        em.getTransaction().begin();
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         MunicipalityEntity municipalityEntity= em.find(MunicipalityEntity.class, code);
-        em.getTransaction().commit();
+        transaction.commit();
 
         return municipalityEntity!=null;
     }
@@ -147,7 +155,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private MunicipalityEntity getMunicipalityByUsername(String name) throws MunicipalityNotPresentException {
         String queryString = "FROM MunicipalityEntity WHERE name='"+name+"'";
 
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         TypedQuery<MunicipalityEntity> query = em.createQuery(queryString, MunicipalityEntity.class);
+        transaction.commit();
 
         List<MunicipalityEntity> municipalityEntityList= query.getResultList();
 
@@ -161,7 +172,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private MunicipalityEntity getMunicipalityByPlace(String city) throws PlaceForMunicipalityNotPresentException {
         String queryString = "FROM MunicipalityEntity WHERE placeEntity.city='"+city+"'";
 
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         TypedQuery<MunicipalityEntity> query = em.createQuery(queryString, MunicipalityEntity.class);
+        transaction.commit();
 
         List<MunicipalityEntity> municipalityEntityList= query.getResultList();
 
@@ -188,9 +202,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean checkPassword(String username, String password) {
-        em.getTransaction().begin();
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
-        em.getTransaction().commit();
+        transaction.commit();
 
         if(userEntity==null) {
             MunicipalityEntity municipalityEntity;
@@ -208,9 +223,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean exists(String username) {
-        em.getTransaction().begin();
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         boolean isPresent=em.find(UserEntity.class, username)!=null;
-        em.getTransaction().commit();
+        transaction.commit();
 
         if(isPresent)
             return true;
@@ -264,10 +280,12 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
         String mainPicturePath=saveImage(userReport.getMainPicture(), userReport.getAuthorUser().getUsername()+ MAIN_PICTURE_FOR_REPORT);
 
-        em.getTransaction().begin();
         UserReportEntity userReportEntity=userReport.toUserReportEntity(mainPicturePath);
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         em.persist(userReportEntity);
-        em.getTransaction().commit();
+        transaction.commit();
 
         List<BufferedImage> otherPicturesImages =userReport.getOtherPictures();
         if(otherPicturesImages!=null) {
@@ -278,9 +296,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
                 otherPictureEntity.setPicture(otherPicturePath);
                 otherPictureEntity.setUserReportEntity(userReportEntity);
 
-                em.getTransaction().begin();
+                transaction=em.getTransaction();
+                transaction.begin();
                 em.persist(otherPictureEntity);
-                em.getTransaction().commit();
+                transaction.commit();
             }
         }
 
@@ -300,11 +319,11 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
         String queryString="";
-        if(filter.getPlace().getAddress()==null)
+        if(filter.getPlace().getAddress()==null || filter.getPlace().getAddress().equals(""))
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
                     "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
                     "' AND place.city='"+filter.getPlace().getCity()+"'";
-        else if(filter.getPlace().getHouseCode()==null) {
+        else if(filter.getPlace().getHouseCode()==null || filter.getPlace().getHouseCode().equals("")) {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
                     "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
                     "' AND place.city='"+filter.getPlace().getCity()+"'" +
@@ -317,7 +336,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
                     " AND place.houseCode='"+filter.getPlace().getHouseCode()+"'";
         }
 
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         TypedQuery<UserReportEntity> query = em.createQuery(queryString, UserReportEntity.class);
+        transaction.commit();
 
         List<UserReportEntity> userReportEntityList= query.getResultList();
 
@@ -331,8 +353,16 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     @Override
-    public String getAggregatedResult(QueryFilter filter) {
-        return null;
+    public List<Object[]> getAggregatedResult(QueryFilter filter) {
+        if(!filter.isApplyQuery() || filter.getQuery()==null || filter.getQuery().equals(""))
+            return new ArrayList<>();
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        List<Object[]> result= em.createQuery(filter.getQuery()).getResultList();
+        transaction.commit();
+
+        return result;
     }
 
     public static OffsetDateTime toOffsetDateTimeFromTimestamp(Timestamp timestamp) {

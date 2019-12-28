@@ -8,7 +8,7 @@ import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
 
 public interface MunicipalityDataInterface extends ClientDataInterface {
-    void addMunicipality(Place place, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException;
+    void addMunicipality(String contractCode, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException;
     Place getMunicipalityArea(String username) throws MunicipalityNotPresentException;
     boolean checkContractCode(String code);
     Municipality getMunicipality(String username, String password) throws WrongPasswordException, MunicipalityNotPresentException;

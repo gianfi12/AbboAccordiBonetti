@@ -12,5 +12,5 @@ public interface ReportsDataInterface {
     void addUserReport(UserReport userReport) throws ImageStoreException;
     List<Report> getReports(QueryFilter filter) throws ImageReadException;
     List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException;
-    String getAggregatedResult(QueryFilter filter);
+    List<Object[]> getAggregatedResult(QueryFilter filter);
 }
