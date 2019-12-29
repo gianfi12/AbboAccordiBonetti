@@ -1,5 +1,6 @@
 package com.SafeStreets;
 
+import com.SafeStreets.exceptions.ImageStoreException;
 import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.RegistrationException;
 import com.SafeStreets.exceptions.UserAlreadyPresentException;
@@ -48,9 +49,9 @@ public class Dispatcher implements DispatcherInterface{
         User user = gson.fromJson(info,type);
         try {
             registrationManager.startUserRegistration(user);
-            registrationManager.finishUserRegistration(user);
+            registrationManager.finishUserRegistration(user,password);
             return true;
-        }catch (UserAlreadyPresentException | RegistrationException e){
+        }catch (UserAlreadyPresentException | ImageStoreException e){
             LOGGER.log(Level.INFO,"Error User registration!");
             registrationManager.abortUserRegistration(user.getUsername());
             return false;
@@ -87,7 +88,7 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public String login(String username, String password) {
         AuthorizationManager authorizationManager = new AuthorizationManager();
-        AccessType accessType = authorizationManager.getAccessType(username,password);
+        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
         Type type = new TypeToken<AccessType>(){}.getType();
         return gson.toJson(accessType,type);
     }

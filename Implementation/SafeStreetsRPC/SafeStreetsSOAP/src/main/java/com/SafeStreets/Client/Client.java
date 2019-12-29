@@ -8,7 +8,7 @@ public class Client {
         DispatcherService dispatcherService = new DispatcherService();
         Dispatcher dispatcher = dispatcherService.getDispatcherPort();
         Gson gson = new Gson();
-        String response = dispatcher.login("gianfi","password");
+        String response = dispatcher.login("jak4","jak");
         System.out.println(response);
     }
 }

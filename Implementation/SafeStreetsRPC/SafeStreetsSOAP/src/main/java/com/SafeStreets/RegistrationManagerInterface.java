@@ -1,5 +1,6 @@
 package com.SafeStreets;
 
+import com.SafeStreets.exceptions.ImageStoreException;
 import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.RegistrationException;
 import com.SafeStreets.exceptions.UserAlreadyPresentException;
@@ -20,9 +21,10 @@ public interface RegistrationManagerInterface {
     /**
      * This method is called when the users' registration can be performed, and it memorize the user in the system
      * @param info Is the instance of the user that has to be registered
+     * @param password Is the password of the user
      * @throws RegistrationException Is thrown if an error occurs during the registration
      */
-    void finishUserRegistration(User info) throws RegistrationException;
+    void finishUserRegistration(User info,String password) throws UserAlreadyPresentException, ImageStoreException;
 
     /**
      * The abortUserRegistration is used to abort the user registration if some error occours

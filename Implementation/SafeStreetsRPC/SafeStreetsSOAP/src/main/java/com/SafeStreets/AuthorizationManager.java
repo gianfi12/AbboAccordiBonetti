@@ -11,9 +11,21 @@ import com.SafeStreets.model.Place;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is an implementation of the authorization manager, that is responsible of verify the access rights of all the requests
+ */
 public class AuthorizationManager implements AuthorizationManagerInterface{
+    /**
+     * This is the logger of the class
+     */
     private final static Logger LOGGER = Logger.getLogger(AuthorizationManager.class.getName());
 
+    /**
+     * This method return the access type relative to the given user
+     * @param username Is the username of the user that the manager has to retrieve the access type
+     * @param password Is the password of the user
+     * @return Is the access type of the user
+     */
     @Override
     public AccessType getAccessType(String username, String password){
         DataManagerAdapter dataManagerAdapter = new DataManagerAdapter();
@@ -38,6 +50,11 @@ public class AuthorizationManager implements AuthorizationManagerInterface{
         return AccessType.NOT_REGISTERED;
     }
 
+    /**
+     * This method return the jurisdiction area of the municipality
+     * @param username Is the username of the municipality
+     * @return Is the place of the municipality
+     */
     @Override
     public Place getMunicipality(String username) {
         return null;

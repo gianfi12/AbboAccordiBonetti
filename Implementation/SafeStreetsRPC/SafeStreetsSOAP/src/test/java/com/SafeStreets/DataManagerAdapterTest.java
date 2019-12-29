@@ -7,6 +7,7 @@ import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.User;
 import org.junit.Before;
 import org.junit.Test;
+import com.mysql.cj.jdbc.Driver;
 
 public class DataManagerAdapterTest {
     DataManagerAdapter dataManagerAdapter;

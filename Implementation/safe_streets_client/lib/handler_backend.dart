@@ -6,6 +6,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 import 'handler_model.dart' as model;
+import 'package:xml/xml.dart' as xml;
+
+import 'handler_model.dart';
 
 /// An interface that represents the backend.
 ///
@@ -131,16 +134,8 @@ class _MockServer implements DispatcherInterface {
 
   @override
   Future<model.AccessType> login() {
-    return Future.delayed(Duration(seconds: 1), () {
-      switch (username) {
-        case 'no':
-          return model.AccessType.NOT_REGISTERED;
-        case 'admin':
-          return model.AccessType.MUNICIPALITY;
-        default:
-          return model.AccessType.USER;
-      }
-    });
+    var soap = new _SOAPTest(username, password);
+    return soap.login();
   }
 
   @override
@@ -709,8 +704,10 @@ class _MockServer implements DispatcherInterface {
           String idCard,
           String fiscalCode,
           DateTime dateOfBirth,
-          String password}) =>
-      Future(() => true);
+          String password}){
+    var soap = new _SOAPTest(username, password);
+    return soap.userRegistration(username: username,email: email,firstName: firstName,lastName: lastName,placeOfBirth: placeOfBirth,placeOfResidence: placeOfResidence,picture: picture,idCard: idCard,fiscalCode: fiscalCode,dateOfBirth: dateOfBirth,password: password);
+  }
 }
 
 Future<List<String>> getAvailableReportCategories() {
@@ -753,10 +750,7 @@ class _SOAPTest implements DispatcherInterface {
 
   @override
   Future<model.AccessType> login() {
-    loginRequest(this._username, this._password).then((s) {
-      print(s);
-    });
-    return Future(() => model.AccessType.NOT_REGISTERED);
+    return loginRequest(this._username, this._password);
   }
 
   @override
@@ -797,14 +791,46 @@ class _SOAPTest implements DispatcherInterface {
       String fiscalCode,
       DateTime dateOfBirth,
       String password}) {
-    // TODO: implement userRegistration
-    throw UnimplementedError();
+    return userRegistrationRequest(username: username,email: email,firstName: firstName,lastName: lastName,placeOfBirth: placeOfBirth,placeOfResidence: placeOfResidence,picture: picture,idCard: idCard,fiscalCode: fiscalCode,dateOfBirth: dateOfBirth,password: password);
   }
 }
 
-Future<String> loginRequest(String username, String password) async {
+Future<bool> userRegistrationRequest(
+    {String username,
+    String email,
+    String firstName,
+    String lastName,
+    String placeOfBirth,
+    String placeOfResidence,
+    String picture,
+    String idCard,
+    String fiscalCode,
+    DateTime dateOfBirth,
+    String password}) async{
   http.Response response = await http.post(
-    'http://10.42.0.1:8080/SafeStreetsSOAP/DispatcherService',
+    'http://192.168.1.7:8080/SafeStreetsSOAP/DispatcherService',
+    headers: {
+      'content-type': 'text/xml',
+      'SOAPAction': 'http://SafeStreets.com/Dispatcher/userRegistrationRequest',
+    },
+    body: utf8.encode(getSoapUserRegistration(username: username,email: email,firstName: firstName,lastName: lastName,placeOfBirth: placeOfBirth,placeOfResidence: placeOfResidence,picture: picture,idCard: idCard,fiscalCode: fiscalCode,dateOfBirth: dateOfBirth,password: password)),
+  );
+  if (response.statusCode != 200) {
+    print("Respons error from the server");
+    return Future.value(false);
+  }
+  print(response.body);
+  var parser = xml.parse(response.body);
+  var returnElement = parser.findAllElements("return");
+  ///TODO
+  //var access;
+  return Future.value(false);
+}
+
+
+Future<AccessType> loginRequest(String username, String password) async {
+  http.Response response = await http.post(
+    'http://192.168.1.7:8080/SafeStreetsSOAP/DispatcherService',
     headers: {
       'content-type': 'text/xml',
       'SOAPAction': 'http://SafeStreets.com/Dispatcher/loginRequest',
@@ -812,9 +838,21 @@ Future<String> loginRequest(String username, String password) async {
     body: utf8.encode(getSoapLogin(username, password)),
   );
   if (response.statusCode != 200) {
-    //TODO throw exception if the status code is wrong
+    print("Respons error from the server");
+    return Future.value(model.AccessType.NOT_REGISTERED);
   }
-  return Future.value(response.body);
+  var parser = xml.parse(response.body);
+  var returnElement = parser.findAllElements("return");
+  var access;
+  var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
+  if(string=="USER"){
+    access=model.AccessType.USER;
+  }else if (string=="MUNICIPALITY"){
+    access=model.AccessType.MUNICIPALITY;
+  }else{
+    access=model.AccessType.NOT_REGISTERED;
+  }
+  return Future.value(access);
 }
 
 String getSoapLogin(String username, String password) =>
@@ -823,3 +861,24 @@ String getSoapLogin(String username, String password) =>
     ''''</arg0><arg1>''' +
     password +
     ''''</arg1></ns2:login></S:Body></S:Envelope>''';
+
+String getSoapUserRegistration(
+  {String username,
+    String email,
+    String firstName,
+    String lastName,
+    String placeOfBirth,
+    String placeOfResidence,
+    String picture,
+    String idCard,
+    String fiscalCode,
+    DateTime dateOfBirth,
+    String password}){
+  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:userRegistration xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+  //TODO
+  //string = string + ;
+  string = string + ''''</arg0><arg1>''' ;
+  string = string + password;
+  string = string + ''''</arg1></ns2:userRegistration></S:Body></S:Envelope>''';
+  return string;
+}
