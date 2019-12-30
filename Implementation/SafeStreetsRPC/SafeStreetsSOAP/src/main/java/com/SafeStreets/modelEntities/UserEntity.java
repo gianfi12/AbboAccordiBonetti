@@ -29,6 +29,8 @@ public class UserEntity {
     private String password;
     private String salt;
 
+    private Date dateOfRegistration;
+
 
 
     @Id
@@ -131,6 +133,16 @@ public class UserEntity {
         this.salt = salt;
     }
 
+    @Basic
+    @Column(name = "dateOfRegistration")
+    public Date getDateOfRegistration() {
+        return dateOfRegistration;
+    }
+
+    public void setDateOfRegistration(Date dateOfRegistration) {
+        this.dateOfRegistration = dateOfRegistration;
+    }
+
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
     @JoinColumn(name = "placeOfBirth_id")
     public PlaceEntity getPlaceOfBirthEntity() {
@@ -165,12 +177,13 @@ public class UserEntity {
                 Objects.equals(fiscalCode, that.fiscalCode) &&
                 Objects.equals(dateOfBirth, that.dateOfBirth) &&
                 Objects.equals(password, that.password) &&
-                Objects.equals(salt, that.salt);
+                Objects.equals(salt, that.salt) &&
+                Objects.equals(dateOfRegistration, that.dateOfRegistration);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, email, firstname, lastname, picture, idCard, fiscalCode, dateOfBirth, password, salt);
+        return Objects.hash(username, email, firstname, lastname, picture, idCard, fiscalCode, dateOfBirth, password, salt, dateOfRegistration);
     }
 
 

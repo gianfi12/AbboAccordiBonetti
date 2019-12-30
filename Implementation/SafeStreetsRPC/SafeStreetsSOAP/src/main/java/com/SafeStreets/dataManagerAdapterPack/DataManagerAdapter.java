@@ -392,4 +392,14 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         OffsetDateTime odt=OffsetDateTime.of(localDate, LocalTime.MIDNIGHT, currentOffsetForMyZone);
         return odt;
     }
+
+    public static ZoneId getZONEID() {
+        return ZONEID;
+    }
+
+    public static Timestamp toTimestampFromLocalDate(LocalDate localDate) {
+        OffsetDateTime odt = OffsetDateTime.now(ZONEID);
+        Timestamp timestamp = Timestamp.valueOf(odt.atZoneSameInstant(ZONEID).toLocalDateTime());
+        return timestamp;
+    }
 }
