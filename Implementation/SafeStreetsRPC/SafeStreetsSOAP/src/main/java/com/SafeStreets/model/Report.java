@@ -43,4 +43,8 @@ public class Report {
     public Vehicle getVehicle() {
         return vehicle;
     }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
 }

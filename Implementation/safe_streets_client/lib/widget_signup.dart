@@ -127,6 +127,7 @@ class _SignUpState extends State<SignUp> {
         padding: EdgeInsets.all(8.0),
       ),
       Padding(
+        key: ValueKey(l.AvailableStrings.SIGN_DOCUMENT),
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           width: double.maxFinite,
@@ -234,6 +235,7 @@ class _TextFormPlaceholder {
   /// Returns a [TextFormField] with the properties of this class.
   Widget buildTextForm() {
     return Padding(
+      key: ValueKey(label),
       padding: const EdgeInsets.all(8.0),
       child: TextFormField(
         validator: validator,

@@ -10,6 +10,7 @@ import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 
+import javax.ejb.Stateless;
 import java.io.IOException;
 
 
@@ -18,7 +19,7 @@ import java.io.IOException;
  *
  * @author Abbo Giulio A.
  * @see MapsServiceInterface
- */
+ */@Stateless
 class MapsServiceAdapter implements MapsServiceInterface {
     /**
      * The context of the maps service: must be a singleton.

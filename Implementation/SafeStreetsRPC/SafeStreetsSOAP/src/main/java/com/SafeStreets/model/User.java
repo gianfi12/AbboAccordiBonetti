@@ -107,4 +107,11 @@ public class User {
                 &&dateOfBirth.isEqual(userToCompare.dateOfBirth);
     }
 
+    public void setPlaceOfBirth(Place placeOfBirth) {
+        this.placeOfBirth = placeOfBirth;
+    }
+
+    public void setPlaceOfResidence(Place placeOfResidence) {
+        this.placeOfResidence = placeOfResidence;
+    }
 }

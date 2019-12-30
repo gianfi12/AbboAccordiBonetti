@@ -4,6 +4,9 @@ import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.MunicipalityDataInterface;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.*;
+import com.SafeStreets.mapsserviceadapter.GeocodeException;
+import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
+import com.SafeStreets.model.Place;
 import com.SafeStreets.model.User;
 
 import javax.ejb.Stateless;
@@ -21,7 +24,7 @@ public class RegistrationManager implements RegistrationManagerInterface{
     private final static Logger LOGGER = Logger.getLogger(RegistrationManager.class.getName());
 
     /**
-     * This method is called when a user what to perform a registration inside the system, it checks if the user can be registered inside the system
+     * This method is called when a user what to perform a registration inside the system, it checks if the user can be registered inside the system, the user has to send a place that contains only a string with the address
      * @param info Is a User object that contains all the information about the user
      * @throws UserAlreadyPresentException Is thrown if the user cannot be registered inside the system
      */
@@ -31,6 +34,15 @@ public class RegistrationManager implements RegistrationManagerInterface{
         IdentityVerifierInterface identityVerifier = new IdentityVerifierAdapter();
         if(dataManagerAdapter.exists(info.getUsername()) && !identityVerifier.verify(info))
                 throw new UserAlreadyPresentException();
+        try{
+            MapsServiceInterface mapsService = MapsServiceInterface.getInstance();
+            Place placeOfBirth = mapsService.geocoding(info.getPlaceOfBirth().getAddress());
+            Place placeOfResidence = mapsService.geocoding(info.getPlaceOfResidence().getAddress());
+            info.setPlaceOfBirth(placeOfBirth);
+            info.setPlaceOfResidence(placeOfResidence);
+        }catch (GeocodeException e){
+            throw new UserAlreadyPresentException();
+        }
     }
 
     /**

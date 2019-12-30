@@ -51,4 +51,6 @@ public class UserReport extends Report{
             return new Report(getReportOffsetDateTime(), getOdtOfWatchedViolation(), getPlace(), getViolationType(),
                     getDescription(), getVehicle());
     }
+
+
 }
