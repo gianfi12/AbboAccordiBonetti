@@ -3,10 +3,7 @@ package com.SafeStreets;
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.MunicipalityDataInterface;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
-import com.SafeStreets.exceptions.ImageStoreException;
-import com.SafeStreets.exceptions.MunicipalityNotPresentException;
-import com.SafeStreets.exceptions.RegistrationException;
-import com.SafeStreets.exceptions.UserAlreadyPresentException;
+import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.User;
 
 import javax.ejb.Stateless;
@@ -75,10 +72,11 @@ public class RegistrationManager implements RegistrationManagerInterface{
      * @throws MunicipalityNotPresentException Is thrown if the some error occurs during the registration
      */
     @Override
-    public void municipalityRegistration(String code, String username, String password) throws MunicipalityNotPresentException{
+    public void municipalityRegistration(String code, String username, String password) throws MunicipalityNotPresentException, MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
         MunicipalityDataInterface municipalityData = new DataManagerAdapter();
         boolean response = municipalityData.checkContractCode(code);
         if(!response)
             throw new MunicipalityNotPresentException();
+        municipalityData.addMunicipality(code,username,password);
     }
 }

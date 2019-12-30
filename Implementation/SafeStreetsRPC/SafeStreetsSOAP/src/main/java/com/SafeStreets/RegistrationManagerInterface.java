@@ -1,9 +1,6 @@
 package com.SafeStreets;
 
-import com.SafeStreets.exceptions.ImageStoreException;
-import com.SafeStreets.exceptions.MunicipalityNotPresentException;
-import com.SafeStreets.exceptions.RegistrationException;
-import com.SafeStreets.exceptions.UserAlreadyPresentException;
+import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.User;
 
 /**
@@ -39,7 +36,7 @@ public interface RegistrationManagerInterface {
      * @param password This is the password provided by the municipality
      * @throws MunicipalityNotPresentException Is thrown if the some error occurs during the registration
      */
-    void municipalityRegistration(String code,String username, String password) throws MunicipalityNotPresentException;
+    void municipalityRegistration(String code,String username, String password) throws MunicipalityNotPresentException, MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException;
 
     /**
      * This method is used to memorize inside the system the data integration info about the municipality if the municipality offers this possibility

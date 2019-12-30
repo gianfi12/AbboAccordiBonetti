@@ -1,11 +1,9 @@
 package com.SafeStreets;
 
-import com.SafeStreets.exceptions.ImageStoreException;
-import com.SafeStreets.exceptions.MunicipalityNotPresentException;
-import com.SafeStreets.exceptions.RegistrationException;
-import com.SafeStreets.exceptions.UserAlreadyPresentException;
+import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.AccessType;
 import com.SafeStreets.model.User;
+import com.SafeStreets.model.UserReport;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -72,10 +70,14 @@ public class Dispatcher implements DispatcherInterface{
         RegistrationManagerInterface registrationManager = new RegistrationManager();
         try{
             registrationManager.municipalityRegistration(code,username,password);
-        }catch (MunicipalityNotPresentException e){
+            Type type = new TypeToken<DataIntegrationInfo>(){}.getType();
+            DataIntegrationInfo dataIntegrationInfo1 = gson.fromJson(dataIntegrationInfo,type);
+            //TODO register the data integration info
+            return true;
+        }catch (MunicipalityNotPresentException | PlaceForMunicipalityNotPresentException | MunicipalityAlreadyPresentException e){
             LOGGER.log(Level.INFO,"Wrong contract code!");
+            return false;
         }
-        return null;
     }
 
     /**
@@ -103,7 +105,20 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean newReport(String username, String password, String userReport) {
-        return null;
+        AuthorizationManager authorizationManager = new AuthorizationManager();
+        AccessType accessType = authorizationManager.getAccessType(username,password);
+        if(accessType==AccessType.USER){
+            Type type = new TypeToken<UserReport>(){}.getType();
+            UserReport userReport1 = gson.fromJson(userReport,type);
+            ElaborationManager elaborationManager= new ElaborationManager();
+            try {
+                elaborationManager.elaborate(userReport1);
+                return true;
+            }catch (ElaborationException e){
+                LOGGER.log(Level.SEVERE,"Error during the elaboration!");
+            }
+        }
+        return false;
     }
 
     /**
