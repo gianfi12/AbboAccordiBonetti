@@ -35,24 +35,22 @@ public interface MapsServiceInterface {
      *
      * @param place the coordinates to reverse geocode
      * @return a new object with the coordinates and the corresponding address
-     * @throws MapsServiceException.FieldsException  if there are no valid coordinates in the provided place or there are already some translated fields
-     * @throws MapsServiceException.GeocodeException if the reverse geocode is not successful
+     * @throws FieldsException  if there are no valid coordinates in the provided place or there are already some translated fields
+     * @throws GeocodeException if the reverse geocode is not successful
      */
-    Place reverseGeocoding(Place place)
-            throws MapsServiceException.FieldsException, MapsServiceException.GeocodeException;
+    Place reverseGeocoding(Place place) throws FieldsException, GeocodeException;
 
     /**
      * Translates from an address string to coordinates.
      * <p>
      * This will translate the provided address into coordinates and return a
-     * place containing both the translation and the coordinates.
+     * place containing both the address and the coordinates.
      *
      * @param location the address to geocode
      * @return a place with the address and the corresponding coordinates
-     * @throws MapsServiceException.GeocodeException if the geocode is not successful
+     * @throws GeocodeException if the geocode is not successful
      */
-    Place geocoding(String location)
-            throws MapsServiceException.GeocodeException;
+    Place geocoding(String location) throws GeocodeException;
 
     /**
      * Translates from coordinates to address string.
@@ -62,11 +60,10 @@ public interface MapsServiceInterface {
      *
      * @param coordinates the coordinates to reverse geocode
      * @return a place with the coordinates and the corresponding address
-     * @throws MapsServiceException.FieldsException  if the provided coordinates has not valid fields
-     * @throws MapsServiceException.GeocodeException if the geocode is not successful
+     * @throws FieldsException  if the provided coordinates has not valid fields
+     * @throws GeocodeException if the geocode is not successful
      */
-    Place geocoding(Coordinate coordinates)
-            throws MapsServiceException.FieldsException, MapsServiceException.GeocodeException;
+    Place geocoding(Coordinate coordinates) throws FieldsException, GeocodeException;
 
     /**
      * Returns whether the provided place is in a generic location, based on
@@ -82,9 +79,8 @@ public interface MapsServiceInterface {
      * @param place    the place to check
      * @param location the common name of a location
      * @return whether the place is inside a location with the given name
-     * @throws MapsServiceException.FieldsException  if place fields are not valid
-     * @throws MapsServiceException.GeocodeException if the location was not recognized
+     * @throws FieldsException  if place fields are not valid
+     * @throws GeocodeException if the location was not recognized
      */
-    boolean isPlaceInLocation(Place place, String location)
-            throws MapsServiceException.FieldsException, MapsServiceException.GeocodeException;
+    boolean isPlaceInLocation(Place place, String location) throws FieldsException, GeocodeException;
 }

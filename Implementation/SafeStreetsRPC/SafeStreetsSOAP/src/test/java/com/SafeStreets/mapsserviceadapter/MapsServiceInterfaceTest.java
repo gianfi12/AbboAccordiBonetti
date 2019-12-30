@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-/*
- * Author: Abbo Giulio A.
- */
 class MapsServiceInterfaceTest {
     // Test that the factory method does not return null.
     @Test
