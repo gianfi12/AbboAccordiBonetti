@@ -52,4 +52,9 @@ public class Coordinate {
         return latitude.equals(coordinateToCompare.latitude)&&longitude.equals(coordinateToCompare.longitude)
                 &&altitude.equals(coordinateToCompare.altitude);
     }
+
+    @Override
+    public String toString() {
+        return "lat: "+latitude+", long: "+longitude+", alt: "+altitude;
+    }
 }

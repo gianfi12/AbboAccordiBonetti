@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Statistic {
-    private Place street;
+    private String street;
     private List<Coordinate> coordinateListForStreet;
     private int numberOfViolationsInStreet;
     private int numberOfReports;
@@ -19,10 +19,6 @@ public class Statistic {
 
     public Statistic(StatisticType statisticType) {
         this.statisticType = statisticType;
-    }
-
-    public Place getStreet() {
-        return street;
     }
 
     public int getNumberOfViolationsInStreet() {
@@ -55,10 +51,6 @@ public class Statistic {
 
     public StatisticType getStatisticType() {
         return statisticType;
-    }
-
-    public void setStreet(Place street) {
-        this.street = street;
     }
 
     public void setNumberOfViolationsInStreet(int numberOfViolationsInStreet) {
@@ -105,4 +97,11 @@ public class Statistic {
         this.coordinateListForStreet = new ArrayList<>(coordinateListForStreet);
     }
 
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 }

@@ -5,14 +5,16 @@ import java.time.LocalDate;
 public class QueryFilter {
     private boolean isApplyQuery;
     private String query;
+    private boolean isOneResult;
     private boolean isApplyFilter;
     private LocalDate from;
     private LocalDate until;
     private Place place;
 
-    public QueryFilter(String query) {
+    public QueryFilter(String query, boolean isOneResult) {
         this.isApplyQuery=true;
         this.query = query;
+        this.isOneResult=isOneResult;
         this.isApplyFilter=false;
     }
 
@@ -30,6 +32,10 @@ public class QueryFilter {
 
     public String getQuery() {
         return query;
+    }
+
+    public boolean isOneResult() {
+        return isOneResult;
     }
 
     public boolean isApplyFilter() {

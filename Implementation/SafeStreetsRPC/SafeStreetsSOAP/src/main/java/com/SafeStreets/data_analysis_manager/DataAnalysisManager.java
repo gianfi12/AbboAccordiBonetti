@@ -17,7 +17,7 @@ import java.util.*;
 @Stateless
 public class DataAnalysisManager implements DataAnalysisInterface {
     private static final LocalDate FIRST_DATE=LocalDate.of(2000, 12, 1);
-    private static final int DAYS_SAMPLE=7;
+    private static final int DAYS_SAMPLE=21;
 
     /**
      * The constructor is hidden outside the package.
@@ -36,8 +36,8 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         if(to==null)
             to=LocalDate.now(DataManagerAdapter.getZONEID());
 
-        Timestamp fromTS= DataManagerAdapter.toTimestampFromLocalDate(from);
-        Timestamp toTS= DataManagerAdapter.toTimestampFromLocalDate(to);
+        Timestamp fromTS= DataManagerAdapter.toTimestampFromLocalDate(from, true);
+        Timestamp toTS= DataManagerAdapter.toTimestampFromLocalDate(to, false);
 
         switch (statisticType) {
             case STREETS_STAT:
@@ -59,18 +59,14 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
-        /*@Language("SQL") String streetsQuery= "SELECT place, count(*) " +
-                "FROM UserReportEntity " +
-                "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' "+
-                "GROUP BY place.address "+
-                "ORDER BY count(*) DESC";*/
-
-        //TODO
-        @Language("SQL") String streetsQuery= "SELECT place, count(*) " +
-                "FROM UserReportEntity " +
+        @Language("SQL") String streetsQuery= "SELECT uR.place.address, count(*) " +
+                "FROM UserReportEntity AS uR " +
+                "WHERE uR.reportTimeStamp>='"+from+"' AND uR.reportTimeStamp<='"+to+"' AND uR.place.city='"+city+"' "+
+                "GROUP BY uR.place.address "+
                 "ORDER BY count(*) DESC";
 
-        QueryFilter queryFilter=new QueryFilter(streetsQuery);
+
+        QueryFilter queryFilter=new QueryFilter(streetsQuery, false);
 
         List<Object[]> resultList = reportsDataInterface.getAggregatedResult(queryFilter);
 
@@ -79,15 +75,15 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         for(Object[] result : resultList) {
             Statistic statistic=new Statistic(StatisticType.STREETS_STAT);
 
-            Place place=((PlaceEntity) result[0]).toPlace();
-            statistic.setStreet(place);
+            String address=(String) result[0];
+            statistic.setStreet(address);
 
-            @Language("SQL") String coordinatesForStreetQuery= "SELECT place.coordinate " +
-                    "FROM UserReportEntity " +
-                    "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' " +
-                    "AND place.address='"+place.getAddress()+"' ";
+            @Language("SQL") String coordinatesForStreetQuery= "SELECT uR.place.coordinateEntity " +
+                    "FROM UserReportEntity AS uR " +
+                    "WHERE uR.reportTimeStamp>='"+from+"' AND uR.reportTimeStamp<='"+to+"' AND uR.place.city='"+city+"' " +
+                    "AND uR.place.address='"+address+"' ";
 
-            queryFilter=new QueryFilter(coordinatesForStreetQuery);
+            queryFilter=new QueryFilter(coordinatesForStreetQuery, true);
             List<Object[]> coordinatesResultList=reportsDataInterface.getAggregatedResult(queryFilter);
 
             List<Coordinate> coordinates=new ArrayList<>();
@@ -107,7 +103,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     private List<Statistic> getEffectivenessesStatistics(String city, LocalDate from,
                                                          LocalDate to) {
-        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+
 
         LocalDate dateSample=to;
 
@@ -115,51 +111,70 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
         while(dateSample.isAfter(from)) {
 
-            @Language("SQL") String reportsCountQuery= "SELECT count(*) " +
-                    "FROM UserReportEntity " +
-                    "WHERE reportTimeStamp<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample)+"' AND place.city='"+city+"'";
-
-            QueryFilter queryFilter=new QueryFilter(reportsCountQuery);
-
-            List<Object[]> reportsCountResultList = reportsDataInterface.getAggregatedResult(queryFilter);
-            Object[] reportsResult = reportsCountResultList.get(0);
-
-            Statistic statistic=new Statistic(StatisticType.EFFECTIVENESS_STAT);
-            statistic.setNumberOfReports((Integer) reportsResult[0]);
-            statistic.setDate(dateSample);
-
-            String usersCountQuery= "SELECT count(*) " +
-                    "FROM UserEntity " +
-                    "WHERE dateOfRegistration<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample)+"' AND placeOfResidenceEntity.city='"+city+"'";
-
-            queryFilter=new QueryFilter(usersCountQuery);
-
-            List<Object[]> usersCountResultList = reportsDataInterface.getAggregatedResult(queryFilter);
-            Object[] usersResult = usersCountResultList.get(0);
-
-            statistic.setNumberOfUsers((Integer) usersResult[0]);
-            statistic.setReportsNoDivUsersNo(((double) statistic.getNumberOfReports())/((double)  statistic.getNumberOfUsers()));
-            statisticList.add(statistic);
-
+            statisticList.add(getEffectivenessStatistic(city, dateSample));
 
             dateSample=dateSample.minusDays(DAYS_SAMPLE);
+        }
+
+        if(dateSample.isBefore(from)) {
+            statisticList.add(getEffectivenessStatistic(city, from));
         }
 
 
         return statisticList;
     }
 
+    private Statistic getEffectivenessStatistic(String city, LocalDate dateSample) {
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+
+        @Language("SQL") String reportsCountQuery= "SELECT count(*) " +
+                "FROM UserReportEntity AS uR " +
+                "WHERE uR.reportTimeStamp<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample, false)+
+                "' AND uR.place.city='"+city+"'";
+
+        QueryFilter queryFilter=new QueryFilter(reportsCountQuery, true);
+
+        List<Object[]> reportsCountResultList = reportsDataInterface.getAggregatedResult(queryFilter);
+        Object[] reportsResult = reportsCountResultList.get(0);
+
+        Statistic statistic=new Statistic(StatisticType.EFFECTIVENESS_STAT);
+        statistic.setNumberOfReports(Integer.parseInt(reportsResult[0].toString()));
+        statistic.setDate(dateSample);
+
+        @Language("SQL") String usersCountQuery= "SELECT count(*) " +
+                "FROM UserEntity AS u " +
+                "WHERE u.dateOfRegistration<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample, false)+
+                "' AND u.placeOfResidenceEntity.city='"+city+"'";
+
+        queryFilter=new QueryFilter(usersCountQuery, true);
+
+        List<Object[]> usersCountResultList = reportsDataInterface.getAggregatedResult(queryFilter);
+        Object[] usersResult = usersCountResultList.get(0);
+
+        statistic.setNumberOfUsers(Integer.parseInt(usersResult[0].toString()));
+        double reportsNo=(double) statistic.getNumberOfReports();
+        double usersNo=(double)  statistic.getNumberOfUsers();
+        if(usersNo==0) {
+            statistic.setReportsNoDivUsersNo(-1);
+        } else {
+            statistic.setReportsNoDivUsersNo(reportsNo / usersNo);
+        }
+
+        return statistic;
+    }
+
     private List<Statistic> getVehiclesStatistics(String city, Timestamp from,
                                                   Timestamp to) {
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
-        @Language("SQL") String vehicleQuery= "SELECT VehicleEntity, count(*) " +
-                "FROM UserReportEntity, VehicleEntity " +
-                "WHERE vehicleEntity=VehicleEntity AND reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' "+
-                "GROUP BY VehicleEntity "+
+        @Language("SQL") String vehicleQuery= "SELECT uR.vehicleEntity, count(*) " +
+                "FROM UserReportEntity AS uR " +
+                "WHERE uR.reportTimeStamp>='"+from+"' AND uR.reportTimeStamp<='"+to+
+                "' AND uR.place.city='"+city+"' "+
+                "GROUP BY uR.vehicleEntity "+
                 "ORDER BY count(*) DESC";
 
-        QueryFilter queryFilter=new QueryFilter(vehicleQuery);
+        QueryFilter queryFilter=new QueryFilter(vehicleQuery, false);
 
         List<Object[]> resultList = reportsDataInterface.getAggregatedResult(queryFilter);
 
@@ -181,13 +196,13 @@ public class DataAnalysisManager implements DataAnalysisInterface {
                                                     Timestamp to) {
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
-        @Language("SQL") String violationQuery= "SELECT violationType, count(*) " +
-                "FROM UserReportEntity " +
-                "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' "+
-                "GROUP BY violationType "+
+        @Language("SQL") String violationQuery= "SELECT uR.violationType, count(*) " +
+                "FROM UserReportEntity AS uR " +
+                "WHERE uR.reportTimeStamp>='"+from+"' AND uR.reportTimeStamp<='"+to+"' AND uR.place.city='"+city+"' "+
+                "GROUP BY uR.violationType "+
                 "ORDER BY count(*) DESC";
 
-        QueryFilter queryFilter=new QueryFilter(violationQuery);
+        QueryFilter queryFilter=new QueryFilter(violationQuery, false);
 
         List<Object[]> resultList = reportsDataInterface.getAggregatedResult(queryFilter);
 

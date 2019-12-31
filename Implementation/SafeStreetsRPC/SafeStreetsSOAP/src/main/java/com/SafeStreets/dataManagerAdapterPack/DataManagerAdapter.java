@@ -15,10 +15,12 @@ import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.sql.Array;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Logger;
@@ -364,12 +366,22 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public List<Object[]> getAggregatedResult(QueryFilter filter) {
-        if(!filter.isApplyQuery() || filter.getQuery()==null || filter.getQuery().equals(""))
+        if(filter==null || !filter.isApplyQuery() || filter.getQuery()==null || filter.getQuery().equals(""))
             return new ArrayList<>();
 
         EntityTransaction transaction=em.getTransaction();
         transaction.begin();
-        List<Object[]> result= em.createQuery(filter.getQuery()).getResultList();
+        List<Object[]> result=new ArrayList<>();
+        if(filter.isOneResult()) {
+            List<Object> intermediateResult=em.createQuery(filter.getQuery()).getResultList();
+            for(Object object : intermediateResult) {
+                Object[] objects=new Object[1];
+                objects[0]=object;
+                result.add(objects);
+            }
+        } else {
+            result=em.createQuery(filter.getQuery()).getResultList();
+        }
         transaction.commit();
 
         return result;
@@ -407,9 +419,22 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         return ZONEID;
     }
 
-    public static Timestamp toTimestampFromLocalDate(LocalDate localDate) {
-        OffsetDateTime odt = OffsetDateTime.now(ZONEID);
-        Timestamp timestamp = Timestamp.valueOf(odt.atZoneSameInstant(ZONEID).toLocalDateTime());
+    public static Timestamp toTimestampFromLocalDate(LocalDate localDate, boolean isZeroHourAndNot24) {
+        Timestamp timestamp = Timestamp.valueOf(localDate.atStartOfDay());
+        Calendar c=Calendar.getInstance();
+        c.setTimeInMillis(timestamp.getTime());
+        if(isZeroHourAndNot24) {
+            c.set(Calendar.HOUR_OF_DAY, 0);
+            c.set(Calendar.MINUTE, 0);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+        } else {
+            c.set(Calendar.HOUR_OF_DAY, 23);
+            c.set(Calendar.MINUTE, 59);
+            c.set(Calendar.SECOND, 50);
+            c.set(Calendar.MILLISECOND, 0);
+        }
+        timestamp.setTime(c.getTimeInMillis());
         return timestamp;
     }
 }

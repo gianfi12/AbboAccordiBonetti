@@ -74,4 +74,9 @@ public class CoordinateEntity {
     public Coordinate toCoordinate() {
         return new Coordinate(latitude.doubleValue(), longitude.doubleValue(), altitude.doubleValue());
     }
+
+    @Override
+    public String toString() {
+        return "id: "+id+", lat: "+latitude+", long: "+longitude+", alt: "+altitude;
+    }
 }
