@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'handler_backend.dart' as backend;
@@ -160,9 +158,7 @@ class _SignUpState extends State<SignUp> {
   /// Asks the user to choose a photo and saves it.
   void _onImageButton() async {
     device.chooseImage(context).then((file) {
-      if (file != null) {
-        _idCard = base64Encode(file.readAsBytesSync());
-      }
+      if (file != null) _idCard = file.path;
     });
   }
 
