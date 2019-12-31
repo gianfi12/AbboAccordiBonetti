@@ -4,6 +4,7 @@ import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.*;
+import com.SafeStreets.modelEntities.CoordinateEntity;
 import com.SafeStreets.modelEntities.PlaceEntity;
 import com.SafeStreets.modelEntities.VehicleEntity;
 import org.intellij.lang.annotations.Language;
@@ -78,7 +79,23 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         for(Object[] result : resultList) {
             Statistic statistic=new Statistic(StatisticType.STREETS_STAT);
 
-            statistic.setStreet(((PlaceEntity) result[0]).toPlace());
+            Place place=((PlaceEntity) result[0]).toPlace();
+            statistic.setStreet(place);
+
+            @Language("SQL") String coordinatesForStreetQuery= "SELECT place.coordinate " +
+                    "FROM UserReportEntity " +
+                    "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' " +
+                    "AND place.address='"+place.getAddress()+"' ";
+
+            queryFilter=new QueryFilter(coordinatesForStreetQuery);
+            List<Object[]> coordinatesResultList=reportsDataInterface.getAggregatedResult(queryFilter);
+
+            List<Coordinate> coordinates=new ArrayList<>();
+            for(Object[] coordinate : coordinatesResultList) {
+                coordinates.add(((CoordinateEntity) coordinate[0]).toCoordinate());
+            }
+
+            statistic.setCoordinateListForStreet(coordinates);
             statistic.setNumberOfViolationsInStreet(Integer.parseInt(result[1].toString()));
 
             statisticList.add(statistic);
