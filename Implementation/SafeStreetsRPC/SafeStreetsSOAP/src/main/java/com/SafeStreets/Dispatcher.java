@@ -1,9 +1,13 @@
 package com.SafeStreets;
 
+import com.SafeStreets.authorizationmanager.AuthorizationManagerInterface;
+import com.SafeStreets.elaborationmanager.ElaborationManagerInterface;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.AccessType;
+import com.SafeStreets.model.DataIntegrationInfo;
 import com.SafeStreets.model.User;
 import com.SafeStreets.model.UserReport;
+import com.SafeStreets.registrationmanager.RegistrationManagerInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,9 +46,8 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean userRegistration(String info, String password) {
-        RegistrationManagerInterface registrationManager= new RegistrationManager();
-        Type type = new TypeToken<User>(){}.getType();
-        User user = gson.fromJson(info,type);
+        RegistrationManagerInterface registrationManager= RegistrationManagerInterface.getInstance();
+        User user = User.fromJSON(info);
         try {
             registrationManager.startUserRegistration(user);
             registrationManager.finishUserRegistration(user,password);
@@ -67,7 +70,7 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean municipalityRegistration(String code, String username, String password, String dataIntegrationInfo) {
-        RegistrationManagerInterface registrationManager = new RegistrationManager();
+        RegistrationManagerInterface registrationManager = RegistrationManagerInterface.getInstance();
         try{
             registrationManager.municipalityRegistration(code,username,password);
             Type type = new TypeToken<DataIntegrationInfo>(){}.getType();
@@ -89,7 +92,7 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public String login(String username, String password) {
-        AuthorizationManager authorizationManager = new AuthorizationManager();
+        AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
         AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
         Type type = new TypeToken<AccessType>(){}.getType();
         return gson.toJson(accessType,type);
@@ -105,12 +108,12 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean newReport(String username, String password, String userReport) {
-        AuthorizationManager authorizationManager = new AuthorizationManager();
+        AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
         AccessType accessType = authorizationManager.getAccessType(username,password);
         if(accessType==AccessType.USER){
             Type type = new TypeToken<UserReport>(){}.getType();
             UserReport userReport1 = gson.fromJson(userReport,type);
-            ElaborationManager elaborationManager= new ElaborationManager();
+            ElaborationManagerInterface elaborationManager= ElaborationManagerInterface.getInstance();
             try {
                 elaborationManager.elaborate(userReport1);
                 return true;

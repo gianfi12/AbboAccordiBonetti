@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.model;
 
 /**
  * This class contains the information provided by a Municipality in order to retrieve data from their repository

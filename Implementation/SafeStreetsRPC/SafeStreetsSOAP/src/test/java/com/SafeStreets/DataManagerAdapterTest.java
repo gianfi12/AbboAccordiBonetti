@@ -1,6 +1,7 @@
 package com.SafeStreets;
 
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
@@ -10,16 +11,16 @@ import org.junit.Test;
 import com.mysql.cj.jdbc.Driver;
 
 public class DataManagerAdapterTest {
-    DataManagerAdapter dataManagerAdapter;
+    UserDataInterface userDataInterface;
 
     @Before
     public void setUp() throws Exception {
-        dataManagerAdapter = new DataManagerAdapter();
+        userDataInterface = UserDataInterface.getInstance();
     }
 
     @Test
     public void testLogin() throws WrongPasswordException, UserNotPresentException, ImageReadException {
-        User user =dataManagerAdapter.getUser("jak4", "jak");
+        User user =userDataInterface.getUser("jak4", "jak");
         assert (user.getUsername()=="jak4");
     }
 

@@ -86,6 +86,7 @@ class _LoginFormState extends State<_LoginForm> {
           ),
           ButtonBar(
             alignment: MainAxisAlignment.spaceBetween,
+            key: ValueKey(1),
             children: <Widget>[
               _buildRichText(
                 context: context,

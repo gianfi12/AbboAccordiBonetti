@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.elaborationmanager;
 
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
@@ -16,7 +16,7 @@ import javax.ejb.Stateless;
  * This is the class that implements the method of the elaboration manager
  */
 @Stateless
-public class ElaborationManager implements ElaborationManagerInterface {
+class ElaborationManager implements ElaborationManagerInterface {
 
     /**
      * This method is called to elaborate a report sent by a User
@@ -37,7 +37,7 @@ public class ElaborationManager implements ElaborationManagerInterface {
                 throw  new ElaborationException();
             }
         }
-        ReportsDataInterface reportsData= new DataManagerAdapter();
+        ReportsDataInterface reportsData= ReportsDataInterface.getInstance();
         userReport.setPlace(place);
         try {
             reportsData.addUserReport(userReport);

@@ -1,4 +1,5 @@
-package com.SafeStreets;
+package com.SafeStreets.identityverifier;
+
 
 import com.SafeStreets.model.User;
 
@@ -6,6 +7,13 @@ import com.SafeStreets.model.User;
  * This interface defines the methods that the Identity verifier needs to expose to the system
  */
 public interface IdentityVerifierInterface {
+    /**
+     * This method is used to get an instance of the Identity Verifier
+     * @return Is an instance of the Identity Verifier
+     */
+    static IdentityVerifierInterface getInstance() {
+        return new IdentityVerifierAdapter();
+    }
 
     /**
      * This method is used to verify the identity of the user, based on the credentials the user has provided to the system it checks if the person really exists

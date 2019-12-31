@@ -1,6 +1,7 @@
-package com.SafeStreets;
+package com.SafeStreets.authorizationmanager;
 
-import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.dataManagerAdapterPack.MunicipalityDataInterface;
+import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.exceptions.UserNotPresentException;
@@ -8,13 +9,15 @@ import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.AccessType;
 import com.SafeStreets.model.Place;
 
+import javax.ejb.Stateless;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * This class is an implementation of the authorization manager, that is responsible of verify the access rights of all the requests
  */
-public class AuthorizationManager implements AuthorizationManagerInterface{
+@Stateless
+class AuthorizationManager implements AuthorizationManagerInterface{
     /**
      * This is the logger of the class
      */
@@ -28,9 +31,10 @@ public class AuthorizationManager implements AuthorizationManagerInterface{
      */
     @Override
     public AccessType getAccessType(String username, String password){
-        DataManagerAdapter dataManagerAdapter = new DataManagerAdapter();
+        UserDataInterface userData = UserDataInterface.getInstance();
+        MunicipalityDataInterface municipalityData = MunicipalityDataInterface.getInstance();
         try {
-            dataManagerAdapter.getUser(username, password);
+            userData.getUser(username, password);
             return AccessType.USER;
         }catch (WrongPasswordException e){
             LOGGER.log(Level.INFO,"Wrong password!");
@@ -40,7 +44,7 @@ public class AuthorizationManager implements AuthorizationManagerInterface{
             e.printStackTrace();
         }
         try{
-            dataManagerAdapter.getMunicipality(username,password);
+            municipalityData.getMunicipality(username,password);
             return AccessType.MUNICIPALITY;
         }catch (WrongPasswordException e){
             LOGGER.log(Level.INFO,"Wrong password!");

@@ -1,13 +1,20 @@
-package com.SafeStreets;
+package com.SafeStreets.registrationmanager;
 
 import com.SafeStreets.exceptions.*;
+import com.SafeStreets.model.DataIntegrationInfo;
 import com.SafeStreets.model.User;
 
 /**
  * This is the interface that expose the method used to register a user
  */
 public interface RegistrationManagerInterface {
-
+    /**
+     * This method returns an instance of the Registration Manager
+     * @return Is an instance of the Registration Manager
+     */
+    static RegistrationManagerInterface getInstance() {
+        return new RegistrationManager();
+    }
     /**
      * This method is called when a user what to perform a registration inside the system, it checks if the user can be registered inside the system
      * @param info Is a User object that contains all the information about the user

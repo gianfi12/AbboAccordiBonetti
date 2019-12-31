@@ -1,11 +1,12 @@
-package com.SafeStreets;
+package com.SafeStreets.registrationmanager;
 
-import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.MunicipalityDataInterface;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.*;
+import com.SafeStreets.identityverifier.IdentityVerifierInterface;
 import com.SafeStreets.mapsserviceadapter.GeocodeException;
 import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
+import com.SafeStreets.model.DataIntegrationInfo;
 import com.SafeStreets.model.Place;
 import com.SafeStreets.model.User;
 
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  * This class represents the Registration Manager that is responsible of perform the registration of the user and the municipality inside the system
  */
 @Stateless
-public class RegistrationManager implements RegistrationManagerInterface{
+class RegistrationManager implements RegistrationManagerInterface{
     /**
      * This is the logger of the class
      */
@@ -30,8 +31,8 @@ public class RegistrationManager implements RegistrationManagerInterface{
      */
     @Override
     public void startUserRegistration(User info) throws UserAlreadyPresentException{
-        UserDataInterface dataManagerAdapter = new DataManagerAdapter();
-        IdentityVerifierInterface identityVerifier = new IdentityVerifierAdapter();
+        UserDataInterface dataManagerAdapter = UserDataInterface.getInstance();
+        IdentityVerifierInterface identityVerifier = IdentityVerifierInterface.getInstance();
         if(dataManagerAdapter.exists(info.getUsername()) && !identityVerifier.verify(info))
                 throw new UserAlreadyPresentException();
         try{
@@ -53,7 +54,7 @@ public class RegistrationManager implements RegistrationManagerInterface{
      */
     @Override
     public void finishUserRegistration(User info,String password) throws UserAlreadyPresentException,ImageStoreException {
-        UserDataInterface userData = new DataManagerAdapter();
+        UserDataInterface userData = UserDataInterface.getInstance();
         userData.addUser(info, password);
     }
 
@@ -85,7 +86,7 @@ public class RegistrationManager implements RegistrationManagerInterface{
      */
     @Override
     public void municipalityRegistration(String code, String username, String password) throws MunicipalityNotPresentException, MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
-        MunicipalityDataInterface municipalityData = new DataManagerAdapter();
+        MunicipalityDataInterface municipalityData = MunicipalityDataInterface.getInstance();
         boolean response = municipalityData.checkContractCode(code);
         if(!response)
             throw new MunicipalityNotPresentException();

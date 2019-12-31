@@ -1,6 +1,7 @@
 package com.SafeStreets;
 
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
@@ -20,17 +21,16 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class DispatcherTest {
-    DataManagerAdapter dataManagerAdapter;
+    UserDataInterface userDataInterface;
     Dispatcher dispatcher;
     final static Gson gson = new Gson();
 
 
     @Before
     public void setUp() throws Exception {
-        dataManagerAdapter = new DataManagerAdapter();
+        userDataInterface = UserDataInterface.getInstance();
     }
 
     @Test
@@ -52,8 +52,11 @@ public class DispatcherTest {
         dispatcher =  new Dispatcher();
         URL url = Thread.currentThread().getContextClassLoader().getResource("image/document.jpg");
         File file = new File(url.getPath());
-        User user = new User("jak4","jak","Giacomo", "Four", new Place("Milano","Via Lomellina","10",null),new Place("Milan","Piazza Leonardo Da Vinci","32",null), ImageIO.read(file),null,"CSAD234JWEDSAK",LocalDate.of(2000,12,31));
-        //TODO finish test
+        url = Thread.currentThread().getContextClassLoader().getResource("image/user.jpg");
+        File file2 = new File(url.getPath());
+        User user = new User("jak4","jak","Giacomo", "Four", new Place("Milano","Via Lomellina","10",null),new Place("Milan","Piazza Leonardo Da Vinci","32",null), ImageIO.read(file2),ImageIO.read(file),"CSAD234JWEDSAK",LocalDate.of(2000,12,31));
+        String info = user.toJSON();
+        dispatcher.userRegistration(info,"pass");
     }
 
 }
