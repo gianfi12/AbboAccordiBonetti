@@ -11,6 +11,15 @@ import java.util.List;
 
 public interface DataAnalysisInterface {
 
+    /**
+     * Returns a new instance of a class that implements this interface.
+     *
+     * @return a new instance of a class that implements this interface
+     */
+    static DataAnalysisInterface getInstance() {
+        return new DataAnalysisManager();
+    }
+
     List<Statistic> getStatistics(StatisticType statisticType, String city, LocalDate from,
                                   LocalDate to);
     List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException;

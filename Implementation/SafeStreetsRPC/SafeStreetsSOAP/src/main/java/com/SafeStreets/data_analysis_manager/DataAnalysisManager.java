@@ -5,8 +5,8 @@ import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.PlaceEntity;
-import com.SafeStreets.modelEntities.UserReportEntity;
 import com.SafeStreets.modelEntities.VehicleEntity;
+import org.intellij.lang.annotations.Language;
 
 import javax.ejb.Stateless;
 import java.sql.Timestamp;
@@ -17,6 +17,13 @@ import java.util.*;
 public class DataAnalysisManager implements DataAnalysisInterface {
     private static final LocalDate FIRST_DATE=LocalDate.of(2000, 12, 1);
     private static final int DAYS_SAMPLE=7;
+
+    /**
+     * The constructor is hidden outside the package.
+     * Use {@link DataAnalysisInterface#getInstance()}.
+     */
+    DataAnalysisManager() {
+    }
 
     @Override
     public List<Statistic> getStatistics(StatisticType statisticType, String city, LocalDate from,
@@ -49,13 +56,18 @@ public class DataAnalysisManager implements DataAnalysisInterface {
     private List<Statistic> getStreetsViolationsStatistics(String city, Timestamp from,
                                                            Timestamp to) {
 
-        ReportsDataInterface reportsDataInterface = new DataManagerAdapter();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
-        String streetsQuery= "SELECT place, count(*) " +
+        /*@Language("SQL") String streetsQuery= "SELECT place, count(*) " +
                 "FROM UserReportEntity " +
-                "WHERE reportTimeStamp>='"+from+"' and reportTimeStamp<='"+to+"' and place.city='"+city+"' "+
-                "GROUP BY place.street "+
-                "ORDER BY count(*) desc";
+                "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' "+
+                "GROUP BY place.address "+
+                "ORDER BY count(*) DESC";*/
+
+        //TODO
+        @Language("SQL") String streetsQuery= "SELECT place, count(*) " +
+                "FROM UserReportEntity " +
+                "ORDER BY count(*) DESC";
 
         QueryFilter queryFilter=new QueryFilter(streetsQuery);
 
@@ -78,16 +90,17 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     private List<Statistic> getEffectivenessesStatistics(String city, LocalDate from,
                                                          LocalDate to) {
-        ReportsDataInterface reportsDataInterface = new DataManagerAdapter();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
         LocalDate dateSample=to;
 
         List<Statistic> statisticList=new ArrayList<>();
 
         while(dateSample.isAfter(from)) {
-            String reportsCountQuery= "SELECT count(*) " +
+
+            @Language("SQL") String reportsCountQuery= "SELECT count(*) " +
                     "FROM UserReportEntity " +
-                    "WHERE reportTimeStamp<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample)+"' and place.city='"+city+"'";
+                    "WHERE reportTimeStamp<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample)+"' AND place.city='"+city+"'";
 
             QueryFilter queryFilter=new QueryFilter(reportsCountQuery);
 
@@ -100,7 +113,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
             String usersCountQuery= "SELECT count(*) " +
                     "FROM UserEntity " +
-                    "WHERE dateOfRegistration<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample)+"' and placeOfResidenceEntity.city='"+city+"'";
+                    "WHERE dateOfRegistration<='"+DataManagerAdapter.toTimestampFromLocalDate(dateSample)+"' AND placeOfResidenceEntity.city='"+city+"'";
 
             queryFilter=new QueryFilter(usersCountQuery);
 
@@ -108,6 +121,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
             Object[] usersResult = usersCountResultList.get(0);
 
             statistic.setNumberOfUsers((Integer) usersResult[0]);
+            statistic.setReportsNoDivUsersNo(((double) statistic.getNumberOfReports())/((double)  statistic.getNumberOfUsers()));
             statisticList.add(statistic);
 
 
@@ -120,13 +134,13 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     private List<Statistic> getVehiclesStatistics(String city, Timestamp from,
                                                   Timestamp to) {
-        ReportsDataInterface reportsDataInterface = new DataManagerAdapter();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
-        String vehicleQuery= "SELECT VehicleEntity, count(*) " +
+        @Language("SQL") String vehicleQuery= "SELECT VehicleEntity, count(*) " +
                 "FROM UserReportEntity, VehicleEntity " +
-                "WHERE vehicleEntity=VehicleEntity and reportTimeStamp>='"+from+"' and reportTimeStamp<='"+to+"' and place.city='"+city+"' "+
+                "WHERE vehicleEntity=VehicleEntity AND reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' "+
                 "GROUP BY VehicleEntity "+
-                "ORDER BY count(*) desc";
+                "ORDER BY count(*) DESC";
 
         QueryFilter queryFilter=new QueryFilter(vehicleQuery);
 
@@ -148,13 +162,13 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     private List<Statistic> getViolationsStatistics(String city, Timestamp from,
                                                     Timestamp to) {
-        ReportsDataInterface reportsDataInterface = new DataManagerAdapter();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
 
-        String violationQuery= "SELECT violationType, count(*) " +
+        @Language("SQL") String violationQuery= "SELECT violationType, count(*) " +
                 "FROM UserReportEntity " +
-                "WHERE reportTimeStamp>='"+from+"' and reportTimeStamp<='"+to+"' and place.city='"+city+"' "+
+                "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' "+
                 "GROUP BY violationType "+
-                "ORDER BY count(*) desc";
+                "ORDER BY count(*) DESC";
 
         QueryFilter queryFilter=new QueryFilter(violationQuery);
 
@@ -173,7 +187,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
-        ReportsDataInterface reportsDataInterface = new DataManagerAdapter();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
         return reportsDataInterface.getUserReports(filter);
     }
 }

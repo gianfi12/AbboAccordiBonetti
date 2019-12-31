@@ -1,12 +1,16 @@
 package com.SafeStreets.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Statistic {
     private Place street;
+    private List<Coordinate> coordinateListForStreet;
     private int numberOfViolationsInStreet;
     private int numberOfReports;
     private int numberOfUsers;
+    private double reportsNoDivUsersNo;
     private LocalDate date;
     private Vehicle vehicle;
     private int numberOfViolationsOfVehicle;
@@ -84,4 +88,21 @@ public class Statistic {
     public void setViolationType(ViolationType violationType) {
         this.violationType = violationType;
     }
+
+    public double getReportsNoDivUsersNo() {
+        return reportsNoDivUsersNo;
+    }
+
+    public void setReportsNoDivUsersNo(double reportsNoDivUsersNo) {
+        this.reportsNoDivUsersNo = reportsNoDivUsersNo;
+    }
+
+    public List<Coordinate> getCoordinateListForStreet() {
+        return new ArrayList<>(coordinateListForStreet);
+    }
+
+    public void setCoordinateListForStreet(List<Coordinate> coordinateListForStreet) {
+        this.coordinateListForStreet = new ArrayList<>(coordinateListForStreet);
+    }
+
 }

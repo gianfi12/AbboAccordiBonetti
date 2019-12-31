@@ -9,6 +9,15 @@ import com.SafeStreets.model.UserReport;
 import java.util.List;
 
 public interface ReportsDataInterface {
+    /**
+     * Returns a new instance of a class that implements this interface.
+     *
+     * @return a new instance of a class that implements this interface
+     */
+    static ReportsDataInterface getInstance() {
+        return new DataManagerAdapter();
+    }
+
     void addUserReport(UserReport userReport) throws ImageStoreException;
     List<Report> getReports(QueryFilter filter) throws ImageReadException;
     List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException;

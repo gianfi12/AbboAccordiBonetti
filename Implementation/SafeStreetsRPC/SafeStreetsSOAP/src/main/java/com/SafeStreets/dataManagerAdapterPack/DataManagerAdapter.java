@@ -1,5 +1,6 @@
 package com.SafeStreets.dataManagerAdapterPack;
 
+import com.SafeStreets.data_analysis_manager.DataAnalysisInterface;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.MunicipalityEntity;
@@ -31,7 +32,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     private EntityManager em = emf.createEntityManager();
 
-    private static final String PICTURESDATA_PATH ="/Users/max/Desktop/forSE2proj/picturesData/";
+    private static final String PICTURESDATA_PATH ="./picturesData/";
     private static final int SALT_LENGTH =16;
 
     private static final String PICTURE_FOR_USER ="Picture";
@@ -45,6 +46,15 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     private static final ZoneId ZONEID=TimeZone.getTimeZone("Europe/Rome").toZoneId();
 
+    /**
+     * The constructor is hidden outside the package.
+     * Use {@link ClientDataInterface#getInstance()} or
+     * use {@link MunicipalityDataInterface#getInstance()} or
+     * use {@link ReportsDataInterface#getInstance()} or
+     * use {@link UserDataInterface#getInstance()}.
+     */
+    DataManagerAdapter() {
+    }
 
     @Override
     public void addUser(User info, String password) throws ImageStoreException, UserAlreadyPresentException {
@@ -82,7 +92,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     public static BufferedImage readImage(String imagePath) throws ImageReadException {
 
-        BufferedImage bufferedImage = null;
+        BufferedImage bufferedImage;
         try
         {
             bufferedImage = ImageIO.read(new File(imagePath));
