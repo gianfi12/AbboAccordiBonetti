@@ -135,7 +135,7 @@ public class DataAnalysisManagerTest {
 
     @Test
     public void queryTest() {
-        ReportsDataInterface reportsDataInterface= ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsDataInterface= ReportsDataInterface.getReportsDataInstance();
 
         Timestamp from= DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2019, 10, 1), true);
         Timestamp to= DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2019, 12, 31), false);

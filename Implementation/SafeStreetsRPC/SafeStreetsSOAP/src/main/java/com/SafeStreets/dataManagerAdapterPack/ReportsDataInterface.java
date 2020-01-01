@@ -14,7 +14,7 @@ public interface ReportsDataInterface {
      *
      * @return a new instance of a class that implements this interface
      */
-    static ReportsDataInterface getInstance() {
+    static ReportsDataInterface getReportsDataInstance() {
         return new DataManagerAdapter();
     }
 

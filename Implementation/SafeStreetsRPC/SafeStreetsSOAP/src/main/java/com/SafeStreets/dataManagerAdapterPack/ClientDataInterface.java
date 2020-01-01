@@ -10,7 +10,7 @@ public interface ClientDataInterface {
      *
      * @return a new instance of a class that implements this interface
      */
-    static ClientDataInterface getInstance() {
+    static ClientDataInterface getClientDataInstance() {
         return new DataManagerAdapter();
     }
 

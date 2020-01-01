@@ -10,7 +10,7 @@ public interface UserDataInterface extends ClientDataInterface {
      *
      * @return a new instance of a class that implements this interface
      */
-    static UserDataInterface getInstance() {
+    static UserDataInterface getUserDataInstance() {
         return new DataManagerAdapter();
     }
 

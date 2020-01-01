@@ -57,7 +57,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
     private List<Statistic> getStreetsViolationsStatistics(String city, Timestamp from,
                                                            Timestamp to) {
 
-        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
 
         @Language("SQL") String streetsQuery= "SELECT uR.place.address, count(*) " +
                 "FROM UserReportEntity AS uR " +
@@ -125,7 +125,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
     }
 
     private Statistic getEffectivenessStatistic(String city, LocalDate dateSample) {
-        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
 
         @Language("SQL") String reportsCountQuery= "SELECT count(*) " +
                 "FROM UserReportEntity AS uR " +
@@ -165,7 +165,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     private List<Statistic> getVehiclesStatistics(String city, Timestamp from,
                                                   Timestamp to) {
-        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
 
         @Language("SQL") String vehicleQuery= "SELECT uR.vehicleEntity, count(*) " +
                 "FROM UserReportEntity AS uR " +
@@ -194,7 +194,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     private List<Statistic> getViolationsStatistics(String city, Timestamp from,
                                                     Timestamp to) {
-        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
 
         @Language("SQL") String violationQuery= "SELECT uR.violationType, count(*) " +
                 "FROM UserReportEntity AS uR " +
@@ -219,7 +219,7 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
-        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
         return reportsDataInterface.getUserReports(filter);
     }
 }

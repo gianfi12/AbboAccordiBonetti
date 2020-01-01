@@ -15,7 +15,7 @@ public interface MunicipalityDataInterface extends ClientDataInterface {
      *
      * @return a new instance of a class that implements this interface
      */
-    static MunicipalityDataInterface getInstance() {
+    static MunicipalityDataInterface getMunicipalityDataInstance() {
         return new DataManagerAdapter();
     }
 
