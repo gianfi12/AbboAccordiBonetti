@@ -46,4 +46,8 @@ public class Report {
     public void setPlace(Place place) {
         this.place = place;
     }
+    public static Report fromJSON(String jsonString){
+        //TODO
+        return null;
+    }
 }

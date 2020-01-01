@@ -1,22 +1,17 @@
 package com.SafeStreets.model;
 
-import com.SafeStreets.Dispatcher;
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.mapsserviceadapter.GeocodeException;
 import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
 import com.SafeStreets.modelEntities.UserEntity;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import org.apache.commons.codec.binary.Base64OutputStream;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Type;
-import java.sql.Date;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -26,7 +21,7 @@ public class User {
     /**
      * This is used to print log message if an error occurs
      */
-    private final static Logger LOGGER = Logger.getLogger(Dispatcher.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(User.class.getName());
 
     private String username;
     private String email;
