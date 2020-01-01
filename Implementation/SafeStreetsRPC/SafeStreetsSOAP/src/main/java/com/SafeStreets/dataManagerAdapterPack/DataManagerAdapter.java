@@ -34,7 +34,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     private EntityManager em = emf.createEntityManager();
 
-    private static final String PICTURESDATA_PATH ="./picturesData/";
+    private static final String PICTURESDATA_PATH ="../picturesData/";
     private static final int SALT_LENGTH =16;
 
     private static final String PICTURE_FOR_USER ="Picture";

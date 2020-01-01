@@ -16,10 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.xml.crypto.Data;
 
 import java.awt.image.BufferedImage;
@@ -39,7 +36,7 @@ public class DataManagerAdapterTest {
     private static EntityManager em;
     private static DataManagerAdapter dataManagerAdapter;
 
-    private static final String PICTURESDATA_PATH ="./picturesData/";
+    private static final String PICTURESDATA_PATH ="../picturesData/";
     private static final String PICTURESDATA_TEST_PATH ="image/";
 
     @BeforeClass
@@ -67,17 +64,59 @@ public class DataManagerAdapterTest {
 
         dataManagerAdapter.addUser(user, password);
 
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
+        transaction.commit();
+
         assertEquals(DataManagerAdapter.generatePasswordHash(password, userEntity.getSalt()), userEntity.getPassword());
-        assertEquals(userEntity.getPicture(), PICTURESDATA_PATH+username+"Picture"+".png");
-        assertEquals(userEntity.getIdCard(), PICTURESDATA_PATH+username+"IdCard"+".png");
+        assertEquals(PICTURESDATA_PATH+username+"Picture"+".png", userEntity.getPicture());
+        assertEquals(PICTURESDATA_PATH+username+"IdCard"+".png", userEntity.getIdCard());
 
         User savedUser = userEntity.toUser();
         assertTrue(user.isEqual(savedUser));
 
-        em.getTransaction().begin();
+        transaction=em.getTransaction();
+        transaction.begin();
         em.remove(userEntity);
-        em.getTransaction().commit();
+        transaction.commit();
+    }
+
+    @Test
+    public void addUserTest2() throws UserAlreadyPresentException, ImageStoreException, ImageReadException {
+
+        String password="not_a_password";
+        BufferedImage pictureImage = readImageFromResourcesImage(PICTURESDATA_TEST_PATH+"pictureBobTest.png");
+
+        BufferedImage idCardImage = readImageFromResourcesImage(PICTURESDATA_TEST_PATH+"idBobTest.png");
+
+        Coordinate birthCoordinate=new Coordinate(45.4642035,9.189982,0.0);
+        Coordinate residenceCoordinate=new Coordinate(45.462035,9.189982,0.0);
+        Place placeOfBirth = new Place("Milan", "", "", birthCoordinate);
+
+        Place placeOfResidence = new Place("Milan", "", "", residenceCoordinate);
+
+        String username="user";
+        User user = new User(username, "user@mail.com", "Real", "User", placeOfBirth, placeOfResidence, pictureImage, idCardImage, "SDCHSDC127NASD", LocalDate.of(1995,11,23));
+
+        dataManagerAdapter.addUser(user, password);
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        UserEntity userEntity=em.find(UserEntity.class, username);
+        transaction.commit();
+
+        assertEquals(DataManagerAdapter.generatePasswordHash(password, userEntity.getSalt()), userEntity.getPassword());
+        assertEquals(PICTURESDATA_PATH+username+"Picture"+".png", userEntity.getPicture());
+        assertEquals(PICTURESDATA_PATH+username+"IdCard"+".png", userEntity.getIdCard());
+
+        User savedUser = userEntity.toUser();
+        assertTrue(user.isEqual(savedUser));
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.remove(userEntity);
+        transaction.commit();
     }
 
 

@@ -55,7 +55,8 @@ public class Place {
         placeEntity.setCity(city);
         placeEntity.setAddress(address);
         placeEntity.setHouseCode(houseCode);
-        placeEntity.setCoordinateEntity(coordinate.toCoordinateEntity());
+        if(coordinate!=null)
+            placeEntity.setCoordinateEntity(coordinate.toCoordinateEntity());
         return placeEntity;
     }
 
