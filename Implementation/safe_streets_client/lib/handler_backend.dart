@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
@@ -819,18 +821,22 @@ class _SOAPTest implements DispatcherInterface {
         'content-type': 'text/xml',
         'SOAPAction': 'http://SafeStreets.com/Dispatcher/userRegistrationRequest',
       },
-      body: utf8.encode(getSoapUserRegistration(user)),
+      body: utf8.encode(getSoapUserRegistration(user,password)),
     );
     if (response.statusCode != 200) {
       print("Respons error from the server");
       return Future.value(false);
     }
-    print(response.body);
     var parser = xml.parse(response.body);
     var returnElement = parser.findAllElements("return");
-    ///TODO
-    //var access;
-    return Future.value(false);
+    var resp;
+    var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
+    if(string=="true"){
+      resp=true;
+    }else if (string=="false"){
+      resp=false;
+    }
+    return Future.value(resp);
   }
 }
 
@@ -841,12 +847,12 @@ String getSoapLogin(String username, String password) =>
     password +
     ''''</arg1></ns2:login></S:Body></S:Envelope>''';
 
-String getSoapUserRegistration(User user){
+String getSoapUserRegistration(User user,String password){
   var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:userRegistration xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   var userJson = jsonEncode(user.toJson());
-  //string = string + ;
+  string = string + userJson;
   string = string + ''''</arg0><arg1>''' ;
-  //string = string + ;
+  string = string + password;
   string = string + ''''</arg1></ns2:userRegistration></S:Body></S:Envelope>''';
   return string;
 }
@@ -867,10 +873,16 @@ class User {
         'lastName': _lastName,
         'placeOfBirth': _placeOfBirth,
         'placeOfResidence': _placeOfResidence,
-        'picture': _picture,
-        'idCard': _idCard,
+        'picture': imageToString(_picture),
+        'idCard': imageToString(_idCard),
         'fiscalCode': _fiscalCode,
-        'dateOfBirth': _dateOfBirth,
+        'dateOfBirth': _dateOfBirth.toString(),
       };
 
-}
+  String imageToString(String path){
+    List<int> imageBytes = File(path).readAsBytesSync();
+    return base64Encode(imageBytes);
+  }
+
+  }
+  

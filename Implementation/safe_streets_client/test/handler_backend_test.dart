@@ -1,33 +1,33 @@
 //TODO(test): backend
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:safe_streets_client/handler_localization.dart';
-import 'package:safe_streets_client/main.dart';
-import 'package:safe_streets_client/widget_signup.dart';
+import 'package:safe_streets_client/handler_backend.dart';
+import 'package:safe_streets_client/handler_model.dart';
 
 void main() async{
-  testWidgets('MyWidget has a title and message', (WidgetTester tester) async {
-    await tester.pumpWidget(createWidgetForTesting(child: new SignUp()));
-
-    await tester.pumpAndSettle();
-
-
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.SIGN_EMAIL)), "user@mail.com");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.LOGIN_USERNAME)), "user");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.LOGIN_PASSWORD)), "1234");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.SIGN_FIRST_NAME)), "02-11-2000");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.SIGN_DATE_BIRTH)), "user");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.SIGN_PLACE_BIRTH)), "Milan");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.SIGN_PLACE_RESIDENCE)), "Milan");
-    await tester.enterText(find.byKey(ValueKey(AvailableStrings.SIGN_FISCAL)), "CRESFA2132H3J");
-    var titlefinder = find.byKey(ValueKey(AvailableStrings.SIGN_DOCUMENT));
+  test('Login Functionality', () async {
+    var soap = DispatcherInterface.getNew("jak4", "jak");
+    AccessType accessType = await soap.login();
+    expect(accessType, AccessType.USER);
   });
-}
 
-Widget createWidgetForTesting({Widget child}){
-  return MaterialApp(
-    home: child,
-  );
+  test('Login with wrong credentials', () {
+    var soap = DispatcherInterface.getNew("jak4", "no_pass");
+    soap.login().then((s) {
+      expect(s, AccessType.NOT_REGISTERED);
+    });
+  });
+
+  test('Signup Functionality', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("", "");
+    File picture = new File('assets/images/user.jpg');
+    var string = picture.path;
+    File document = new File('assets/images/document.jpg');
+    var reponse = await soap.userRegistration(username: "user", email:  "user@mail.com", firstName: "Real", lastName: "User", placeOfBirth: "Milan", placeOfResidence: "Milan", picture: picture.path, idCard: document.path, fiscalCode: "SDCHSDC127NASD", dateOfBirth: new DateTime(1995,11,23), password: "not_a_password");
+  });
 }
