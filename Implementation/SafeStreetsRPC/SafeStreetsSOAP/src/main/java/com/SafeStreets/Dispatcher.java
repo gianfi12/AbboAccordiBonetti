@@ -1,6 +1,7 @@
 package com.SafeStreets;
 
 import com.SafeStreets.authorizationmanager.AuthorizationManagerInterface;
+import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.elaborationmanager.ElaborationManagerInterface;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.AccessType;
@@ -109,16 +110,19 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public Boolean newReport(String username, String password, String userReport) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username,password);
+        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
         if(accessType==AccessType.USER){
-            Type type = new TypeToken<UserReport>(){}.getType();
-            UserReport userReport1 = gson.fromJson(userReport,type);
-            ElaborationManagerInterface elaborationManager= ElaborationManagerInterface.getInstance();
+            UserDataInterface userData = UserDataInterface.getUserDataInstance();
             try {
+                User user = userData.getUser(username, password);
+                UserReport userReport1 = UserReport.fromJSON(userReport, user);
+                ElaborationManagerInterface elaborationManager = ElaborationManagerInterface.getInstance();
                 elaborationManager.elaborate(userReport1);
                 return true;
             }catch (ElaborationException e){
                 LOGGER.log(Level.SEVERE,"Error during the elaboration!");
+            }catch (WrongPasswordException | UserNotPresentException | ImageReadException e){
+                LOGGER.log(Level.SEVERE,"Error during user elaboration!");
             }
         }
         return false;
