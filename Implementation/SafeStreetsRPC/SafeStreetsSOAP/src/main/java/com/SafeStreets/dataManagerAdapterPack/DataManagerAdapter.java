@@ -81,6 +81,9 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         String imagePath= PICTURESDATA_PATH+filename+DOT+PICTURE_FORMAT;
         try
         {
+            File file = new File(PICTURESDATA_PATH);
+            file.mkdir();
+
             File outputFile = new File(imagePath);
             ImageIO.write(image, PICTURE_FORMAT, outputFile);
         }
