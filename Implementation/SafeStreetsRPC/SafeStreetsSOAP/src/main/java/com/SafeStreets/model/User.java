@@ -113,6 +113,9 @@ public class User {
         newUserEntity.setSalt(DataManagerAdapter.generateSalt());
         newUserEntity.setPassword(DataManagerAdapter.generatePasswordHash(password, newUserEntity.getSalt()));
 
+        newUserEntity.setDateOfRegistration(DataManagerAdapter.toDateFromLocalDate(LocalDate.now(DataManagerAdapter.getZONEID())));
+
+
         return newUserEntity;
     }
 
