@@ -50,10 +50,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     /**
      * The constructor is hidden outside the package.
-     * Use {@link ClientDataInterface#getInstance()} or
-     * use {@link MunicipalityDataInterface#getInstance()} or
-     * use {@link ReportsDataInterface#getInstance()} or
-     * use {@link UserDataInterface#getInstance()}.
+     * Use {@link ClientDataInterface#getClientDataInstance()} ()} or
+     * use {@link MunicipalityDataInterface#getMunicipalityDataInstance()} ()} or
+     * use {@link ReportsDataInterface#getReportsDataInstance()} ()} or
+     * use {@link UserDataInterface#getUserDataInstance()} ()}.
      */
     DataManagerAdapter() {
     }
