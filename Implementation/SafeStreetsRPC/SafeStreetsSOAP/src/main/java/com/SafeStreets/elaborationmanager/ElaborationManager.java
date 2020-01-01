@@ -1,6 +1,5 @@
 package com.SafeStreets.elaborationmanager;
 
-import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ElaborationException;
 import com.SafeStreets.exceptions.ImageStoreException;
@@ -37,7 +36,7 @@ class ElaborationManager implements ElaborationManagerInterface {
                 throw  new ElaborationException();
             }
         }
-        ReportsDataInterface reportsData= ReportsDataInterface.getInstance();
+        ReportsDataInterface reportsData= ReportsDataInterface.getReportsDataInstance();
         userReport.setPlace(place);
         try {
             reportsData.addUserReport(userReport);

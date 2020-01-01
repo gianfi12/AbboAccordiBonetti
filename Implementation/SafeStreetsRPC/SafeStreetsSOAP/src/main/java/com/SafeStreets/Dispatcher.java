@@ -46,8 +46,8 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public Boolean userRegistration(String info, String password) {
-        RegistrationManagerInterface registrationManager= RegistrationManagerInterface.getInstance();
         User user = User.fromJSON(info);
+        RegistrationManagerInterface registrationManager= RegistrationManagerInterface.getInstance();
         try {
             registrationManager.startUserRegistration(user);
             registrationManager.finishUserRegistration(user,password);

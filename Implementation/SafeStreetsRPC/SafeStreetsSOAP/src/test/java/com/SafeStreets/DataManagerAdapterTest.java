@@ -1,6 +1,5 @@
 package com.SafeStreets;
 
-import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.UserNotPresentException;
@@ -8,14 +7,13 @@ import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.User;
 import org.junit.Before;
 import org.junit.Test;
-import com.mysql.cj.jdbc.Driver;
 
 public class DataManagerAdapterTest {
     UserDataInterface userDataInterface;
 
     @Before
     public void setUp() throws Exception {
-        userDataInterface = UserDataInterface.getInstance();
+        userDataInterface = UserDataInterface.getUserDataInstance();
     }
 
     @Test

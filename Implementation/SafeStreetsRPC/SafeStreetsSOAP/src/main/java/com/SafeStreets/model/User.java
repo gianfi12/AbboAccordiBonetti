@@ -2,10 +2,14 @@ package com.SafeStreets.model;
 
 import com.SafeStreets.Dispatcher;
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
+import com.SafeStreets.mapsserviceadapter.GeocodeException;
+import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
 import com.SafeStreets.modelEntities.UserEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.codec.binary.Base64OutputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import sun.misc.BASE64Decoder;
 
 import javax.imageio.ImageIO;
@@ -13,7 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.sql.Date;
-import java.time.LocalDate;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -121,14 +126,6 @@ public class User {
                 &&dateOfBirth.isEqual(userToCompare.dateOfBirth);
     }
 
-    public void setPlaceOfBirth(Place placeOfBirth) {
-        this.placeOfBirth = placeOfBirth;
-    }
-
-    public void setPlaceOfResidence(Place placeOfResidence) {
-        this.placeOfResidence = placeOfResidence;
-    }
-
     public String toJSON(){
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         OutputStream b64 = new Base64OutputStream(os);
@@ -217,32 +214,52 @@ public class User {
          public LocalDate getDateOfBirth() {
              return dateOfBirth;
          }
+
      }
 
      public static User fromJSON(String info){
-        Gson gson = new Gson();
-        Type type = new TypeToken<UserSend>(){}.getType();
-        UserSend user = gson.fromJson(info,type);
-        try {
-            BufferedImage image;
-            byte[] imageByte;
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(user.getPicture());
-            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            image = ImageIO.read(bis);
-            bis.close();
+         JSONObject obj = new JSONObject(info);
+         String username = obj.getString("username");
+         String email = obj.getString("email");
+         String firstname = obj.getString("firstName");
+         String lastname = obj.getString("lastName");
+         String placeOfBirthString = obj.getString("placeOfBirth");
+         String placeOfResidenceString = obj.getString("placeOfResidence");
+         String picture = obj.getString("picture");
+         String idCard = obj.getString("idCard");
+         String fiscalCode = obj.getString("fiscalCode");
+         String dateOfBirth = obj.getString("dateOfBirth");
 
-            BufferedImage image1;
-            byte[] imageByte1;
-            BASE64Decoder decoder1= new BASE64Decoder();
-            imageByte1 = decoder1.decodeBuffer(user.getImageIdCard());
-            ByteArrayInputStream bis1 = new ByteArrayInputStream(imageByte1);
-            image1 = ImageIO.read(bis1);
-            bis1.close();
-            return new User(user.getUsername(), user.getEmail(), user.getFirstName(), user.getLastName(), user.placeOfBirth, user.placeOfResidence, image, image1, user.getFiscalCode(), user.getDateOfBirth());
-        }catch(IOException e){
-            LOGGER.log(Level.SEVERE,"Error decode user image!");
-        }
-        return null;
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+         LocalDate date = LocalDate.parse(dateOfBirth.substring(0,dateOfBirth.indexOf(" ")), formatter);
+         MapsServiceInterface mapsService = MapsServiceInterface.getInstance();
+         try {
+             Place placeOfBirth = mapsService.geocoding(placeOfBirthString);
+             Place placeOfResidence = mapsService.geocoding(placeOfResidenceString);
+
+             try {
+                 BufferedImage image;
+                 byte[] imageByte;
+                 BASE64Decoder decoder = new BASE64Decoder();
+                 imageByte = decoder.decodeBuffer(picture);
+                 ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+                 image = ImageIO.read(bis);
+                 bis.close();
+
+                 BufferedImage image1;
+                 byte[] imageByte1;
+                 BASE64Decoder decoder1 = new BASE64Decoder();
+                 imageByte1 = decoder1.decodeBuffer(idCard);
+                 ByteArrayInputStream bis1 = new ByteArrayInputStream(imageByte1);
+                 image1 = ImageIO.read(bis1);
+                 bis1.close();
+                 return new User(username, email, firstname, lastname, placeOfBirth, placeOfResidence, image, image1, fiscalCode, date);
+             } catch (IOException e) {
+                 LOGGER.log(Level.SEVERE, "Error decode user image!");
+             }
+         }catch(GeocodeException e){
+             LOGGER.log(Level.SEVERE,"Error geocoding!");
+         }
+         return null;
      }
 }

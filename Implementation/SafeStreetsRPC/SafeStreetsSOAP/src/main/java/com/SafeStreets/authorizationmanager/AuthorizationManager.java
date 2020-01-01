@@ -31,8 +31,8 @@ class AuthorizationManager implements AuthorizationManagerInterface{
      */
     @Override
     public AccessType getAccessType(String username, String password){
-        UserDataInterface userData = UserDataInterface.getInstance();
-        MunicipalityDataInterface municipalityData = MunicipalityDataInterface.getInstance();
+        UserDataInterface userData = UserDataInterface.getUserDataInstance();
+        MunicipalityDataInterface municipalityData = MunicipalityDataInterface.getMunicipalityDataInstance();
         try {
             userData.getUser(username, password);
             return AccessType.USER;

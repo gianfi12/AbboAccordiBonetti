@@ -1,12 +1,10 @@
 package com.SafeStreets;
 
-import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.AccessType;
-import com.SafeStreets.model.Coordinate;
 import com.SafeStreets.model.Place;
 import com.SafeStreets.model.User;
 import com.google.gson.Gson;
@@ -15,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -30,7 +27,7 @@ public class DispatcherTest {
 
     @Before
     public void setUp() throws Exception {
-        userDataInterface = UserDataInterface.getInstance();
+        userDataInterface = UserDataInterface.getUserDataInstance();
     }
 
     @Test
@@ -56,7 +53,8 @@ public class DispatcherTest {
         File file2 = new File(url.getPath());
         User user = new User("jak4","jak","Giacomo", "Four", new Place("Milano","Via Lomellina","10",null),new Place("Milan","Piazza Leonardo Da Vinci","32",null), ImageIO.read(file2),ImageIO.read(file),"CSAD234JWEDSAK",LocalDate.of(2000,12,31));
         String info = user.toJSON();
-        dispatcher.userRegistration(info,"pass");
+        Boolean response = dispatcher.userRegistration(info,"pass");
+        assert !response;
     }
 
 }
