@@ -193,8 +193,8 @@ public class DataManagerAdapterTest {
 
     @Test
     public void getUserReportsTestWithCityAddressAndHouseCode() throws ImageReadException {
-        QueryFilter queryFilter=new QueryFilter(LocalDate.of(2018, 10, 1),
-                LocalDate.of(2019, 10, 13),
+        QueryFilter queryFilter=new QueryFilter(LocalDate.of(2018, 12, 1),
+                LocalDate.of(2019, 12, 16),
                 new Place("Venice", "Via Amerigo Vespucci", "4", null));
         List<UserReport> userReportList = dataManagerAdapter.getUserReports(queryFilter);
 

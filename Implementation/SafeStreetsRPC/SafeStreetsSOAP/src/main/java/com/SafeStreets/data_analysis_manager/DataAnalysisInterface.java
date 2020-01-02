@@ -9,6 +9,10 @@ import com.SafeStreets.model.UserReport;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ *
+ * @author Massimiliano Bonetti
+ */
 public interface DataAnalysisInterface {
 
     /**

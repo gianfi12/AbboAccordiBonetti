@@ -3,6 +3,10 @@ package com.SafeStreets.dataManagerAdapterPack;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.User;
 
+/**
+ *
+ * @author Massimiliano Bonetti
+ */
 public interface UserDataInterface extends ClientDataInterface {
 
     /**

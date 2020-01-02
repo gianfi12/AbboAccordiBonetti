@@ -2,6 +2,7 @@ package com.SafeStreets.dataManagerAdapterPack;
 
 import com.SafeStreets.data_analysis_manager.DataAnalysisInterface;
 import com.SafeStreets.exceptions.*;
+import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.MunicipalityEntity;
 import com.SafeStreets.modelEntities.OtherPictureEntity;
@@ -25,9 +26,16 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.logging.Logger;
 
+/**
+ * An implementation of {@link UserDataInterface}, {@link MunicipalityDataInterface} and {@link ReportsDataInterface}.
+ * It manages all the requests to the data needed for the application, in particular it communicates with the DBMS.
+ * @author Massimiliano Bonetti
+ * @see UserDataInterface
+ * @see MunicipalityDataInterface
+ * @see ReportsDataInterface
+ */
 @Stateless
 public class DataManagerAdapter implements UserDataInterface, MunicipalityDataInterface, ReportsDataInterface {
-    private static final Logger LOGGER = Logger.getLogger(DataManagerAdapter.class.getName());
 
     private static final String PERSISTENCE_UNIT_NAME ="manager1";
 

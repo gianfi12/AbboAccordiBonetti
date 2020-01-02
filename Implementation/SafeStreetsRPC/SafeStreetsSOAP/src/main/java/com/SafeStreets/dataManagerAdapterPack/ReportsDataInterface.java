@@ -8,6 +8,10 @@ import com.SafeStreets.model.UserReport;
 
 import java.util.List;
 
+/**
+ *
+ * @author Massimiliano Bonetti
+ */
 public interface ReportsDataInterface {
     /**
      * Returns a new instance of a class that implements this interface.

@@ -5,7 +5,6 @@ import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.CoordinateEntity;
-import com.SafeStreets.modelEntities.PlaceEntity;
 import com.SafeStreets.modelEntities.VehicleEntity;
 import org.intellij.lang.annotations.Language;
 
@@ -14,6 +13,10 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
 
+/**
+ *
+ * @author Massimiliano Bonetti
+ */
 @Stateless
 public class DataAnalysisManager implements DataAnalysisInterface {
     private static final LocalDate FIRST_DATE=LocalDate.of(2000, 12, 1);

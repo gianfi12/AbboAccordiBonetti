@@ -1,8 +1,9 @@
 package com.SafeStreets.dataManagerAdapterPack;
 
-import com.SafeStreets.data_analysis_manager.DataAnalysisInterface;
-import com.SafeStreets.data_analysis_manager.DataAnalysisManager;
-
+/**
+ *
+ * @author Massimiliano Bonetti
+ */
 public interface ClientDataInterface {
 
     /**
