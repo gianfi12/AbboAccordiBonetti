@@ -727,6 +727,7 @@ Future<List<String>> getAvailableReportCategories() {
 
 class _SOAPTest implements DispatcherInterface {
   String _username, _password;
+  final String ip='localhost';
 
   _SOAPTest(this._username, this._password);
 
@@ -751,7 +752,7 @@ class _SOAPTest implements DispatcherInterface {
   @override
   Future<model.AccessType> login() async{
     http.Response response = await http.post(
-      'http://192.168.1.7:8080/SafeStreetsSOAP/DispatcherService',
+      'http://'+ip+':8080/SafeStreetsSOAP/DispatcherService',
       headers: {
         'content-type': 'text/xml',
         'SOAPAction': 'http://SafeStreets.com/Dispatcher/loginRequest',
@@ -791,7 +792,7 @@ class _SOAPTest implements DispatcherInterface {
   @override
   Future<bool> newReport({model.Report report}) async {
     http.Response response = await http.post(
-      'http://192.168.1.7:8080/SafeStreetsSOAP/DispatcherService',
+      'http://'+ ip +':8080/SafeStreetsSOAP/DispatcherService',
       headers: {
         'content-type': 'text/xml',
         'SOAPAction': 'http://SafeStreets.com/Dispatcher/newReportRequest',
@@ -836,7 +837,7 @@ class _SOAPTest implements DispatcherInterface {
       String password}) async{
     var user = new User(username, email, firstName, lastName, placeOfBirth, placeOfResidence, picture, idCard, fiscalCode, dateOfBirth);
     http.Response response = await http.post(
-      'http://192.168.1.7:8080/SafeStreetsSOAP/DispatcherService',
+      'http://'+ip+':8080/SafeStreetsSOAP/DispatcherService',
       headers: {
         'content-type': 'text/xml',
         'SOAPAction': 'http://SafeStreets.com/Dispatcher/userRegistrationRequest',

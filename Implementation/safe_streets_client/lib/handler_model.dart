@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 /// A class that contains a position, expressed in latitude and longitude.
@@ -76,6 +79,35 @@ class Report {
         'violationType: $violationType,\n'
         'plateNumber: $plateNumber,\n'
         'author: $author\n}\n';
+  }
+
+  Map<String, dynamic> toJson() =>
+      {
+        'reportOffsetDateTime': deviceDateTime.toString(),
+        'odtOfWatchedViolation': violationDateTime.toString(),
+        'place': position,
+        'devicePosition': devicePosition,
+        'violationType': violationType,
+        'description': "",
+        'vehicle': plateNumber,
+        'author': "",
+        'mainPicture': imageToString(mainImage),
+        'otherPictures': imageListToString(otherImages),
+      };
+
+  String imageToString(String path){
+    List<int> imageBytes = File(path).readAsBytesSync();
+    return base64Encode(imageBytes);
+  }
+
+  List imageListToString(List<String> images){
+    List jsonList = new List();
+    List<int> imageBytes;
+    images.forEach((element) => {
+        imageBytes = File(element).readAsBytesSync(),
+        jsonList.add(base64Encode(imageBytes)),
+    });
+    return jsonList;
   }
 }
 
