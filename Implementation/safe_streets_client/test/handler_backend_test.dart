@@ -29,7 +29,7 @@ void main() async{
     File picture = new File('assets/images/user.jpg');
     File document = new File('assets/images/document.jpg');
     var reponse = await soap.userRegistration(username: "user", email:  "user@mail.com", firstName: "Real", lastName: "User", placeOfBirth: "Milan", placeOfResidence: "Milan", picture: picture.path, idCard: document.path, fiscalCode: "SDCHSDC127NASD", dateOfBirth: new DateTime(1995,11,23), password: "not_a_password");
-    //TODO response
+    expect(reponse,true);
   });
 
   test('New Report functionality', () async{
@@ -39,6 +39,17 @@ void main() async{
     File other = new File('assets/images/park-on-sidewalk2.png');
     var images = [other.path];
     var report = new Report(deviceDateTime: new DateTime(2010,12,23),violationDateTime: new DateTime(2010,12,22), mainImage: main.path,otherImages: images, devicePosition: null,position: "Piazza Leonardo da Vinci 32 Milano", violationType: l.AvailableStrings.PARKING_ON_SIDEWALK.toString(),plateNumber: "AB345CD");
-    var reponse = await soap.newReport(report: report);
+    var response = await soap.newReport(report: report);
+    expect(response,true);
+
   });
+
+
+  test('Available Statistics functionality', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("jak4", "jak");
+    var statistics = await soap.getAvailableStatistics();
+
+  });
+
 }

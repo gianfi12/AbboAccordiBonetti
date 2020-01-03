@@ -1,7 +1,6 @@
 package com.SafeStreets;
 
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
-import com.SafeStreets.dispatcher.Dispatcher;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;

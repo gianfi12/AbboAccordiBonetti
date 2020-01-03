@@ -738,9 +738,29 @@ class _SOAPTest implements DispatcherInterface {
   }
 
   @override
-  Future<List<String>> getAvailableStatistics() {
-    // TODO: implement getAvailableStatistics
-    throw UnimplementedError();
+  Future<List<String>> getAvailableStatistics() async{
+    http.Response response = await http.post(
+      'http://'+ip+':8080/SafeStreetsSOAP/DispatcherService',
+      headers: {
+        'content-type': 'text/xml',
+        'SOAPAction': 'http://SafeStreets.com/Dispatcher/getAvailableStatisticsRequest',
+      },
+      body: utf8.encode(getSoapAvailableStatistics(_username,_password)),
+    );
+    if (response.statusCode != 200) {
+      print("Respons error from the server");
+      return Future.value(new List());
+    }
+    var parser = xml.parse(response.body);
+    var returnElement = parser.findAllElements("return");
+    var resp;
+    var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
+    if(string=="true"){
+      resp=true;
+    }else if (string=="false"){
+      resp=false;
+    }
+    return Future.value(resp);
   }
 
   @override
@@ -886,6 +906,15 @@ String getSoapNewReport(String report,String username,String password){
   string = string + ''''</arg1><arg2>''' ;
   string = string + report;
   string = string + ''''</arg2></ns2:newReport></S:Body></S:Envelope>''';
+  return string;
+}
+
+String getSoapAvailableStatistics(String username,String password){
+  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:getAvailableStatistics xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+  string = string + username;
+  string = string + ''''</arg0><arg1>''' ;
+  string = string + password;
+  string = string + ''''</arg1></ns2:getAvailableStatistics></S:Body></S:Envelope>''';
   return string;
 }
 
