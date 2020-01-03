@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "User", schema = "SafeStreetsDB")
+@Table(name = "user", schema = "SafeStreetsDB")
 public class UserEntity {
     private String username;
     private String email;

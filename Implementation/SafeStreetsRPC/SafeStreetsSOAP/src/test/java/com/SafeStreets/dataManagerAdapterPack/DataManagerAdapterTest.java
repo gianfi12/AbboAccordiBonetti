@@ -338,6 +338,5 @@ public class DataManagerAdapterTest {
         em.persist(placeEntity);
         transaction.commit();
 
-
     }
 }

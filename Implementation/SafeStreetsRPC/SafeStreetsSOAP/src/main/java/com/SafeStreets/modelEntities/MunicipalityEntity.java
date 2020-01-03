@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Municipality", schema = "SafeStreetsDB")
+@Table(name = "municipality", schema = "SafeStreetsDB")
 public class MunicipalityEntity {
     private String contractCode;
     private String name;

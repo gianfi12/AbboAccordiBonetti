@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "Vehicle", schema = "SafeStreetsDB")
+@Table(name = "vehicle", schema = "SafeStreetsDB")
 public class VehicleEntity {
     private String licensePlate;
 

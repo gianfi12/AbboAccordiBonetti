@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "UserReport", schema = "SafeStreetsDB")
+@Table(name = "userReport", schema = "SafeStreetsDB")
 public class UserReportEntity {
     private int id;
     private Timestamp reportTimeStamp;
