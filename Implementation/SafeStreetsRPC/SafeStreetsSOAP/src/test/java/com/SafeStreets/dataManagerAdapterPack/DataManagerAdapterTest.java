@@ -7,10 +7,7 @@ import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.User;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
-import com.SafeStreets.modelEntities.MunicipalityEntity;
-import com.SafeStreets.modelEntities.UserEntity;
-import com.SafeStreets.modelEntities.UserReportEntity;
-import com.SafeStreets.modelEntities.VehicleEntity;
+import com.SafeStreets.modelEntities.*;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 import org.intellij.lang.annotations.Language;
@@ -23,6 +20,7 @@ import javax.xml.crypto.Data;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -317,5 +315,29 @@ public class DataManagerAdapterTest {
         byte[] digest = digestSHA3.digest(stringToHash.getBytes());
         String hash = Hex.toHexString(digest);
         System.out.println("hash SHA3-512 of "+stringToHash+" is " + hash);
+    }
+
+    @Test
+    public void testCoordinatePlace() {
+        CoordinateEntity coordinateEntity=new CoordinateEntity();
+        coordinateEntity.setAltitude(BigDecimal.valueOf(1));
+        coordinateEntity.setLatitude(BigDecimal.valueOf(1));
+        coordinateEntity.setLongitude(BigDecimal.valueOf(1));
+
+        PlaceEntity placeEntity=new PlaceEntity();
+        placeEntity.setCity("Milan");
+        placeEntity.setCoordinateEntity(coordinateEntity);
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        em.persist(coordinateEntity);
+        transaction.commit();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.persist(placeEntity);
+        transaction.commit();
+
+
     }
 }

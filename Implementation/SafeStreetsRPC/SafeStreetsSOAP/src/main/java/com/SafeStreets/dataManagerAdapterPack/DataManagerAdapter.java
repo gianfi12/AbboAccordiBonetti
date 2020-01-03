@@ -149,7 +149,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         municipalityEntity.setPassSalt(generateSalt());
         municipalityEntity.setPassword(generatePasswordHash(password, municipalityEntity.getPassSalt()));
 
-        transaction=em.getTransaction();
         transaction.begin();
         em.persist(municipalityEntity);
         em.getTransaction().commit();
