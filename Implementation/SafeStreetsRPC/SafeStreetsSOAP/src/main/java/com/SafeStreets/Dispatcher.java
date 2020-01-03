@@ -4,10 +4,7 @@ import com.SafeStreets.authorizationmanager.AuthorizationManagerInterface;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
 import com.SafeStreets.elaborationmanager.ElaborationManagerInterface;
 import com.SafeStreets.exceptions.*;
-import com.SafeStreets.model.AccessType;
-import com.SafeStreets.model.DataIntegrationInfo;
-import com.SafeStreets.model.User;
-import com.SafeStreets.model.UserReport;
+import com.SafeStreets.model.*;
 import com.SafeStreets.registrationmanager.RegistrationManagerInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,6 +13,7 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.ejb.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -114,7 +112,7 @@ public class Dispatcher implements DispatcherInterface{
         if(accessType==AccessType.USER){
             UserDataInterface userData = UserDataInterface.getUserDataInstance();
             try {
-                User user = userData.getUser(username, password);
+                User user = userData.getUser(username.replace("'",""),password.replace("'",""));
                 UserReport userReport1 = UserReport.fromJSON(userReport, user);
                 ElaborationManagerInterface elaborationManager = ElaborationManagerInterface.getInstance();
                 elaborationManager.elaborate(userReport1);
@@ -137,7 +135,26 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public List<String> getAvailableStatistics(String username, String password) {
-        return null;
+        AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
+        AccessType accessType = authorizationManager.getAccessType(username,password);
+        List<String> statistics = new ArrayList<>();
+        switch (accessType){
+            case NOT_REGISTERED:
+                break;
+            case USER:
+                for (StatisticType statistic : StatisticType.values()){
+                    if(statistic.canBeForUser())
+                        statistics.add(statistic.toString());
+                }
+                break;
+            case MUNICIPALITY:
+                for (StatisticType statistic : StatisticType.values()){
+                    if(statistic.canBeForMunicipality())
+                        statistics.add(statistic.toString());
+                }
+                break;
+        }
+        return statistics;
     }
 
     /**

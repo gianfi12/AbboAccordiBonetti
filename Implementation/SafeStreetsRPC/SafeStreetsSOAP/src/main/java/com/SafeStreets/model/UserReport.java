@@ -67,8 +67,6 @@ public class UserReport extends Report{
 
     public static UserReport fromJSON(String jsonstring,User user){
         Report report = Report.fromJSON(jsonstring);
-        UserReport userReport = (UserReport) report;
-        userReport.authorUser=user;
         JSONObject obj = new JSONObject(jsonstring);
         String mainPicture = obj.getString("mainPicture");
 
@@ -77,18 +75,18 @@ public class UserReport extends Report{
         try {
             imageByte = decoder.decodeBuffer(mainPicture);
             ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-            userReport.mainPicture = ImageIO.read(bis);
+            BufferedImage newmainPicture = ImageIO.read(bis);
             bis.close();
 
-            userReport.otherPictures = new ArrayList<>();
+            List<BufferedImage> newotherPictures = new ArrayList<>();
             JSONArray otherPictures = obj.getJSONArray("otherPictures");
             for (int i = 0; i < otherPictures.length(); i++){
                 imageByte = decoder.decodeBuffer(otherPictures.getString(i));
                 bis = new ByteArrayInputStream(imageByte);
-                userReport.otherPictures.add(ImageIO.read(bis));
+                newotherPictures.add(ImageIO.read(bis));
                 bis.close();
             }
-            return userReport;
+            return new UserReport(report.getReportOffsetDateTime(),report.getOdtOfWatchedViolation(),report.getPlace(),report.getViolationType(),report.getDescription(),report.getVehicle(),user,newmainPicture,newotherPictures);
         }catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Error decode report main image!");
             return null;

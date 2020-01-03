@@ -1,8 +1,20 @@
 package com.SafeStreets.model;
 
-import java.time.OffsetDateTime;
+import com.SafeStreets.mapsserviceadapter.GeocodeException;
+import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
+import org.json.JSONObject;
+
+import java.time.*;
+import java.time.format.DateTimeFormatter;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Report {
+    /**
+     * This is used to print log message if an error occurs
+     */
+    private final static Logger LOGGER = Logger.getLogger(Report.class.getName());
     private OffsetDateTime reportOffsetDateTime;
     private OffsetDateTime odtOfWatchedViolation;
     private Place place;
@@ -46,8 +58,34 @@ public class Report {
     public void setPlace(Place place) {
         this.place = place;
     }
-    public static Report fromJSON(String jsonString){
-        //TODO
+
+    public static Report fromJSON(String jsonstring){
+        JSONObject obj = new JSONObject(jsonstring);
+        String reportOffsetDateTime = obj.getString("reportOffsetDateTime");
+        String odtOfWatchedViolation = obj.getString("odtOfWatchedViolation");
+        String place = obj.getString("place");
+        String violationType = obj.getString("violationType");
+        String description = obj.getString("description");
+        String vehicle = obj.getString("vehicle");
+
+        ZoneId zoneId= TimeZone.getTimeZone("Europe/Rome").toZoneId();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        LocalDateTime dateTime = LocalDateTime.parse(reportOffsetDateTime, formatter);
+        Instant instant = dateTime.atZone(ZoneId.of("Europe/Paris")).toInstant();
+        OffsetDateTime rodt = OffsetDateTime.ofInstant(instant, zoneId);
+
+        dateTime = LocalDateTime.parse(odtOfWatchedViolation, formatter);
+        instant = dateTime.atZone(ZoneId.of("Europe/Paris")).toInstant();
+        OffsetDateTime odt = OffsetDateTime.ofInstant(instant,zoneId);
+
+        MapsServiceInterface mapsService = MapsServiceInterface.getInstance();
+        try {
+            Place placeViolation = mapsService.geocoding(place);
+
+            return new Report(rodt, odt, placeViolation, ViolationType.valueOf(violationType.split("\\.")[1]),description, new Vehicle(vehicle));
+        }catch (GeocodeException e){
+            LOGGER.log(Level.SEVERE,"Error with violation place!!");
+        }
         return null;
     }
 }
