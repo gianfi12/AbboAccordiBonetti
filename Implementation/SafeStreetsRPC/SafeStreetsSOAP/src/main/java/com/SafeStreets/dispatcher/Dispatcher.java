@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.dispatcher;
 
 import com.SafeStreets.authorizationmanager.AuthorizationManagerInterface;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;

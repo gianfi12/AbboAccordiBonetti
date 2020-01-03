@@ -1,4 +1,4 @@
-package com.SafeStreets;
+package com.SafeStreets.dispatcher;
 
 import java.util.Date;
 import java.util.List;
@@ -7,6 +7,11 @@ import java.util.List;
  * This classe define the method that a Dispatcher needs to implement
  */
 public interface DispatcherInterface {
+    /**
+     * This method is used to get an instance of the Dispatcher
+     * @return Is an instance of the Dispatcher
+     */
+    static DispatcherInterface getInstance(){ return new Dispatcher(); }
 
     /**
      * This is the method call by a client that wants to register a user in the system

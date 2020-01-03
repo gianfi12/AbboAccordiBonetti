@@ -1,7 +1,6 @@
 package com.SafeStreets.access_reports_manager;
 
-import com.SafeStreets.DispatcherInterface;
-import com.SafeStreets.model.UserReport;
+import com.SafeStreets.dispatcher.DispatcherInterface;
 
 import java.util.Date;
 import java.util.List;
