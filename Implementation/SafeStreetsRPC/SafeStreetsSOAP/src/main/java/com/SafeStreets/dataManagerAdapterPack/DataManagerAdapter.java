@@ -39,8 +39,8 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     private static final String PERSISTENCE_UNIT_NAME ="manager1";
 
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-    private EntityManager em = emf.createEntityManager();
+    private static EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+    private static EntityManager em = emf.createEntityManager();
 
     private static final String PICTURESDATA_PATH ="../picturesData/";
     private static final int SALT_LENGTH =16;
@@ -55,6 +55,8 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private static final String DOT =".";
 
     private static final ZoneId ZONEID=TimeZone.getTimeZone("Europe/Rome").toZoneId();
+
+    private static EntityTransaction transaction=em.getTransaction();
 
     /**
      * The constructor is hidden outside the package.
@@ -75,7 +77,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
         String imageIdCardPath=saveImage(info.getImageIdCard(), info.getUsername()+ IDCARD_FOR_USER);
 
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         em.persist(info.toUserEntity(password, picturePath, imageIdCardPath));
         transaction.commit();
@@ -120,7 +121,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public User getUser(String username, String password) throws WrongPasswordException, UserNotPresentException, ImageReadException {
-        EntityTransaction transaction=em.getTransaction();
+
         transaction.begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
         transaction.commit();
@@ -140,7 +141,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         if(exists(username))
             throw new MunicipalityAlreadyPresentException();
 
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         MunicipalityEntity municipalityEntity=em.find(MunicipalityEntity.class, contractCode);
         transaction.commit();
@@ -165,7 +165,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean checkContractCode(String code) {
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         MunicipalityEntity municipalityEntity= em.find(MunicipalityEntity.class, code);
         transaction.commit();
@@ -178,7 +177,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     private MunicipalityEntity getMunicipalityByUsername(String name) throws MunicipalityNotPresentException {
         String queryString = "FROM MunicipalityEntity WHERE name='"+name+"'";
 
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         TypedQuery<MunicipalityEntity> query = em.createQuery(queryString, MunicipalityEntity.class);
         transaction.commit();
@@ -188,23 +186,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         if(municipalityEntityList==null || municipalityEntityList.isEmpty()
                 || municipalityEntityList.get(0)==null)
             throw new MunicipalityNotPresentException();
-
-        return municipalityEntityList.get(0);
-    }
-
-    private MunicipalityEntity getMunicipalityByPlace(String city) throws PlaceForMunicipalityNotPresentException {
-        String queryString = "FROM MunicipalityEntity WHERE placeEntity.city='"+city+"'";
-
-        EntityTransaction transaction=em.getTransaction();
-        transaction.begin();
-        TypedQuery<MunicipalityEntity> query = em.createQuery(queryString, MunicipalityEntity.class);
-        transaction.commit();
-
-        List<MunicipalityEntity> municipalityEntityList= query.getResultList();
-
-        if(municipalityEntityList==null || municipalityEntityList.isEmpty()
-                || municipalityEntityList.get(0)==null)
-            throw new PlaceForMunicipalityNotPresentException();
 
         return municipalityEntityList.get(0);
     }
@@ -225,7 +206,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean checkPassword(String username, String password) {
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         UserEntity userEntity=em.find(UserEntity.class, username);
         transaction.commit();
@@ -246,7 +226,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public boolean exists(String username) {
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         boolean isPresent=em.find(UserEntity.class, username)!=null;
         transaction.commit();
@@ -305,7 +284,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
         UserReportEntity userReportEntity=userReport.toUserReportEntity(mainPicturePath);
 
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         em.persist(userReportEntity);
         transaction.commit();
@@ -344,22 +322,24 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         String queryString="";
         if(filter.getPlace().getAddress()==null || filter.getPlace().getAddress().equals(""))
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                    "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                    "BETWEEN '"+toTimestampFromLocalDate(filter.getFrom(), true)+
+                    "'"+" AND '"+toTimestampFromLocalDate(filter.getUntil(), false) +
                     "' AND place.city='"+filter.getPlace().getCity()+"'";
         else if(filter.getPlace().getHouseCode()==null || filter.getPlace().getHouseCode().equals("")) {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                    "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                    "BETWEEN '"+toTimestampFromLocalDate(filter.getFrom(), true)+
+                    "'"+" AND '"+toTimestampFromLocalDate(filter.getUntil(), false) +
                     "' AND place.city='"+filter.getPlace().getCity()+"'" +
                     " AND place.address='"+filter.getPlace().getAddress()+"'";
         } else {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                    "BETWEEN '"+filter.getFrom()+"'"+" AND '"+filter.getUntil() +
+                    "BETWEEN '"+toTimestampFromLocalDate(filter.getFrom(), true)+
+                    "'"+" AND '"+toTimestampFromLocalDate(filter.getUntil(), false) +
                     "' AND place.city='"+filter.getPlace().getCity()+"'" +
                     " AND place.address='"+filter.getPlace().getAddress()+"'" +
                     " AND place.houseCode='"+filter.getPlace().getHouseCode()+"'";
         }
 
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         TypedQuery<UserReportEntity> query = em.createQuery(queryString, UserReportEntity.class);
         transaction.commit();
@@ -380,7 +360,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         if(filter==null || !filter.isApplyQuery() || filter.getQuery()==null || filter.getQuery().equals(""))
             return new ArrayList<>();
 
-        EntityTransaction transaction=em.getTransaction();
         transaction.begin();
         List<Object[]> result=new ArrayList<>();
         if(filter.isOneResult()) {
@@ -418,12 +397,8 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         return localDate;
     }
 
-    public static OffsetDateTime toOffsetDateTimeFromLocalDate(LocalDate localDate) {
-        Instant instant = Instant.now();
-        ZoneOffset currentOffsetForMyZone = ZONEID.getRules().getOffset(instant);
-
-        OffsetDateTime odt=OffsetDateTime.of(localDate, LocalTime.MIDNIGHT, currentOffsetForMyZone);
-        return odt;
+    public static OffsetDateTime toOffsetDateTimeFromLocalDate(LocalDate localDate, boolean isZeroHourAndNot24) {
+        return toOffsetDateTimeFromTimestamp(toTimestampFromLocalDate(localDate, isZeroHourAndNot24));
     }
 
     public static ZoneId getZONEID() {

@@ -7,11 +7,13 @@ import com.SafeStreets.exceptions.WrongPasswordException;
 import com.SafeStreets.model.User;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
+import com.SafeStreets.modelEntities.MunicipalityEntity;
 import com.SafeStreets.modelEntities.UserEntity;
 import com.SafeStreets.modelEntities.UserReportEntity;
 import com.SafeStreets.modelEntities.VehicleEntity;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
+import org.intellij.lang.annotations.Language;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -120,16 +122,67 @@ public class DataManagerAdapterTest {
     }
 
 
-
-
     @Test
-    public void getUser() {
+    public void getUser() throws UserNotPresentException, ImageReadException, WrongPasswordException {
+        User user =dataManagerAdapter.getUser("jak4", "jak");
+        assertEquals("jak4", user.getUsername());
+        assertEquals("jak@gmail.com", user.getEmail());
+        assertEquals("Jak", user.getFirstName());
+        assertEquals("Red", user.getLastName());
+        assertEquals("Milan", user.getPlaceOfBirth().getCity());
+        assertNull(user.getPlaceOfBirth().getAddress());
+        assertNull( user.getPlaceOfBirth().getHouseCode());
+        assertTrue(45.4769300000==user.getPlaceOfBirth().getCoordinate().getLatitude());
+        assertTrue(9.2322900000==user.getPlaceOfBirth().getCoordinate().getLongitude());
+        assertTrue(122.0000000000==user.getPlaceOfBirth().getCoordinate().getAltitude());
+        assertEquals("Milan", user.getPlaceOfResidence().getCity());
+        assertEquals("Piazza della Scala",user.getPlaceOfResidence().getAddress());
+        assertEquals("2",user.getPlaceOfResidence().getHouseCode());
+        assertTrue(45.4667800000==user.getPlaceOfResidence().getCoordinate().getLatitude());
+        assertTrue(9.1904000000==user.getPlaceOfResidence().getCoordinate().getLongitude());
+        assertTrue(122.0000000000==user.getPlaceOfResidence().getCoordinate().getAltitude());
+        assertEquals("RDEJKA80A01F205W", user.getFiscalCode());
+        assertEquals(LocalDate.of(1983,1,1), user.getDateOfBirth());
     }
 
     @Test
-    public void addMunicipality() throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
-        //dataManagerAdapter.addMunicipality(new Place("Rome", "", "", null),
-        // "Rome", "RomeP");
+    public void addMunicipality() throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException, MunicipalityNotPresentException, WrongPasswordException {
+        dataManagerAdapter.addMunicipality("14", "FlorenceMunicipality", "FlorenceP");
+
+        Municipality municipality=dataManagerAdapter.getMunicipality("FlorenceMunicipality", "FlorenceP");
+
+        assertEquals("FlorenceMunicipality", municipality.getName());
+        assertEquals("Florence", municipality.getPlace().getCity());
+        assertNull(municipality.getPlace().getAddress());
+        assertNull(municipality.getPlace().getHouseCode());
+        assertNull(municipality.getPlace().getCoordinate());
+
+        String unregisterMunicipality="UPDATE MunicipalityEntity " +
+                "SET name=NULL " +
+                "WHERE contractCode='14'";
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        em.createQuery(unregisterMunicipality).executeUpdate();
+        transaction.commit();
+
+        unregisterMunicipality="UPDATE MunicipalityEntity " +
+                "SET password=NULL " +
+                "WHERE contractCode='14'";
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.createQuery(unregisterMunicipality).executeUpdate();
+        transaction.commit();
+
+        unregisterMunicipality="UPDATE MunicipalityEntity " +
+                "SET passSalt=NULL " +
+                "WHERE contractCode='14'";
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.createQuery(unregisterMunicipality).executeUpdate();
+        transaction.commit();
     }
 
     @Test
@@ -185,8 +238,8 @@ public class DataManagerAdapterTest {
 
         for(UserReport userReport : userReportList) {
             assertEquals(userReport.getPlace().getCity(), queryFilter.getPlace().getCity());
-            assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom())));
-            assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil())));
+            assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
+            assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
         }
 
     }
@@ -204,8 +257,8 @@ public class DataManagerAdapterTest {
             assertEquals(userReport.getPlace().getCity(), queryFilter.getPlace().getCity());
             assertEquals(userReport.getPlace().getAddress(), queryFilter.getPlace().getAddress());
             assertEquals(userReport.getPlace().getHouseCode(), queryFilter.getPlace().getHouseCode());
-            assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom())));
-            assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil())));
+            assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
+            assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
         }
 
     }
@@ -219,11 +272,6 @@ public class DataManagerAdapterTest {
         VehicleEntity vehicleEntity = em.find(VehicleEntity.class, "AP234IJ");
     }
 
-    @Test
-    public void testLogin() throws WrongPasswordException, UserNotPresentException, ImageReadException {
-        User user =dataManagerAdapter.getUser("jak4", "jak");
-        assert (user.getUsername()=="jak4");
-    }
 
     @Test
     public void violationStatisticTest() {
@@ -259,7 +307,8 @@ public class DataManagerAdapterTest {
 
     @Test
     public void hashTest() {
-        printHash("s4"+"M#c\3|Yzoja`sIu(");
+
+        printHash("jak"+"\":xa?(Cc7o]t5f6$");
     }
 
 

@@ -2,6 +2,7 @@ package com.SafeStreets.data_analysis_manager;
 
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
+import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.CoordinateEntity;
 import com.SafeStreets.modelEntities.PlaceEntity;
@@ -130,7 +131,24 @@ public class DataAnalysisManagerTest {
 
 
     @Test
-    public void getUserReportsTest() {
+    public void getUserReportsTest() throws ImageReadException {
+        DataAnalysisInterface dataAnalysisInterface=DataAnalysisInterface.getInstance();
+
+        QueryFilter queryFilter=new QueryFilter(LocalDate.of(2019, 10, 12),
+                LocalDate.of(2019, 11, 12),
+                new Place("Milan", "", "", null));
+        List<UserReport> userReportList = dataAnalysisInterface.getUserReports(queryFilter);
+
+        assertFalse(userReportList.isEmpty());
+
+        assertEquals(2, userReportList.size());
+
+        for(UserReport userReport : userReportList) {
+            assertEquals(userReport.getPlace().getCity(), queryFilter.getPlace().getCity());
+            assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
+            assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
+        }
+
     }
 
     @Test
