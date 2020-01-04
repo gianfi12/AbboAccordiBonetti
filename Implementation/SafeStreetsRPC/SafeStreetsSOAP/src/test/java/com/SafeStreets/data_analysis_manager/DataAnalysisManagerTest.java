@@ -5,17 +5,10 @@ import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.CoordinateEntity;
-import com.SafeStreets.modelEntities.PlaceEntity;
-import org.intellij.lang.annotations.Language;
 import org.junit.Test;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;

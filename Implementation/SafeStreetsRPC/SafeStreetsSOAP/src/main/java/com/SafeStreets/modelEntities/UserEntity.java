@@ -11,7 +11,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user", schema = "SafeStreetsDB")
+@Table(name = "user", schema = "safe_streets_db")
 public class UserEntity {
     private String username;
     private String email;
@@ -84,7 +84,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "idCard")
+    @Column(name = "id_card")
     public String getIdCard() {
         return idCard;
     }
@@ -94,7 +94,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "fiscalCode")
+    @Column(name = "fiscal_code")
     public String getFiscalCode() {
         return fiscalCode;
     }
@@ -104,7 +104,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "dateOfBirth")
+    @Column(name = "date_of_birth")
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
@@ -134,7 +134,7 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "dateOfRegistration")
+    @Column(name = "date_of_registration")
     public Date getDateOfRegistration() {
         return dateOfRegistration;
     }
@@ -143,8 +143,8 @@ public class UserEntity {
         this.dateOfRegistration = dateOfRegistration;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "placeOfBirth_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name = "place_of_birth_id")
     public PlaceEntity getPlaceOfBirthEntity() {
         return placeOfBirthEntity;
     }
@@ -153,8 +153,8 @@ public class UserEntity {
         this.placeOfBirthEntity = placeOfBirthEntity;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "placeOfResidence_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name = "place_of_residence_id")
     public PlaceEntity getPlaceOfResidenceEntity() {
         return placeOfResidenceEntity;
     }

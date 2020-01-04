@@ -78,7 +78,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         String imageIdCardPath=saveImage(info.getImageIdCard(), info.getUsername()+ IDCARD_FOR_USER);
 
         transaction.begin();
-        em.persist(info.toUserEntity(password, picturePath, imageIdCardPath));
+        em.merge(info.toUserEntity(password, picturePath, imageIdCardPath));
         transaction.commit();
     }
 
@@ -150,7 +150,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         municipalityEntity.setPassword(generatePasswordHash(password, municipalityEntity.getPassSalt()));
 
         transaction.begin();
-        em.persist(municipalityEntity);
+        em.merge(municipalityEntity);
         em.getTransaction().commit();
     }
 
@@ -284,7 +284,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         UserReportEntity userReportEntity=userReport.toUserReportEntity(mainPicturePath);
 
         transaction.begin();
-        em.persist(userReportEntity);
+        em.merge(userReportEntity);
         transaction.commit();
 
         List<BufferedImage> otherPicturesImages =userReport.getOtherPictures();
@@ -298,7 +298,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
                 transaction=em.getTransaction();
                 transaction.begin();
-                em.persist(otherPictureEntity);
+                em.merge(otherPictureEntity);
                 transaction.commit();
             }
         }

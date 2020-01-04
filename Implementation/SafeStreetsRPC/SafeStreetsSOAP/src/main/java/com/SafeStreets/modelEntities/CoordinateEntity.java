@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 @Entity
-@Table(name = "coordinate", schema = "SafeStreetsDB")
+@Table(name = "coordinate", schema = "safe_streets_db")
 public class CoordinateEntity {
     private int id;
     private BigDecimal latitude;

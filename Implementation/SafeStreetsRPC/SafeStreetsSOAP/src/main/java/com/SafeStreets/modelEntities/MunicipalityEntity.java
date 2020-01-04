@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "municipality", schema = "SafeStreetsDB")
+@Table(name = "municipality", schema = "safe_streets_db")
 public class MunicipalityEntity {
     private String contractCode;
     private String name;
@@ -36,7 +36,7 @@ public class MunicipalityEntity {
     }
 
     @Basic
-    @Column(name = "passSalt")
+    @Column(name = "pass_salt")
     public String getPassSalt() {
         return passSalt;
     }
@@ -46,7 +46,7 @@ public class MunicipalityEntity {
     }
 
     @Id
-    @Column(name = "contractCode")
+    @Column(name = "contract_code")
     public String getContractCode() {
         return contractCode;
     }
@@ -55,8 +55,8 @@ public class MunicipalityEntity {
         this.contractCode = contractCode;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
-    @JoinColumn(name="Place_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name="place_id")
     public PlaceEntity getPlaceEntity() {
         return placeEntity;
     }

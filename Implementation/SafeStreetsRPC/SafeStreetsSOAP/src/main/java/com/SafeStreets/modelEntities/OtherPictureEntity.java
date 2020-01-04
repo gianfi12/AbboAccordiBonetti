@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "otherPicture", schema = "SafeStreetsDB")
+@Table(name = "other_picture", schema = "safe_streets_db")
 public class OtherPictureEntity {
     private int id;
     private String picture;
@@ -33,7 +33,7 @@ public class OtherPictureEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name="UserReport_id")
+    @JoinColumn(name="user_report_id")
     public UserReportEntity getUserReportEntity() {
         return userReportEntity;
     }

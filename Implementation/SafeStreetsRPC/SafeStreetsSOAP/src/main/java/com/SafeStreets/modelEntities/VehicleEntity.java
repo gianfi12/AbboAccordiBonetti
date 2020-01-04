@@ -9,12 +9,12 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
-@Table(name = "vehicle", schema = "SafeStreetsDB")
+@Table(name = "vehicle", schema = "safe_streets_db")
 public class VehicleEntity {
     private String licensePlate;
 
     @Id
-    @Column(name = "licensePlate")
+    @Column(name = "license_plate")
     public String getLicensePlate() {
         return licensePlate;
     }

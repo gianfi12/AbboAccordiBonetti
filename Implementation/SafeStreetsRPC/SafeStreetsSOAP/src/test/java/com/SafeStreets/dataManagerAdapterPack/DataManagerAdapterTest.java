@@ -8,6 +8,7 @@ import com.SafeStreets.model.User;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.*;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 import org.intellij.lang.annotations.Language;
@@ -21,10 +22,8 @@ import javax.xml.crypto.Data;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.sql.Timestamp;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -330,12 +329,104 @@ public class DataManagerAdapterTest {
 
         EntityTransaction transaction=em.getTransaction();
         transaction.begin();
-        em.persist(coordinateEntity);
+        em.merge(coordinateEntity);
         transaction.commit();
 
         transaction=em.getTransaction();
         transaction.begin();
-        em.persist(placeEntity);
+        em.merge(placeEntity);
+        transaction.commit();
+
+    }
+
+    @Test
+    public void addThreeVehicles() {
+        VehicleEntity vehicleEntity=new VehicleEntity();
+        vehicleEntity.setLicensePlate("12dvg49");
+
+        VehicleEntity vehicleEntity2=new VehicleEntity();
+        vehicleEntity2.setLicensePlate("12dvg50");
+
+        VehicleEntity vehicleEntity3=new VehicleEntity();
+        vehicleEntity3.setLicensePlate("12dvg49");
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        em.merge(vehicleEntity);
+        transaction.commit();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.merge(vehicleEntity2);
+        transaction.commit();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.merge(vehicleEntity3);
+        transaction.commit();
+    }
+
+    @Test
+    public void addTwoReports() {
+
+        UserReportEntity userReportEntity=new UserReportEntity();
+        userReportEntity.setReportTimeStamp(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30)));
+        userReportEntity.setViolationType(ViolationType.PARKING_ON_RESERVED_STALL.toString());
+        userReportEntity.setMainPicture("/Users/max/Desktop/forSE2proj/picturesData/ParkingOnReservedStall2.png");
+        PlaceEntity placeEntity=new PlaceEntity();
+        placeEntity.setCity("Milan");
+        placeEntity.setAddress("Piazzale Gabrio Piola");
+        CoordinateEntity coordinateEntity=new CoordinateEntity();
+        coordinateEntity.setLongitude(BigDecimal.valueOf(9.2229332));
+        coordinateEntity.setLatitude(BigDecimal.valueOf(45.4801297));
+        coordinateEntity.setAltitude(BigDecimal.valueOf(127));
+        placeEntity.setCoordinateEntity(coordinateEntity);
+        userReportEntity.setPlace(placeEntity);
+
+        VehicleEntity vehicleEntity=new VehicleEntity();
+        vehicleEntity.setLicensePlate("12dvg47");
+
+        userReportEntity.setVehicleEntity(vehicleEntity);
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        UserEntity userEntity= em.find(UserEntity.class, "jak4");
+        transaction.commit();
+
+        userReportEntity.setUserEntity(userEntity);
+
+
+        UserReportEntity userReportEntity2=new UserReportEntity();
+        userReportEntity2.setReportTimeStamp(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30)));
+        userReportEntity2.setViolationType(ViolationType.PARKING_ON_RESERVED_STALL.toString());
+        userReportEntity2.setMainPicture("/Users/max/Desktop/forSE2proj/picturesData/ParkingOnReservedStall2.png");
+        PlaceEntity placeEntity2=new PlaceEntity();
+        placeEntity2.setCity("Milan");
+        placeEntity2.setAddress("Piazzale Gabrio Piola");
+        CoordinateEntity coordinateEntity2=new CoordinateEntity();
+        coordinateEntity2.setLongitude(BigDecimal.valueOf(9.2229332));
+        coordinateEntity2.setLatitude(BigDecimal.valueOf(45.4801297));
+        coordinateEntity2.setAltitude(BigDecimal.valueOf(127));
+        placeEntity2.setCoordinateEntity(coordinateEntity2);
+        userReportEntity2.setPlace(placeEntity2);
+
+        VehicleEntity vehicleEntity2=new VehicleEntity();
+        vehicleEntity2.setLicensePlate("12dvg47");
+
+        userReportEntity2.setVehicleEntity(vehicleEntity2);
+
+        userReportEntity2.setUserEntity(userEntity);
+
+
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.merge(userReportEntity);
+        transaction.commit();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.merge(userReportEntity2);
         transaction.commit();
 
     }

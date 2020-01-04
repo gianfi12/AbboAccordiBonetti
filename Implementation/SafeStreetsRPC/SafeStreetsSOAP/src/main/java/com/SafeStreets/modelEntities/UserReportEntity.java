@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "userReport", schema = "SafeStreetsDB")
+@Table(name = "user_report", schema = "safe_streets_db")
 public class UserReportEntity {
     private int id;
     private Timestamp reportTimeStamp;
@@ -40,7 +40,7 @@ public class UserReportEntity {
     }
 
     @Basic
-    @Column(name = "reportTimeStamp")
+    @Column(name = "report_time_stamp")
     public Timestamp getReportTimeStamp() {
         return reportTimeStamp;
     }
@@ -50,7 +50,7 @@ public class UserReportEntity {
     }
 
     @Basic
-    @Column(name = "timeStampOfWatchedViolation")
+    @Column(name = "time_stamp_of_watched_violation")
     public Timestamp getTimeStampOfWatchedViolation() {
         return timeStampOfWatchedViolation;
     }
@@ -60,7 +60,7 @@ public class UserReportEntity {
     }
 
     @Basic
-    @Column(name = "violationType")
+    @Column(name = "violation_type")
     public String getViolationType() {
         return violationType;
     }
@@ -80,7 +80,7 @@ public class UserReportEntity {
     }
 
     @Basic
-    @Column(name = "mainPicture")
+    @Column(name = "main_picture")
     public String getMainPicture() {
         return mainPicture;
     }
@@ -89,8 +89,8 @@ public class UserReportEntity {
         this.mainPicture = mainPicture;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "Place_id")
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name = "place_id")
     public PlaceEntity getPlace() {
         return place;
     }
@@ -99,8 +99,8 @@ public class UserReportEntity {
         this.place = place;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "Vehicle_licensePlate")
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name = "vehicle_license_plate")
     public VehicleEntity getVehicleEntity() {
         return vehicleEntity;
     }
@@ -110,7 +110,7 @@ public class UserReportEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "User")
+    @JoinColumn(name = "user")
     public UserEntity getUserEntity() {
         return userEntity;
     }

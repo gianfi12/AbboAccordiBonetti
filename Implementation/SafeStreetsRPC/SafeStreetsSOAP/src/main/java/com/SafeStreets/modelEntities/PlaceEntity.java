@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "place", schema = "SafeStreetsDB")
+@Table(name = "place", schema = "safe_streets_db")
 public class PlaceEntity {
     private int id;
     private String city;
@@ -48,7 +48,7 @@ public class PlaceEntity {
     }
 
     @Basic
-    @Column(name = "houseCode")
+    @Column(name = "house_code")
     public String getHouseCode() {
         return houseCode;
     }
@@ -57,8 +57,8 @@ public class PlaceEntity {
         this.houseCode = houseCode;
     }
 
-    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
-    @JoinColumn(name = "Coordinate_id")
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
+    @JoinColumn(name = "coordinate_id")
     public CoordinateEntity getCoordinateEntity() {
         return coordinateEntity;
     }
