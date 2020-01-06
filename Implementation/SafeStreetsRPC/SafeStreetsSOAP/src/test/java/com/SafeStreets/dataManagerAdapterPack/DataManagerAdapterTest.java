@@ -1,6 +1,5 @@
 package com.SafeStreets.dataManagerAdapterPack;
 
-import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.exceptions.UserNotPresentException;
 import com.SafeStreets.exceptions.WrongPasswordException;
@@ -10,20 +9,17 @@ import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.*;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
-import org.intellij.lang.annotations.Language;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
 import javax.persistence.*;
-import javax.xml.crypto.Data;
 
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.*;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -117,6 +113,17 @@ public class DataManagerAdapterTest {
         transaction.commit();
     }
 
+    @Test
+    public void readImage() throws ImageReadException {
+        BufferedImage bufferedImage=DataManagerAdapter.readImage("../picturesData/park-on-sidewalk.png");
+        assertNotNull(bufferedImage);
+    }
+
+    @Test(expected = ImageReadException.class)
+    public void readImagePictureNotPresent() throws ImageReadException {
+        DataManagerAdapter.readImage("../picturesData/park-on-sidewalk453.png");
+    }
+
 
     @Test
     public void getUser() throws UserNotPresentException, ImageReadException, WrongPasswordException {
@@ -182,11 +189,31 @@ public class DataManagerAdapterTest {
     }
 
     @Test
-    public void getMunicipalityArea() {
+    public void getMunicipalityAreaWithMunicipalityPresent() throws MunicipalityNotPresentException {
+        Place place=dataManagerAdapter.getMunicipalityArea("Venice");
+
+        assertEquals("Venice", place.getCity());
+        assertNull("Venice", place.getAddress());
+        assertNull("Venice", place.getHouseCode());
+        assertTrue(9.1904000000==place.getCoordinate().getLongitude());
+        assertTrue(45.4667800000==place.getCoordinate().getLatitude());
+        assertTrue(122.0000000000==place.getCoordinate().getAltitude());
+    }
+
+    @Test(expected=MunicipalityNotPresentException.class)
+    public void getMunicipalityAreaWithMunicipalityNotPresent() throws MunicipalityNotPresentException {
+        dataManagerAdapter.getMunicipalityArea("NoMunicipality");
     }
 
     @Test
-    public void checkContractCode() {
+    public void checkContractCodePresent() {
+
+        assertTrue(dataManagerAdapter.checkContractCode("14"));
+    }
+
+    @Test
+    public void checkContractCodeNotPresent() {
+        assertFalse(dataManagerAdapter.checkContractCode("149214"));
     }
 
     @Test
@@ -200,27 +227,67 @@ public class DataManagerAdapterTest {
     }
 
     @Test
-    public void checkPassword() {
+    public void checkPasswordUserTrue() {
+        assertTrue(dataManagerAdapter.checkPassword("smith40", "s4"));
     }
 
     @Test
-    public void exists() {
+    public void checkPasswordUserFalse() {
+        assertFalse(dataManagerAdapter.checkPassword("Justin76", "abct"));
+    }
+
+    @Test
+    public void checkPasswordMunicipalityTrue() {
+        assertTrue(dataManagerAdapter.checkPassword("Rome", "RomeP"));
+    }
+
+    @Test
+    public void checkPasswordMunicipalityFalse() {
+        assertFalse(dataManagerAdapter.checkPassword("Milan", "milan"));
+    }
+
+    @Test
+    public void existsUserTrue() {
+        assertTrue(dataManagerAdapter.exists("jak4"));
+    }
+
+    @Test
+    public void existsUserFalse() {
+        assertFalse(dataManagerAdapter.exists("jak452342678d"));
+    }
+
+    @Test
+    public void existsMunicipalityTrue() {
+        assertTrue(dataManagerAdapter.exists("Milan"));
+    }
+
+    @Test
+    public void existsMunicipalityFalse() {
+        assertFalse(dataManagerAdapter.exists("SuperMilan"));
     }
 
     @Test
     public void generatePasswordHash() {
+        assertEquals("7d885571378195102c08f5f862bdfdeb68bc5f95a353143fd9d9d0ad5878c4a5b2d4e066514565e4c90ace6e21a374aa102113da25a8ed3320d4f2c2cb1bc987",
+                DataManagerAdapter.generatePasswordHash("justin", "M#T\\3|Yzoja`sIu("));
     }
 
     @Test
-    public void generateSalt() {
+    public void generatePasswordHashWithPasswordAndSaltNull() {
+        assertEquals("a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26",
+                DataManagerAdapter.generatePasswordHash(null, null));
     }
 
     @Test
-    public void addUserReport() {
-    }
+    public void getReports() throws ImageReadException {
+        QueryFilter queryFilter=new QueryFilter(LocalDate.of(2019, 11, 1),
+                LocalDate.of(2019, 11, 30), new Place("Milan", "", "", null));
+        List<Report> reportList=dataManagerAdapter.getReports(queryFilter);
 
-    @Test
-    public void getReports() {
+        assertEquals(2, reportList.size());
+        assertEquals("Milan", reportList.get(0).getPlace().getCity());
+        //TODO
+        //assertTrue(reportList.get(0).getReportOffsetDateTime().isAfter(DataManagerAdapter));
     }
 
     @Test
@@ -264,6 +331,34 @@ public class DataManagerAdapterTest {
     }
 
     @Test
+    public void toOffsetDateTimeFromTimestamp() {
+    }
+
+    @Test
+    public void toTimestampFromOffsetDateTime() {
+    }
+
+    @Test
+    public void toDateFromLocalDate() {
+    }
+
+    @Test
+    public void toLocalDateFromDate() {
+    }
+
+    @Test
+    public void toOffsetDateTimeFromLocalDate() {
+    }
+
+    @Test
+    public void getZONEID() {
+    }
+
+    @Test
+    public void toTimestampFromLocalDate() {
+    }
+
+    @Test
     public void getVehicle() {
         VehicleEntity vehicleEntity = em.find(VehicleEntity.class, "AP234IJ");
     }
@@ -304,7 +399,7 @@ public class DataManagerAdapterTest {
     @Test
     public void hashTest() {
 
-        printHash("jak"+"\":xa?(Cc7o]t5f6$");
+        printHash("s4"+"M#c\\3|Yzoja`sIu(");
     }
 
 
