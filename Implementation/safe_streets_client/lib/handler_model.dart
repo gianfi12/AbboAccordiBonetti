@@ -10,6 +10,13 @@ class DevicePosition {
   const DevicePosition({@required this.latitude, @required this.longitude})
       : assert(latitude != null),
         assert(longitude != null);
+
+  ///This method is used to get the json serialization of the object
+  Map<String, dynamic> toJson() =>
+      {
+        'latitude': latitude,
+        'longitude': longitude,
+      };
 }
 
 /// An entry of a statistic, with main and secondary text.

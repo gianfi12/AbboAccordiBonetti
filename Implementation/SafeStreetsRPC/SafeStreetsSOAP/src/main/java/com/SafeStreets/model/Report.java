@@ -2,8 +2,11 @@ package com.SafeStreets.model;
 
 import com.SafeStreets.mapsserviceadapter.GeocodeException;
 import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
@@ -87,5 +90,19 @@ public class Report {
             LOGGER.log(Level.SEVERE,"Error with violation place!!");
         }
         return null;
+    }
+
+    public JSONObject toJSON(){
+        Gson gson = new Gson();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("reportOffsetDateTime",reportOffsetDateTime.toString());
+        jsonObject.put("odtOfWatchedViolation",odtOfWatchedViolation.toString());
+        Type type = new TypeToken<Place>(){}.getType();
+        jsonObject.put("place",gson.toJson(place,type));
+        jsonObject.put("violationType",violationType.toString());
+        jsonObject.put("description",description);
+        jsonObject.put("vehicle",vehicle.getLicensePlate());
+
+        return  jsonObject;
     }
 }

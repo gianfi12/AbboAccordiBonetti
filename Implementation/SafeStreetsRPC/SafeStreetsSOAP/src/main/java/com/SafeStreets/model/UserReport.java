@@ -5,10 +5,12 @@ import com.SafeStreets.modelEntities.UserReportEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -91,6 +93,38 @@ public class UserReport extends Report{
             LOGGER.log(Level.SEVERE, "Error decode report main image!");
             return null;
         }
+    }
+
+    public String toJson(){
+        JSONObject jsonObject = super.toJSON();
+        jsonObject.put("author", authorUser.getUsername());
+        jsonObject.put("mainPicture", encodeToString(mainPicture,"png"));
+        List<String> picturesString = new ArrayList<>();
+        for(BufferedImage picture: otherPictures){
+            picturesString.add(encodeToString(picture,"png"));
+        }
+        jsonObject.put("otherPictures", picturesString);
+
+
+        return jsonObject.toString();
+    }
+
+    private String encodeToString(BufferedImage image, String type) {
+        String imageString = null;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+        try {
+            ImageIO.write(image, type, bos);
+            byte[] imageBytes = bos.toByteArray();
+
+            BASE64Encoder encoder = new BASE64Encoder();
+            imageString = encoder.encode(imageBytes);
+
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return imageString;
     }
 
 

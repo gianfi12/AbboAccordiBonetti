@@ -18,9 +18,12 @@ import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.ejb.*;
 import java.lang.reflect.Type;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -192,6 +195,7 @@ public class Dispatcher implements DispatcherInterface{
                 }
             }catch(FieldsException | GeocodeException e){
                 LOGGER.log(Level.SEVERE,"Error during the geocoding of the position!");
+
             }
         }
 
@@ -207,8 +211,25 @@ public class Dispatcher implements DispatcherInterface{
      * @param until This date indicates that the municipality is interested in the reports up to this date
      * @return Is a list that contains the request reports as a JSON string
      */
-    public List<String> accessReports(String username,String password,Date from,Date until){
-        return null;
+    public List<String> accessReports(String username,String password,String from,String until){
+        AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
+        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        List<String> returnList = new ArrayList<>();
+        if(accessType==AccessType.MUNICIPALITY){
+            DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                LocalDate untilDate = LocalDate.parse(until.replace("'",""), formatter);
+
+                List<UserReport> userReports= dataAnalysis.getUserReports(new QueryFilter(null,untilDate , authorizationManager.getMunicipality(username)));
+                for(UserReport userReport : userReports){
+                    returnList.add(userReport.toJson());
+                }
+            }catch(ImageReadException e){
+                LOGGER.log(Level.SEVERE,"Error image loading during report access!");
+            }
+        }
+        return returnList;
     }
 
     /**
