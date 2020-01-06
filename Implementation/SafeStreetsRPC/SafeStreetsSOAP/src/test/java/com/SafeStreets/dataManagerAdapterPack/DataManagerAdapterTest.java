@@ -8,7 +8,6 @@ import com.SafeStreets.model.User;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.*;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.bouncycastle.jcajce.provider.digest.SHA3;
 import org.bouncycastle.util.encoders.Hex;
 import org.intellij.lang.annotations.Language;

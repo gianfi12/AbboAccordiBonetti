@@ -1,5 +1,7 @@
 package com.SafeStreets.model;
 
+import com.google.gson.Gson;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,5 +105,42 @@ public class Statistic {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String toJSON(){
+        Gson gson = new Gson();
+        List<String> coordinates = new ArrayList<>();
+        for(Coordinate coordinate : coordinateListForStreet){
+            coordinates.add(gson.toJson(coordinate));
+        }
+        return gson.toJson(new StatisticSend(street,coordinates,numberOfViolationsInStreet,numberOfReports,numberOfUsers,reportsNoDivUsersNo,date.toString(),vehicle.getLicensePlate(),numberOfViolationsOfVehicle,violationType.toString(),statisticType.toString()));
+    }
+
+    class StatisticSend{
+        private String street;
+        private List<String> coordinateListForStreet;
+        private int numberOfViolationsInStreet;
+        private int numberOfReports;
+        private int numberOfUsers;
+        private double reportsNoDivUsersNo;
+        private String date;
+        private String vehicle;
+        private int numberOfViolationsOfVehicle;
+        private String violationType;
+        private String statisticType;
+
+        public StatisticSend(String street, List<String> coordinateListForStreet, int numberOfViolationsInStreet, int numberOfReports, int numberOfUsers, double reportsNoDivUsersNo, String date, String vehicle, int numberOfViolationsOfVehicle, String violationType, String statisticType) {
+            this.street = street;
+            this.coordinateListForStreet = coordinateListForStreet;
+            this.numberOfViolationsInStreet = numberOfViolationsInStreet;
+            this.numberOfReports = numberOfReports;
+            this.numberOfUsers = numberOfUsers;
+            this.reportsNoDivUsersNo = reportsNoDivUsersNo;
+            this.date = date;
+            this.vehicle = vehicle;
+            this.numberOfViolationsOfVehicle = numberOfViolationsOfVehicle;
+            this.violationType = violationType;
+            this.statisticType = statisticType;
+        }
     }
 }

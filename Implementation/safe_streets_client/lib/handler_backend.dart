@@ -10,8 +10,6 @@ import 'package:http/http.dart' as http;
 import 'handler_model.dart' as model;
 import 'package:xml/xml.dart' as xml;
 
-import 'handler_model.dart';
-
 /// An interface that represents the backend.
 ///
 /// This describes the methods that the backend provides.
@@ -727,7 +725,7 @@ Future<List<String>> getAvailableReportCategories() {
 
 class _SOAPTest implements DispatcherInterface {
   String _username, _password;
-  final String ip='localhost';
+  final String ip='192.168.1.7';
 
   _SOAPTest(this._username, this._password);
 
@@ -753,13 +751,9 @@ class _SOAPTest implements DispatcherInterface {
     }
     var parser = xml.parse(response.body);
     var returnElement = parser.findAllElements("return");
-    var resp;
-    var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
-    if(string=="true"){
-      resp=true;
-    }else if (string=="false"){
-      resp=false;
-    }
+    List<String> resp = new List();
+    var elements = returnElement.toList();
+    elements.forEach((element) => resp.add(element.text.replaceAll("\"", "")));
     return Future.value(resp);
   }
 
@@ -804,9 +798,35 @@ class _SOAPTest implements DispatcherInterface {
       String password,
       String dataIntegrationIp,
       String dataIntegrationPort,
-      String dataIntegrationPassword}) {
-    // TODO: implement municipalityRegistration
-    throw UnimplementedError();
+      String dataIntegrationPassword}) async {
+    var dataIntegrationInfo;
+    if(dataIntegrationIp==null){
+      dataIntegrationInfo = new DataIntegrationInfo("", "", "");
+    }else{
+      dataIntegrationInfo = new   DataIntegrationInfo(dataIntegrationIp,dataIntegrationPort,dataIntegrationPassword);
+    }
+    http.Response response = await http.post(
+      'http://'+ip+':8080/SafeStreetsSOAP/DispatcherService',
+      headers: {
+        'content-type': 'text/xml',
+        'SOAPAction': 'http://SafeStreets.com/Dispatcher/municipalityRegistrationRequest',
+      },
+      body: utf8.encode(getSoapMunicipalityRegistration(code,username,password, dataIntegrationInfo)),
+    );
+    if (response.statusCode != 200) {
+      print("Respons error from the server");
+      return Future.value(false);
+    }
+    var parser = xml.parse(response.body);
+    var returnElement = parser.findAllElements("return");
+    var resp;
+    var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
+    if(string=="true"){
+      resp=true;
+    }else if (string=="false"){
+      resp=false;
+    }
+    return Future.value(resp);
   }
 
   @override
@@ -832,15 +852,35 @@ class _SOAPTest implements DispatcherInterface {
     }else if (string=="false"){
       resp=false;
     }
-    return Future.value(resp);    throw UnimplementedError();
+    return Future.value(resp);
   }
 
   @override
   Future<List<model.StatisticsItem>> requestDataAnalysis(
-      {String statisticsType, model.DevicePosition location}) {
-    // TODO: implement requestDataAnalysis
-    throw UnimplementedError();
-  }
+      {String statisticsType, model.DevicePosition location}) async{
+    http.Response response = await http.post(
+      'http://'+ip+':8080/SafeStreetsSOAP/DispatcherService',
+      headers: {
+        'content-type': 'text/xml',
+        'SOAPAction': 'http://SafeStreets.com/Dispatcher/requestDataAnalysisRequest',
+      },
+      body: utf8.encode(getSoapDataAnalysis(_username,_password,statisticsType,location)),
+    );
+    List<model.StatisticsItem> returnList = new List();
+    if (response.statusCode != 200) {
+      print("Respons error from the server");
+      return Future.value(returnList);
+    }
+    var parser = xml.parse(response.body);
+    var returnElement = parser.findAllElements("return");
+    var resp;
+    var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
+    if(string=="true"){
+      resp=true;
+    }else if (string=="false"){
+      resp=false;
+    }
+    return Future.value(resp);  }
 
   @override
   Future<bool> userRegistration(
@@ -879,6 +919,36 @@ class _SOAPTest implements DispatcherInterface {
     }
     return Future.value(resp);
   }
+}
+
+String getSoapDataAnalysis(String username,String password,String statisticsType, model.DevicePosition location) {
+  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:requestDataAnalysis xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+  string = string + username;
+  string = string + ''''</arg0><arg1>''' ;
+  string = string + password;
+  string = string + ''''</arg1><arg2>''' ;
+  string = string + statisticsType;
+  string = string + ''''</arg2><arg3>''' ;
+  string = string + jsonEncode(location.toJson());
+  string = string + ''''</arg3></ns2:requestDataAnalysis></S:Body></S:Envelope>''';
+  return string;
+
+}
+
+
+
+String getSoapMunicipalityRegistration(String code, String username, String password, DataIntegrationInfo dataIntegrationInfo){
+    var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:municipalityRegistration xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+    string = string + code;
+    string = string + ''''</arg0><arg1>''' ;
+    string = string + username;
+    string = string + ''''</arg1><arg2>''' ;
+    string = string + password;
+    string = string + ''''</arg2><arg3>''' ;
+    string = string + jsonEncode(dataIntegrationInfo.toJson());
+    string = string + ''''</arg3></ns2:municipalityRegistration></S:Body></S:Envelope>''';
+    return string;
+
 }
 
 String getSoapLogin(String username, String password) =>
@@ -944,6 +1014,28 @@ class User {
     List<int> imageBytes = File(path).readAsBytesSync();
     return base64Encode(imageBytes);
   }
+
+  }
+
+  class DataIntegrationInfo{
+  String _dataIntegrationIp, _dataIntegrationPort, _dataIntegrationPassword;
+
+  DataIntegrationInfo(this._dataIntegrationIp, this._dataIntegrationPort,
+      this._dataIntegrationPassword);
+
+  get dataIntegrationPassword => _dataIntegrationPassword;
+
+  get dataIntegrationPort => _dataIntegrationPort;
+
+  String get dataIntegrationIp => _dataIntegrationIp;
+
+  Map<String, dynamic> toJson() =>
+      {
+        'ip': dataIntegrationIp,
+        'port': dataIntegrationPort,
+        'password': dataIntegrationPassword,
+      };
+
 
   }
   

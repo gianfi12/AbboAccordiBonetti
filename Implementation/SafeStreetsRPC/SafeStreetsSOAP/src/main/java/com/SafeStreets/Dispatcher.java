@@ -2,12 +2,17 @@ package com.SafeStreets;
 
 import com.SafeStreets.authorizationmanager.AuthorizationManagerInterface;
 import com.SafeStreets.dataManagerAdapterPack.UserDataInterface;
+import com.SafeStreets.data_analysis_manager.DataAnalysisInterface;
 import com.SafeStreets.elaborationmanager.ElaborationManagerInterface;
 import com.SafeStreets.exceptions.*;
+import com.SafeStreets.mapsserviceadapter.FieldsException;
+import com.SafeStreets.mapsserviceadapter.GeocodeException;
+import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
 import com.SafeStreets.model.*;
 import com.SafeStreets.registrationmanager.RegistrationManagerInterface;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.json.JSONObject;
 
 import javax.jws.WebService;
 import javax.jws.WebMethod;
@@ -71,9 +76,9 @@ public class Dispatcher implements DispatcherInterface{
     public Boolean municipalityRegistration(String code, String username, String password, String dataIntegrationInfo) {
         RegistrationManagerInterface registrationManager = RegistrationManagerInterface.getInstance();
         try{
-            registrationManager.municipalityRegistration(code,username,password);
+            registrationManager.municipalityRegistration(code.replace("'",""),username.replace("'",""),password.replace("'",""));
             Type type = new TypeToken<DataIntegrationInfo>(){}.getType();
-            DataIntegrationInfo dataIntegrationInfo1 = gson.fromJson(dataIntegrationInfo,type);
+            DataIntegrationInfo dataIntegrationInfo1 = gson.fromJson(dataIntegrationInfo.replace("'",""),type);
             //TODO register the data integration info
             return true;
         }catch (MunicipalityNotPresentException | PlaceForMunicipalityNotPresentException | MunicipalityAlreadyPresentException e){
@@ -136,7 +141,7 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public List<String> getAvailableStatistics(String username, String password) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username,password);
+        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
         List<String> statistics = new ArrayList<>();
         switch (accessType){
             case NOT_REGISTERED:
@@ -168,7 +173,30 @@ public class Dispatcher implements DispatcherInterface{
     @WebMethod
     @Override
     public List<String> requestDataAnalysis(String username, String password, String statisticsType, String location) {
-        return null;
+        AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
+        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        List<String> response = new ArrayList<>();
+        StatisticType statistic = StatisticType.valueOf(statisticsType.split("\\.")[1].replace("'",""));
+
+        if( (accessType==AccessType.USER && statistic.canBeForUser()) || (accessType==AccessType.MUNICIPALITY && statistic.canBeForMunicipality()) ){
+            DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
+            MapsServiceInterface mapsService = MapsServiceInterface.getInstance();
+
+            JSONObject obj = new JSONObject(location.replace("'", ""));
+            Double longitude = obj.getDouble("longitude");
+            Double latitude = obj.getDouble("latitude");
+            try {
+                Place place = mapsService.geocoding(new Coordinate(latitude, longitude, 0.0));
+                for( Statistic element : dataAnalysis.getStatistics(statistic,place.getCity(),null,null)){
+                    response.add(element.toJSON());
+                }
+            }catch(FieldsException | GeocodeException e){
+                LOGGER.log(Level.SEVERE,"Error during the geocoding of the position!");
+            }
+        }
+
+
+        return response;
     }
 
     /**

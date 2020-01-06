@@ -41,7 +41,6 @@ void main() async{
     var report = new Report(deviceDateTime: new DateTime(2010,12,23),violationDateTime: new DateTime(2010,12,22), mainImage: main.path,otherImages: images, devicePosition: null,position: "Piazza Leonardo da Vinci 32 Milano", violationType: l.AvailableStrings.PARKING_ON_SIDEWALK.toString(),plateNumber: "AB345CD");
     var response = await soap.newReport(report: report);
     expect(response,true);
-
   });
 
 
@@ -49,7 +48,23 @@ void main() async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
     var statistics = await soap.getAvailableStatistics();
-
+    expect(statistics[0],"STREETS_STAT");
+    expect(statistics[1],"EFFECTIVENESS_STAT");
+    expect(statistics[2],"VIOLATIONS_STAT");
   });
+
+  test('Municipality Registration Functionality', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("jak4", "jak");
+    var response = await soap.municipalityRegistration(code: "14", username: "Florence", password: "ARealPassowrd");
+    expect(response,true);
+  });
+
+  test('Data Analysis Functionality', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("jak4", "jak");
+    var response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.VIOLATIONS_STAT.toString(), location: new DevicePosition(latitude: 45.4408, longitude: 12.3155));
+  });
+
 
 }

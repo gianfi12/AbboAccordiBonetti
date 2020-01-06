@@ -1,8 +1,6 @@
 package com.SafeStreets.dataManagerAdapterPack;
 
-import com.SafeStreets.data_analysis_manager.DataAnalysisInterface;
 import com.SafeStreets.exceptions.*;
-import com.SafeStreets.mapsserviceadapter.MapsServiceInterface;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.MunicipalityEntity;
 import com.SafeStreets.modelEntities.OtherPictureEntity;
@@ -16,7 +14,6 @@ import javax.imageio.ImageIO;
 import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.sql.Array;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
@@ -24,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 
 /**
  * An implementation of {@link UserDataInterface}, {@link MunicipalityDataInterface} and {@link ReportsDataInterface}.
