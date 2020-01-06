@@ -151,13 +151,12 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
         transaction.begin();
         em.merge(municipalityEntity);
-        em.getTransaction().commit();
+        transaction.commit();
     }
 
     @Override
     public Place getMunicipalityArea(String username) throws MunicipalityNotPresentException{
         MunicipalityEntity municipalityEntity=getMunicipalityByUsername(username);
-
         return municipalityEntity.getPlaceEntity().toPlace();
     }
 
@@ -249,6 +248,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     public static String generatePasswordHash(String password, String salt) {
+        if(password==null)
+            password="";
+        if(salt==null)
+            salt="";
         return doHash(password+salt);
     }
 
@@ -296,7 +299,6 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
                 otherPictureEntity.setPicture(otherPicturePath);
                 otherPictureEntity.setUserReportEntity(userReportEntity);
 
-                transaction=em.getTransaction();
                 transaction.begin();
                 em.merge(otherPictureEntity);
                 transaction.commit();
