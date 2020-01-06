@@ -64,7 +64,15 @@ void main() async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
     var response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.VIOLATIONS_STAT.toString(), location: new DevicePosition(latitude: 45.4408, longitude: 12.3155));
+    //TODO
   });
 
+  test('Access Reports Functionality', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("Milan", "Milan");
+    var response = await soap.accessReports(from: new DateTime(2010,10,11));
+    //TODO
+  });
+  
 
 }

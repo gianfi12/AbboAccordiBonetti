@@ -730,9 +730,26 @@ class _SOAPTest implements DispatcherInterface {
   _SOAPTest(this._username, this._password);
 
   @override
-  Future<List<model.Report>> accessReports({DateTime from, DateTime until}) {
-    // TODO: implement accessReports
-    throw UnimplementedError();
+  Future<List<model.Report>> accessReports({DateTime from, DateTime until}) async{
+    http.Response response = await http.post(
+      'http://'+ip+':8080/SafeStreetsSOAP/DispatcherService',
+      headers: {
+        'content-type': 'text/xml',
+        'SOAPAction': 'http://SafeStreets.com/Dispatcher/accessReportsRequest',
+      },
+      body: utf8.encode(getSoapAccessReports(_username,_password,from,until)),
+    );
+    if (response.statusCode != 200) {
+      print("Respons error from the server");
+      return Future.value(new List());
+    }
+    List<model.Report> returnList = new List();
+    var parser = xml.parse(response.body);
+    var returnElement = parser.findAllElements("return");
+    List<String> resp = new List();
+    var elements = returnElement.toList();
+    elements.forEach((element) => resp.add(element.text.replaceAll("\"", "")));
+    return Future.value(returnList);
   }
 
   @override
@@ -871,6 +888,7 @@ class _SOAPTest implements DispatcherInterface {
       print("Respons error from the server");
       return Future.value(returnList);
     }
+    //TODO the return list
     var parser = xml.parse(response.body);
     var returnElement = parser.findAllElements("return");
     var resp;
@@ -921,8 +939,21 @@ class _SOAPTest implements DispatcherInterface {
   }
 }
 
+String getSoapAccessReports(String username, String password, DateTime from, DateTime until){
+  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:accessReports xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+  string = string + username;
+  string = string + ''''</arg0><arg1>''' ;
+  string = string + password;
+  string = string + ''''</arg1><arg2>''' ;
+  string = string + from.toString();
+  string = string + ''''</arg2><arg3>''' ;
+  string = string + until.toString();
+  string = string + ''''</arg3></ns2:accessReports></S:Body></S:Envelope>''';
+  return string;
+}
+
 String getSoapDataAnalysis(String username,String password,String statisticsType, model.DevicePosition location) {
-  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:requestDataAnalysis xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:accessReports xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   string = string + username;
   string = string + ''''</arg0><arg1>''' ;
   string = string + password;
