@@ -137,8 +137,7 @@ public class UserReportEntity {
         return Objects.hash(id, reportTimeStamp, timeStampOfWatchedViolation, violationType, description, mainPicture);
     }
 
-    public UserReport toUserReportWithoutImages() throws ImageReadException {
-        List<BufferedImage> otherPictures = new ArrayList<>();
+    public UserReport toUserReportWithImages(List<OtherPictureEntity> otherPictureEntities) throws ImageReadException {
         OffsetDateTime odtOfWatchedViolation=null;
         if(timeStampOfWatchedViolation!=null)
             odtOfWatchedViolation=DataManagerAdapter.toOffsetDateTimeFromTimestamp(timeStampOfWatchedViolation);
@@ -147,9 +146,17 @@ public class UserReportEntity {
         if(vehicleEntity!=null)
             vehicle=vehicleEntity.toVehicle();
 
+        BufferedImage mainPictureBI=DataManagerAdapter.readImage(mainPicture);
+
+        List<BufferedImage> otherPicturesBI = new ArrayList<>();
+
+        for(OtherPictureEntity otherPictureEntity : otherPictureEntities) {
+            otherPicturesBI.add(DataManagerAdapter.readImage(otherPictureEntity.getPicture()));
+        }
+
         return new UserReport(DataManagerAdapter.toOffsetDateTimeFromTimestamp(reportTimeStamp), odtOfWatchedViolation,
                 place.toPlace(), ViolationType.valueOf(violationType), description,
                 vehicle,
-                userEntity.toUser(), null, otherPictures);
+                userEntity.toUser(), mainPictureBI, otherPicturesBI);
     }
 }

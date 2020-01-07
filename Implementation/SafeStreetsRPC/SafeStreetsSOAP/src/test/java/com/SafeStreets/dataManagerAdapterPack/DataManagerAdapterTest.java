@@ -18,15 +18,17 @@ import javax.persistence.*;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 
 public class DataManagerAdapterTest {
     private static final String PERSISTENCE_UNIT_NAME ="manager1";
-    private static EntityManagerFactory emf;
     private static EntityManager em;
     private static DataManagerAdapter dataManagerAdapter;
 
@@ -35,7 +37,7 @@ public class DataManagerAdapterTest {
 
     @BeforeClass
     public static void beforeClass() {
-        emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         em = emf.createEntityManager();
         dataManagerAdapter=new DataManagerAdapter();
     }
@@ -49,12 +51,12 @@ public class DataManagerAdapterTest {
 
         Coordinate birthCoordinate=new Coordinate(4.0,5.0,6.0);
         Coordinate residenceCoordinate=new Coordinate(7.0,8.0,9.0);
-        Place placeOfBirth = new Place("b", "a", "4", birthCoordinate);
+        Place placeOfBirth = new Place("Bologna", "Via Avesella", "12", birthCoordinate);
 
-        Place placeOfResidence = new Place("r", "a2", "5", residenceCoordinate);
+        Place placeOfResidence = new Place("Ravenna", "Via Alfredo Baccarini", "3", residenceCoordinate);
 
         String username="bob45";
-        User user = new User(username, "bob@m.com", "bob", "r", placeOfBirth, placeOfResidence, pictureImage, idCardImage, "BBORSS80A01L378T", LocalDate.of(1980, 1, 1));
+        User user = new User(username, "bob@m.com", "Bob", "R", placeOfBirth, placeOfResidence, pictureImage, idCardImage, "BBORSS80A01L378T", LocalDate.of(1980, 1, 1));
 
         dataManagerAdapter.addUser(user, password);
 
@@ -70,10 +72,15 @@ public class DataManagerAdapterTest {
         User savedUser = userEntity.toUser();
         assertTrue(user.isEqual(savedUser));
 
+
+        String deleteUser= "DELETE FROM UserEntity WHERE username="+userEntity.getUsername();
+
         transaction=em.getTransaction();
         transaction.begin();
-        em.remove(userEntity);
+        em.createQuery(deleteUser);
         transaction.commit();
+
+
     }
 
     @Test
@@ -86,9 +93,9 @@ public class DataManagerAdapterTest {
 
         Coordinate birthCoordinate=new Coordinate(45.4642035,9.189982,0.0);
         Coordinate residenceCoordinate=new Coordinate(45.462035,9.189982,0.0);
-        Place placeOfBirth = new Place("Milan", "", "", birthCoordinate);
+        Place placeOfBirth = new Place("Milano", "Via Aristide de Togni", "12", birthCoordinate);
 
-        Place placeOfResidence = new Place("Milan", "", "", residenceCoordinate);
+        Place placeOfResidence = new Place("Milano", "Via Aristide de Togni", "12", residenceCoordinate);
 
         String username="user";
         User user = new User(username, "user@mail.com", "Real", "User", placeOfBirth, placeOfResidence, pictureImage, idCardImage, "SDCHSDC127NASD", LocalDate.of(1995,11,23));
@@ -107,9 +114,11 @@ public class DataManagerAdapterTest {
         User savedUser = userEntity.toUser();
         assertTrue(user.isEqual(savedUser));
 
+        String deleteUser= "DELETE FROM UserEntity WHERE username="+userEntity.getUsername();
+
         transaction=em.getTransaction();
         transaction.begin();
-        em.remove(userEntity);
+        em.createQuery(deleteUser);
         transaction.commit();
     }
 
@@ -132,13 +141,13 @@ public class DataManagerAdapterTest {
         assertEquals("jak@gmail.com", user.getEmail());
         assertEquals("Jak", user.getFirstName());
         assertEquals("Red", user.getLastName());
-        assertEquals("Milan", user.getPlaceOfBirth().getCity());
+        assertEquals("Milano", user.getPlaceOfBirth().getCity());
         assertNull(user.getPlaceOfBirth().getAddress());
         assertNull( user.getPlaceOfBirth().getHouseCode());
         assertTrue(45.4769300000==user.getPlaceOfBirth().getCoordinate().getLatitude());
         assertTrue(9.2322900000==user.getPlaceOfBirth().getCoordinate().getLongitude());
         assertTrue(122.0000000000==user.getPlaceOfBirth().getCoordinate().getAltitude());
-        assertEquals("Milan", user.getPlaceOfResidence().getCity());
+        assertEquals("Milano", user.getPlaceOfResidence().getCity());
         assertEquals("Piazza della Scala",user.getPlaceOfResidence().getAddress());
         assertEquals("2",user.getPlaceOfResidence().getHouseCode());
         assertTrue(45.4667800000==user.getPlaceOfResidence().getCoordinate().getLatitude());
@@ -150,12 +159,12 @@ public class DataManagerAdapterTest {
 
     @Test
     public void addMunicipality() throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException, MunicipalityNotPresentException, WrongPasswordException {
-        dataManagerAdapter.addMunicipality("14", "FlorenceMunicipality", "FlorenceP");
+        dataManagerAdapter.addMunicipality("14", "Firenze", "FlorenceP");
 
-        Municipality municipality=dataManagerAdapter.getMunicipality("FlorenceMunicipality", "FlorenceP");
+        Municipality municipality=dataManagerAdapter.getMunicipality("Firenze", "FlorenceP");
 
-        assertEquals("FlorenceMunicipality", municipality.getName());
-        assertEquals("Florence", municipality.getPlace().getCity());
+        assertEquals("Firenze", municipality.getName());
+        assertEquals("Firenze", municipality.getPlace().getCity());
         assertNull(municipality.getPlace().getAddress());
         assertNull(municipality.getPlace().getHouseCode());
         assertNull(municipality.getPlace().getCoordinate());
@@ -190,11 +199,11 @@ public class DataManagerAdapterTest {
 
     @Test
     public void getMunicipalityAreaWithMunicipalityPresent() throws MunicipalityNotPresentException {
-        Place place=dataManagerAdapter.getMunicipalityArea("Venice");
+        Place place=dataManagerAdapter.getMunicipalityArea("Venezia");
 
-        assertEquals("Venice", place.getCity());
-        assertNull("Venice", place.getAddress());
-        assertNull("Venice", place.getHouseCode());
+        assertEquals("Venezia", place.getCity());
+        assertNull(place.getAddress());
+        assertNull(place.getHouseCode());
         assertTrue(9.1904000000==place.getCoordinate().getLongitude());
         assertTrue(45.4667800000==place.getCoordinate().getLatitude());
         assertTrue(122.0000000000==place.getCoordinate().getAltitude());
@@ -218,9 +227,9 @@ public class DataManagerAdapterTest {
 
     @Test
     public void getMunicipality() throws MunicipalityNotPresentException, WrongPasswordException {
-        Municipality municipality=dataManagerAdapter.getMunicipality("Rome", "RomeP");
-        assertEquals(municipality.getName(),"Rome");
-        assertEquals(municipality.getPlace().getCity(),"Rome");
+        Municipality municipality=dataManagerAdapter.getMunicipality("Roma", "RomeP");
+        assertEquals("Roma", municipality.getName());
+        assertEquals("Roma", municipality.getPlace().getCity());
         assertNull(municipality.getPlace().getAddress());
         assertNull(municipality.getPlace().getHouseCode());
         assertNull(municipality.getPlace().getCoordinate());
@@ -238,12 +247,12 @@ public class DataManagerAdapterTest {
 
     @Test
     public void checkPasswordMunicipalityTrue() {
-        assertTrue(dataManagerAdapter.checkPassword("Rome", "RomeP"));
+        assertTrue(dataManagerAdapter.checkPassword("Roma", "RomeP"));
     }
 
     @Test
     public void checkPasswordMunicipalityFalse() {
-        assertFalse(dataManagerAdapter.checkPassword("Milan", "milan"));
+        assertFalse(dataManagerAdapter.checkPassword("Milano", "milan"));
     }
 
     @Test
@@ -258,7 +267,7 @@ public class DataManagerAdapterTest {
 
     @Test
     public void existsMunicipalityTrue() {
-        assertTrue(dataManagerAdapter.exists("Milan"));
+        assertTrue(dataManagerAdapter.exists("Milano"));
     }
 
     @Test
@@ -280,21 +289,98 @@ public class DataManagerAdapterTest {
 
     @Test
     public void getReports() throws ImageReadException {
-        QueryFilter queryFilter=new QueryFilter(LocalDate.of(2019, 11, 1),
-                LocalDate.of(2019, 11, 30), new Place("Milan", "", "", null));
+        LocalDate from=LocalDate.of(2019, 11, 1);
+        LocalDate to=LocalDate.of(2019, 11, 30);
+        QueryFilter queryFilter=new QueryFilter(from, to, new Place("Milano", "", "", null));
         List<Report> reportList=dataManagerAdapter.getReports(queryFilter);
 
         assertEquals(2, reportList.size());
-        assertEquals("Milan", reportList.get(0).getPlace().getCity());
-        //TODO
-        //assertTrue(reportList.get(0).getReportOffsetDateTime().isAfter(DataManagerAdapter));
+        assertEquals("Milano", reportList.get(0).getPlace().getCity());
+        assertTrue(reportList.get(0).getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(from, true)));
+        assertTrue(reportList.get(0).getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(to, false)));
+
+        assertEquals("Milano", reportList.get(1).getPlace().getCity());
+        assertTrue(reportList.get(1).getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(from, true)));
+        assertTrue(reportList.get(1).getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(to, false)));
+    }
+
+    @Test
+    public void addUserReport() throws ImageReadException, ImageStoreException {
+
+        UserReportEntity userReportEntityOld=dataManagerAdapter.findLastUserReport();
+
+        BufferedImage mainPicture=DataManagerAdapter.readImage("../picturesData/ParkingOnReservedStall.png");
+
+        List<BufferedImage> otherPictures = new ArrayList<>();
+        otherPictures.add(DataManagerAdapter.readImage("../picturesData/ParkingOnReservedStall.png"));
+        otherPictures.add(DataManagerAdapter.readImage("../picturesData/ParkingOnReservedStall.png"));
+
+        Vehicle vehicle=new Vehicle("fb452rt");
+
+        Coordinate coordinate=new Coordinate(45.471245, 9.211029 , 150.0);
+        Timestamp reportTimeStamp=Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30));
+        Timestamp reportOfWatchedViolationTimeStamp=Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 50, 30));
+
+        Place place=new Place("Milano", "Via Carlo Pisacane", null, coordinate);
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        UserEntity userEntity= em.find(UserEntity.class, "jak4");
+        transaction.commit();
+
+        UserReport userReport=new UserReport(DataManagerAdapter.toOffsetDateTimeFromTimestamp(reportTimeStamp),
+                DataManagerAdapter.toOffsetDateTimeFromTimestamp(reportOfWatchedViolationTimeStamp),
+                place, ViolationType.PARKING_ON_RESERVED_STALL, "",
+                vehicle,
+                userEntity.toUser(), mainPicture, otherPictures);
+
+        dataManagerAdapter.addUserReport(userReport);
+
+        UserReportEntity userReportEntity=dataManagerAdapter.findLastUserReport();
+
+        assertTrue(userReportEntity.getId()>userReportEntityOld.getId());
+
+        assertEquals("", userReportEntity.getDescription());
+        assertEquals("../picturesData/MainPictureFromReportOfjak4.png", userReportEntity.getMainPicture());
+        assertEquals(ViolationType.PARKING_ON_RESERVED_STALL.toString(), userReportEntity.getViolationType());
+        assertEquals("Milano", userReportEntity.getPlace().getCity());
+        assertEquals("Via Carlo Pisacane", userReportEntity.getPlace().getAddress());
+        assertNull(userReportEntity.getPlace().getHouseCode());
+        assertEquals("fb452rt", userReportEntity.getVehicleEntity().getLicensePlate());
+        assertEquals(userEntity, userReportEntity.getUserEntity());
+        assertEquals(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30)), userReportEntity.getReportTimeStamp());
+        assertEquals(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 50, 30)), userReportEntity.getTimeStampOfWatchedViolation());
+
+        String otherPicturesQuery= "SELECT oP " +
+                "FROM OtherPictureEntity AS oP " +
+                "WHERE oP.userReportEntity.id="+userReportEntity.getId();
+
+        QueryFilter queryFilter=new QueryFilter(otherPicturesQuery, true);
+
+        List<Object[]> resultList = dataManagerAdapter.getAggregatedResult(queryFilter);
+
+        OtherPictureEntity otherPictureEntity= (OtherPictureEntity) resultList.get(0)[0];
+        assertEquals(userReportEntity.getId(),otherPictureEntity.getUserReportEntity().getId());
+        assertEquals("../picturesData/OtherPictureFromReportOfjak40.png",otherPictureEntity.getPicture());
+
+        OtherPictureEntity otherPictureEntity2= (OtherPictureEntity) resultList.get(1)[0];
+        assertEquals("../picturesData/OtherPictureFromReportOfjak41.png",otherPictureEntity2.getPicture());
+
+
+        String deleteReport= "DELETE FROM UserReportEntity WHERE id="+userReportEntity.getId();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.createQuery(deleteReport);
+        transaction.commit();
+
     }
 
     @Test
     public void getUserReportsTestWithCity() throws ImageReadException {
         QueryFilter queryFilter=new QueryFilter(LocalDate.of(2019, 10, 1),
                 LocalDate.of(2019, 12, 15),
-                new Place("Milan", null, null, null));
+                new Place("Milano", null, null, null));
         List<UserReport> userReportList = dataManagerAdapter.getUserReports(queryFilter);
 
         assertFalse(userReportList.isEmpty());
@@ -303,6 +389,12 @@ public class DataManagerAdapterTest {
             assertEquals(userReport.getPlace().getCity(), queryFilter.getPlace().getCity());
             assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
             assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
+            assertNull(userReport.getOdtOfWatchedViolation());
+            assertNotNull(userReport.getViolationType());
+            assertNull(userReport.getDescription());
+            assertNotNull(userReport.getMainPicture());
+            assertNotNull(userReport.getVehicle().getLicensePlate());
+            assertNotNull(userReport.getAuthorUser().getUsername());
         }
 
     }
@@ -311,7 +403,7 @@ public class DataManagerAdapterTest {
     public void getUserReportsTestWithCityAddressAndHouseCode() throws ImageReadException {
         QueryFilter queryFilter=new QueryFilter(LocalDate.of(2018, 12, 1),
                 LocalDate.of(2019, 12, 16),
-                new Place("Venice", "Via Amerigo Vespucci", "4", null));
+                new Place("Venezia", "Via Amerigo Vespucci", "4", null));
         List<UserReport> userReportList = dataManagerAdapter.getUserReports(queryFilter);
 
         assertFalse(userReportList.isEmpty());
@@ -322,60 +414,116 @@ public class DataManagerAdapterTest {
             assertEquals(userReport.getPlace().getHouseCode(), queryFilter.getPlace().getHouseCode());
             assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
             assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
+            assertNull(userReport.getOdtOfWatchedViolation());
+            assertNotNull(userReport.getViolationType());
+            assertNull(userReport.getDescription());
+            assertNotNull(userReport.getMainPicture());
+            assertNotNull(userReport.getVehicle().getLicensePlate());
+            assertNotNull(userReport.getAuthorUser().getUsername());
         }
 
     }
 
     @Test
     public void getAggregatedResult() {
+        String otherPicturesQuery= "SELECT oP " +
+                "FROM OtherPictureEntity AS oP " +
+                "WHERE oP.userReportEntity.id>=2";
+
+        QueryFilter queryFilter=new QueryFilter(otherPicturesQuery, true);
+
+        List<Object[]> resultList = dataManagerAdapter.getAggregatedResult(queryFilter);
+
+        for(Object[] objects : resultList) {
+            OtherPictureEntity otherPictureEntity= (OtherPictureEntity) resultList.get(0)[0];
+            assertTrue(2<=otherPictureEntity.getUserReportEntity().getId());
+        }
     }
 
     @Test
     public void toOffsetDateTimeFromTimestamp() {
+        OffsetDateTime offsetDateTime= DataManagerAdapter.toOffsetDateTimeFromTimestamp(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 39, 40)));
+
+        ZoneId zoneId= TimeZone.getTimeZone("Europe/Rome").toZoneId();
+        LocalDateTime dateTime = LocalDateTime.of(2020, 1, 4, 8, 39, 40);
+        Instant instant = dateTime.atZone(ZoneId.of("Europe/Rome")).toInstant();
+        OffsetDateTime expectedODT = OffsetDateTime.ofInstant(instant, zoneId);
+
+        assertTrue(offsetDateTime.isEqual(expectedODT));
     }
 
     @Test
     public void toTimestampFromOffsetDateTime() {
+        ZoneId zoneId= TimeZone.getTimeZone("Europe/Rome").toZoneId();
+        LocalDateTime dateTime = LocalDateTime.of(2022, 1, 4, 8, 39, 40);
+        Instant instant = dateTime.atZone(ZoneId.of("Europe/Rome")).toInstant();
+        OffsetDateTime odt = OffsetDateTime.ofInstant(instant, zoneId);
+
+        Timestamp timestamp=DataManagerAdapter.toTimestampFromOffsetDateTime(odt);
+
+        Timestamp expectedTS=Timestamp.valueOf(LocalDateTime.of(2022, 1, 4, 8, 39, 40));
+
+        assertEquals(expectedTS, timestamp);
+
     }
 
     @Test
     public void toDateFromLocalDate() {
+        Date date = DataManagerAdapter.toDateFromLocalDate(LocalDate.of(2000, 10, 15));
+        Date expectedDate= Date.valueOf(LocalDate.of(2000, 10, 15));
+        assertEquals(expectedDate, date);
+
     }
 
     @Test
     public void toLocalDateFromDate() {
+        LocalDate localDate = DataManagerAdapter.toLocalDateFromDate(Date.valueOf(LocalDate.of(2000, 11, 15)));
+        LocalDate expectedLocalDate= LocalDate.of(2000, 11, 15);
+        assertEquals(expectedLocalDate, localDate);
     }
 
     @Test
-    public void toOffsetDateTimeFromLocalDate() {
+    public void toOffsetDateTimeFromLocalDateBeginningOfDay() {
+        OffsetDateTime odt = DataManagerAdapter.toOffsetDateTimeFromLocalDate(LocalDate.of(2019, 7, 10), true);
+
+        ZoneId zoneId= TimeZone.getTimeZone("Europe/Rome").toZoneId();
+        LocalDateTime dateTime = LocalDateTime.of(2019, 7, 10, 0, 0, 0);
+        Instant instant = dateTime.atZone(ZoneId.of("Europe/Rome")).toInstant();
+        OffsetDateTime expectedODT = OffsetDateTime.ofInstant(instant, zoneId);
+
+        assertTrue(odt.isEqual(expectedODT));
     }
 
     @Test
-    public void getZONEID() {
+    public void toOffsetDateTimeFromLocalDateEndOfDay() {
+        OffsetDateTime odt = DataManagerAdapter.toOffsetDateTimeFromLocalDate(LocalDate.of(2019, 7, 10), false);
+
+        ZoneId zoneId= TimeZone.getTimeZone("Europe/Rome").toZoneId();
+        LocalDateTime dateTime = LocalDateTime.of(2019, 7, 10, 23, 59, 50);
+        Instant instant = dateTime.atZone(ZoneId.of("Europe/Rome")).toInstant();
+        OffsetDateTime expectedODT = OffsetDateTime.ofInstant(instant, zoneId);
+
+        assertTrue(odt.isEqual(expectedODT));
     }
 
     @Test
-    public void toTimestampFromLocalDate() {
+    public void toTimestampFromLocalDateBeginningOfDay() {
+        Timestamp timestamp=DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2010, 6, 30), true);
+
+        Timestamp expectedTS=Timestamp.valueOf(LocalDateTime.of(2010, 6, 30, 0, 0, 0));
+
+        assertEquals(expectedTS, timestamp);
+
     }
 
     @Test
-    public void getVehicle() {
-        VehicleEntity vehicleEntity = em.find(VehicleEntity.class, "AP234IJ");
-    }
+    public void toTimestampFromLocalDateEndOfDay() {
+        Timestamp timestamp=DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2010, 6, 30), false);
 
+        Timestamp expectedTS=Timestamp.valueOf(LocalDateTime.of(2010, 6, 30, 23, 59, 50));
 
-    @Test
-    public void violationStatisticTest() {
-        String queryString= "SELECT violationType, count(*) " +
-                "FROM UserReportEntity " +
-                "GROUP BY violationType";
+        assertEquals(expectedTS, timestamp);
 
-        List<Object[]> resultList = em.createQuery(queryString).getResultList();
-
-        for(Object[] result : resultList) {
-            System.out.println(ViolationType.valueOf(result[0].toString()));
-            System.out.println(result[1].toString()+" .");
-        }
     }
 
     private BufferedImage readImageFromResourcesImage(String imagePath) throws ImageReadException {
@@ -398,10 +546,8 @@ public class DataManagerAdapterTest {
 
     @Test
     public void hashTest() {
-
         printHash("s4"+"M#c\\3|Yzoja`sIu(");
     }
-
 
     private static void printHash(String stringToHash) {
         SHA3.DigestSHA3 digestSHA3 = new SHA3.Digest512();
@@ -418,7 +564,7 @@ public class DataManagerAdapterTest {
         coordinateEntity.setLongitude(BigDecimal.valueOf(1));
 
         PlaceEntity placeEntity=new PlaceEntity();
-        placeEntity.setCity("Milan");
+        placeEntity.setCity("Milano");
         placeEntity.setCoordinateEntity(coordinateEntity);
 
         EntityTransaction transaction=em.getTransaction();
@@ -434,33 +580,6 @@ public class DataManagerAdapterTest {
     }
 
     @Test
-    public void addThreeVehicles() {
-        VehicleEntity vehicleEntity=new VehicleEntity();
-        vehicleEntity.setLicensePlate("12dvg49");
-
-        VehicleEntity vehicleEntity2=new VehicleEntity();
-        vehicleEntity2.setLicensePlate("12dvg50");
-
-        VehicleEntity vehicleEntity3=new VehicleEntity();
-        vehicleEntity3.setLicensePlate("12dvg49");
-
-        EntityTransaction transaction=em.getTransaction();
-        transaction.begin();
-        em.merge(vehicleEntity);
-        transaction.commit();
-
-        transaction=em.getTransaction();
-        transaction.begin();
-        em.merge(vehicleEntity2);
-        transaction.commit();
-
-        transaction=em.getTransaction();
-        transaction.begin();
-        em.merge(vehicleEntity3);
-        transaction.commit();
-    }
-
-    @Test
     public void addTwoReports() {
 
         UserReportEntity userReportEntity=new UserReportEntity();
@@ -468,7 +587,7 @@ public class DataManagerAdapterTest {
         userReportEntity.setViolationType(ViolationType.PARKING_ON_RESERVED_STALL.toString());
         userReportEntity.setMainPicture("/Users/max/Desktop/forSE2proj/picturesData/ParkingOnReservedStall2.png");
         PlaceEntity placeEntity=new PlaceEntity();
-        placeEntity.setCity("Milan");
+        placeEntity.setCity("Milano");
         placeEntity.setAddress("Piazzale Gabrio Piola");
         CoordinateEntity coordinateEntity=new CoordinateEntity();
         coordinateEntity.setLongitude(BigDecimal.valueOf(9.2229332));
@@ -495,7 +614,7 @@ public class DataManagerAdapterTest {
         userReportEntity2.setViolationType(ViolationType.PARKING_ON_RESERVED_STALL.toString());
         userReportEntity2.setMainPicture("/Users/max/Desktop/forSE2proj/picturesData/ParkingOnReservedStall2.png");
         PlaceEntity placeEntity2=new PlaceEntity();
-        placeEntity2.setCity("Milan");
+        placeEntity2.setCity("Milano");
         placeEntity2.setAddress("Piazzale Gabrio Piola");
         CoordinateEntity coordinateEntity2=new CoordinateEntity();
         coordinateEntity2.setLongitude(BigDecimal.valueOf(9.2229332));
@@ -523,5 +642,26 @@ public class DataManagerAdapterTest {
         em.merge(userReportEntity2);
         transaction.commit();
 
+        userReportEntity=dataManagerAdapter.findLastUserReport();
+
+
+        String deleteReport= "DELETE FROM UserReportEntity WHERE id="+userReportEntity.getId();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.createQuery(deleteReport);
+        transaction.commit();
+
+        userReportEntity=dataManagerAdapter.findLastUserReport();
+
+        deleteReport= "DELETE FROM UserReportEntity WHERE id="+userReportEntity.getId();
+
+        transaction=em.getTransaction();
+        transaction.begin();
+        em.createQuery(deleteReport);
+        transaction.commit();
+
     }
+
+
 }

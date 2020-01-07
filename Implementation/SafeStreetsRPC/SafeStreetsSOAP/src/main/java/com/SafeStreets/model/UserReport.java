@@ -51,7 +51,10 @@ public class UserReport extends Report{
     public UserReportEntity toUserReportEntity(String mainPicturePath) {
         UserReportEntity userReportEntity=new UserReportEntity();
         userReportEntity.setReportTimeStamp(DataManagerAdapter.toTimestampFromOffsetDateTime(getReportOffsetDateTime()));
-        userReportEntity.setTimeStampOfWatchedViolation(DataManagerAdapter.toTimestampFromOffsetDateTime(getOdtOfWatchedViolation()));
+
+        if(getOdtOfWatchedViolation()!=null)
+            userReportEntity.setTimeStampOfWatchedViolation(DataManagerAdapter.toTimestampFromOffsetDateTime(getOdtOfWatchedViolation()));
+
         userReportEntity.setViolationType(getViolationType().toString());
         userReportEntity.setDescription(getDescription());
         userReportEntity.setMainPicture(mainPicturePath);

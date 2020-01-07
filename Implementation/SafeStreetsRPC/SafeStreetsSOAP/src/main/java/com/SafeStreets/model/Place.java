@@ -61,8 +61,18 @@ public class Place {
     }
 
     public boolean isEqual(Place placeToCompare) {
-        return city.equals(placeToCompare.city)&&address.equals(placeToCompare.address)
-                &&houseCode.equals(placeToCompare.houseCode)
-                &&coordinate.isEqual(placeToCompare.coordinate);
+        boolean result=true;
+        if(address==null)
+            result=placeToCompare.address==null;
+
+        if(houseCode==null)
+            result=result&&placeToCompare.houseCode==null;
+
+        if(coordinate==null)
+            result=result&&placeToCompare.coordinate==null;
+        else
+            result=coordinate.isEqual(placeToCompare.coordinate);
+
+        return city.equals(placeToCompare.city)&&result;
     }
 }

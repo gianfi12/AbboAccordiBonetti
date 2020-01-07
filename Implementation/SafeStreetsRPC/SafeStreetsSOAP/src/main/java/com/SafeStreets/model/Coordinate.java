@@ -41,16 +41,25 @@ public class Coordinate {
 
     public CoordinateEntity toCoordinateEntity() {
         CoordinateEntity coordinateEntity=new CoordinateEntity();
-        coordinateEntity.setLatitude(new BigDecimal(latitude));
-        coordinateEntity.setLongitude(new BigDecimal(longitude));
-        coordinateEntity.setAltitude(new BigDecimal(altitude));
+        coordinateEntity.setLatitude(new BigDecimal(latitude.toString()));
+        coordinateEntity.setLongitude(new BigDecimal(longitude.toString()));
+        if(altitude!=null)
+            coordinateEntity.setAltitude(new BigDecimal(altitude.toString()));
 
         return coordinateEntity;
     }
 
     public boolean isEqual(Coordinate coordinateToCompare) {
-        return latitude.equals(coordinateToCompare.latitude)&&longitude.equals(coordinateToCompare.longitude)
-                &&altitude.equals(coordinateToCompare.altitude);
+        if(altitude==null && coordinateToCompare.altitude!=null ||
+                altitude!=null && coordinateToCompare.altitude==null)
+            return false;
+
+        if(altitude==null)
+            return latitude.equals(coordinateToCompare.latitude)&&longitude.equals(coordinateToCompare.longitude);
+
+        return latitude.equals(coordinateToCompare.latitude)&&longitude.equals(coordinateToCompare.longitude) &&
+                altitude.equals(coordinateToCompare.altitude);
+
     }
 
     @Override

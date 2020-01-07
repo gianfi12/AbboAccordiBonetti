@@ -1,13 +1,10 @@
 package com.SafeStreets.data_analysis_manager;
 
 import com.SafeStreets.dataManagerAdapterPack.DataManagerAdapter;
-import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ImageReadException;
 import com.SafeStreets.model.*;
-import com.SafeStreets.modelEntities.CoordinateEntity;
 import org.junit.Test;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,7 +16,7 @@ public class DataAnalysisManagerTest {
     public void getStreetsViolationsStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
 
-        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.STREETS_STAT, "Milan",
+        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.STREETS_STAT, "Milano",
                 LocalDate.of(2019, 9, 15), LocalDate.of(2019, 12, 31));
 
         for (Statistic statistic : statisticList) {
@@ -42,7 +39,7 @@ public class DataAnalysisManagerTest {
     public void getEffectivenessesStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
 
-        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.EFFECTIVENESS_STAT, "Milan",
+        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.EFFECTIVENESS_STAT, "Milano",
                 LocalDate.of(2019, 11, 1), LocalDate.of(2019, 12, 31));
 
         for (Statistic statistic : statisticList) {
@@ -88,7 +85,7 @@ public class DataAnalysisManagerTest {
     public void getVehiclesStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
 
-        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.VEHICLES_STAT, "Milan",
+        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.VEHICLES_STAT, "Milano",
                 LocalDate.of(2019, 9, 15), LocalDate.of(2019, 12, 31));
 
         for (Statistic statistic : statisticList) {
@@ -108,7 +105,7 @@ public class DataAnalysisManagerTest {
     public void getViolationsStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
 
-        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.VIOLATIONS_STAT, "Venice",
+        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.VIOLATIONS_STAT, "Venezia",
                 LocalDate.of(2019, 9, 15), LocalDate.of(2019, 12, 31));
 
         for (Statistic statistic : statisticList) {
@@ -121,6 +118,24 @@ public class DataAnalysisManagerTest {
 
     }
 
+    @Test
+    public void getStatisticsWithoutFilterOnDatesTest() {
+        DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
+
+        List<Statistic> statisticList= dataAnalysisInterface.getStatistics(StatisticType.VIOLATIONS_STAT, "Milano",
+                null, null);
+
+        for (Statistic statistic : statisticList) {
+            assertEquals(StatisticType.VIOLATIONS_STAT, statistic.getStatisticType());
+            System.out.println(statistic.getViolationType());
+        }
+
+        assertEquals(ViolationType.valueOf("PARKING_ON_RESERVED_STALL"), statisticList.get(0).getViolationType());
+        assertEquals(ViolationType.valueOf("PARKING_ON_SIDEWALK"), statisticList.get(1).getViolationType());
+
+
+    }
+
 
 
     @Test
@@ -129,7 +144,7 @@ public class DataAnalysisManagerTest {
 
         QueryFilter queryFilter=new QueryFilter(LocalDate.of(2019, 10, 12),
                 LocalDate.of(2019, 11, 12),
-                new Place("Milan", "", "", null));
+                new Place("Milano", "", "", null));
         List<UserReport> userReportList = dataAnalysisInterface.getUserReports(queryFilter);
 
         assertFalse(userReportList.isEmpty());
@@ -140,37 +155,17 @@ public class DataAnalysisManagerTest {
             assertEquals(userReport.getPlace().getCity(), queryFilter.getPlace().getCity());
             assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
             assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
+            assertNull(userReport.getOdtOfWatchedViolation());
+            assertNotNull(userReport.getViolationType());
+            assertNull(userReport.getDescription());
+            assertNotNull(userReport.getMainPicture());
+            assertNotNull(userReport.getVehicle().getLicensePlate());
+            assertNotNull(userReport.getAuthorUser().getUsername());
+            assertNotNull(userReport.getOtherPictures());
         }
 
-    }
+        assertEquals(2, userReportList.get(0).getOtherPictures().size());
+        assertEquals(1, userReportList.get(1).getOtherPictures().size());
 
-    @Test
-    public void queryTest() {
-        ReportsDataInterface reportsDataInterface= ReportsDataInterface.getReportsDataInstance();
-
-        Timestamp from= DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2019, 10, 1), true);
-        Timestamp to= DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2019, 12, 31), false);
-        String city="Milan";
-        Place place=new Place(city, "Via Camillo Golgi", "", null);
-
-
-        /*String coordinatesForStreetQuery= "SELECT place.coordinate " +
-                "FROM UserReportEntity " +
-                "WHERE reportTimeStamp>='"+from+"' AND reportTimeStamp<='"+to+"' AND place.city='"+city+"' " +
-                "AND place.address='"+place.getAddress()+"' ";*/
-        String coordinatesForStreetQuery= "SELECT UR.place.coordinateEntity " +
-                "FROM UserReportEntity AS UR " +
-                "WHERE UR.reportTimeStamp>='"+from+"' AND UR.reportTimeStamp<='"+to+"' AND UR.place.city='"+city+"' "+
-                "AND UR.place.address='"+place.getAddress()+"' ";
-
-        QueryFilter queryFilter=new QueryFilter(coordinatesForStreetQuery, true);
-
-
-        List<Object[]> coordinatesResultList=reportsDataInterface.getAggregatedResult(queryFilter);
-
-        for(Object[] coordinate : coordinatesResultList) {
-            Coordinate coordinate1=((CoordinateEntity) coordinate[0]).toCoordinate();
-            System.out.println(coordinate1.toString());
-        }
     }
 }

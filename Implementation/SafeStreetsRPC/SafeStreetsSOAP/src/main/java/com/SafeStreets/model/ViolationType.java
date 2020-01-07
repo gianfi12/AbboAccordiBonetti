@@ -34,7 +34,7 @@ public enum ViolationType {
         return canBeReportedFromMunicipality;
     }
 
-    public List<ViolationType> getViolationTypeReportableFromUser() {
+    public static List<ViolationType> getViolationTypeReportableFromUser() {
         List<ViolationType> violationTypeList=new ArrayList<>();
 
         for(ViolationType violationType : ViolationType.values()) {
@@ -44,13 +44,4 @@ public enum ViolationType {
         return violationTypeList;
     }
 
-    public List<ViolationType> getViolationTypeReportableFromMunicipality() {
-        List<ViolationType> violationTypeList=new ArrayList<>();
-
-        for(ViolationType violationType : ViolationType.values()) {
-            if(violationType.canBeReportedFromMunicipality)
-                violationTypeList.add(violationType);
-        }
-        return violationTypeList;
-    }
 }

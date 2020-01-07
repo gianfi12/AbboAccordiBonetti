@@ -1,7 +1,5 @@
 package com.SafeStreets.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public enum StatisticType {
     STREETS_STAT(true, true),
@@ -23,25 +21,5 @@ public enum StatisticType {
 
     public boolean canBeForMunicipality() {
         return canBeForMunicipality;
-    }
-
-    public List<StatisticType> getStatisticTypeForUser() {
-        List<StatisticType> statisticTypeList=new ArrayList<>();
-
-        for(StatisticType statisticType : StatisticType.values()) {
-            if(statisticType.canBeForUser)
-                statisticTypeList.add(statisticType);
-        }
-        return statisticTypeList;
-    }
-
-    public List<StatisticType> getStatisticTypeForMunicipality() {
-        List<StatisticType> statisticTypeList=new ArrayList<>();
-
-        for(StatisticType statisticType : StatisticType.values()) {
-            if(statisticType.canBeForMunicipality)
-                statisticTypeList.add(statisticType);
-        }
-        return statisticTypeList;
     }
 }

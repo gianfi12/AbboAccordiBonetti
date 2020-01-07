@@ -10,13 +10,17 @@ public class Statistic {
     private String street;
     private List<Coordinate> coordinateListForStreet;
     private int numberOfViolationsInStreet;
+
     private int numberOfReports;
     private int numberOfUsers;
     private double reportsNoDivUsersNo;
     private LocalDate date;
+
     private Vehicle vehicle;
     private int numberOfViolationsOfVehicle;
+
     private ViolationType violationType;
+
     private StatisticType statisticType;
 
     public Statistic(StatisticType statisticType) {

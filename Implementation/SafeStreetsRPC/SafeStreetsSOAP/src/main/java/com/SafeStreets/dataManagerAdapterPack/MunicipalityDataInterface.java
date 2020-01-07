@@ -21,7 +21,7 @@ public interface MunicipalityDataInterface extends ClientDataInterface {
         return new DataManagerAdapter();
     }
 
-    void addMunicipality(String contractCode, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException;
+    void addMunicipality(String contractCode, String username, String password) throws MunicipalityAlreadyPresentException;
     Place getMunicipalityArea(String username) throws MunicipalityNotPresentException;
     boolean checkContractCode(String code);
     Municipality getMunicipality(String username, String password) throws WrongPasswordException, MunicipalityNotPresentException;

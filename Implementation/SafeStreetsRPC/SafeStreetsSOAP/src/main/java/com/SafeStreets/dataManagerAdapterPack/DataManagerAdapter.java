@@ -43,8 +43,8 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     private static final String PICTURE_FOR_USER ="Picture";
     private static final String IDCARD_FOR_USER ="IdCard";
-    private static final String MAIN_PICTURE_FOR_REPORT ="MainPicture";
-    private static final String OTHER_PICTURE_FOR_REPORT ="OtherPicture";
+    private static final String MAIN_PICTURE_FOR_REPORT ="MainPictureFromReportOf";
+    private static final String OTHER_PICTURE_FOR_REPORT ="OtherPictureFromReportOf";
 
     private static final String EMPTY_PICTURE_FILENAME ="empty";
     private static final String PICTURE_FORMAT ="png";
@@ -54,6 +54,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     private static EntityTransaction transaction=em.getTransaction();
 
+    private static final LocalDate FIRST_DATE=LocalDate.of(2000, 12, 1);
     /**
      * The constructor is hidden outside the package.
      * Use {@link ClientDataInterface#getClientDataInstance()} ()} or
@@ -133,7 +134,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     @Override
-    public void addMunicipality(String contractCode, String username, String password) throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException {
+    public void addMunicipality(String contractCode, String username, String password) throws MunicipalityAlreadyPresentException {
         if(exists(username))
             throw new MunicipalityAlreadyPresentException();
 
@@ -262,10 +263,10 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     }
 
     private static String getRandomString(int length) {
-        String result="";
+        StringBuilder result= new StringBuilder();
         for(int i=0; i<length;i++)
-            result=result+getRandomChar();
-        return result;
+            result.append(getRandomChar());
+        return result.toString();
     }
 
     private static String  getRandomChar() {
@@ -278,7 +279,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     @Override
     public void addUserReport(UserReport userReport) throws ImageStoreException {
 
-        String mainPicturePath=saveImage(userReport.getMainPicture(), userReport.getAuthorUser().getUsername()+ MAIN_PICTURE_FOR_REPORT);
+        String mainPicturePath=saveImage(userReport.getMainPicture(), MAIN_PICTURE_FOR_REPORT+userReport.getAuthorUser().getUsername());
 
         UserReportEntity userReportEntity=userReport.toUserReportEntity(mainPicturePath);
 
@@ -286,11 +287,13 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         em.merge(userReportEntity);
         transaction.commit();
 
+        userReportEntity= findLastUserReport();
+
         List<BufferedImage> otherPicturesImages =userReport.getOtherPictures();
         if(otherPicturesImages!=null) {
             String otherPicturePath;
             for(int i=0; i<otherPicturesImages.size(); i++) {
-                otherPicturePath=saveImage(otherPicturesImages.get(i), userReport.getAuthorUser().getUsername()+OTHER_PICTURE_FOR_REPORT+i);
+                otherPicturePath=saveImage(otherPicturesImages.get(i), OTHER_PICTURE_FOR_REPORT+userReport.getAuthorUser().getUsername()+i);
                 OtherPictureEntity otherPictureEntity=new OtherPictureEntity();
                 otherPictureEntity.setPicture(otherPicturePath);
                 otherPictureEntity.setUserReportEntity(userReportEntity);
@@ -301,6 +304,19 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
             }
         }
 
+    }
+
+    public UserReportEntity findLastUserReport() {
+        String lastUserReportQuery= "SELECT uR " +
+                "FROM UserReportEntity AS uR " +
+                "WHERE uR.id=(SELECT max(uR2.id) FROM UserReportEntity AS uR2)";
+
+        QueryFilter queryFilter=new QueryFilter(lastUserReportQuery, true);
+
+        List<Object[]> resultList = getAggregatedResult(queryFilter);
+        Object[] usersResult = resultList.get(0);
+
+        return (UserReportEntity) usersResult[0];
     }
 
     @Override
@@ -316,22 +332,32 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
-        String queryString="";
+        String queryString;
+
+        LocalDate from=filter.getFrom();
+        LocalDate until=filter.getUntil();
+
+        if(from==null)
+            from=FIRST_DATE;
+
+        if(until==null)
+            until=LocalDate.now(DataManagerAdapter.getZONEID());
+
         if(filter.getPlace().getAddress()==null || filter.getPlace().getAddress().equals(""))
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                    "BETWEEN '"+toTimestampFromLocalDate(filter.getFrom(), true)+
-                    "'"+" AND '"+toTimestampFromLocalDate(filter.getUntil(), false) +
+                    "BETWEEN '"+toTimestampFromLocalDate(from, true)+
+                    "'"+" AND '"+toTimestampFromLocalDate(until, false) +
                     "' AND place.city='"+filter.getPlace().getCity()+"'";
         else if(filter.getPlace().getHouseCode()==null || filter.getPlace().getHouseCode().equals("")) {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                    "BETWEEN '"+toTimestampFromLocalDate(filter.getFrom(), true)+
-                    "'"+" AND '"+toTimestampFromLocalDate(filter.getUntil(), false) +
+                    "BETWEEN '"+toTimestampFromLocalDate(from, true)+
+                    "'"+" AND '"+toTimestampFromLocalDate(until, false) +
                     "' AND place.city='"+filter.getPlace().getCity()+"'" +
                     " AND place.address='"+filter.getPlace().getAddress()+"'";
         } else {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
-                    "BETWEEN '"+toTimestampFromLocalDate(filter.getFrom(), true)+
-                    "'"+" AND '"+toTimestampFromLocalDate(filter.getUntil(), false) +
+                    "BETWEEN '"+toTimestampFromLocalDate(from, true)+
+                    "'"+" AND '"+toTimestampFromLocalDate(until, false) +
                     "' AND place.city='"+filter.getPlace().getCity()+"'" +
                     " AND place.address='"+filter.getPlace().getAddress()+"'" +
                     " AND place.houseCode='"+filter.getPlace().getHouseCode()+"'";
@@ -346,7 +372,17 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         List<UserReport> userReportList=new ArrayList<>();
 
         for (UserReportEntity userReportEntity : userReportEntityList) {
-            userReportList.add(userReportEntity.toUserReportWithoutImages());
+
+            String otherPicturesQueryString="FROM OtherPictureEntity WHERE userReportEntity="+userReportEntity.getId();
+
+            transaction.begin();
+            TypedQuery<OtherPictureEntity> otherPicturesQuery = em.createQuery(otherPicturesQueryString, OtherPictureEntity.class);
+            transaction.commit();
+
+            List<OtherPictureEntity> otherPictureEntities=otherPicturesQuery.getResultList();
+
+            userReportList.add(userReportEntity.toUserReportWithImages(otherPictureEntities));
+
         }
 
         return userReportList;
