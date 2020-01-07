@@ -37,11 +37,11 @@ class _SignUpState extends State<SignUp> {
   String _dateOfBirth;
   String _placeOfResidence;
   String _fiscalCode;
+  String _picture;
   String _idCard;
   String _password;
 
   //TODO(hig): validate inputs based on json, especially dates and images.
-  //TODO(med): add user picture in registration.
   //TODO(low): link elements.
   //TODO(low): change keyboards.
   @override
@@ -130,7 +130,6 @@ class _SignUpState extends State<SignUp> {
         padding: EdgeInsets.all(8.0),
       ),
       Padding(
-        key: ValueKey(l.AvailableStrings.SIGN_DOCUMENT),
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
           width: double.maxFinite,
@@ -138,7 +137,19 @@ class _SignUpState extends State<SignUp> {
             child: Text(
               l.local(l.AvailableStrings.SIGN_DOCUMENT).toUpperCase(),
             ),
-            onPressed: _onImageButton,
+            onPressed: _onIDButton,
+          ),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.maxFinite,
+          child: RaisedButton(
+            child: Text(
+              l.local(l.AvailableStrings.SIGN_PICTURE).toUpperCase(),
+            ),
+            onPressed: _onPictureButton,
           ),
         ),
       ),
@@ -161,9 +172,18 @@ class _SignUpState extends State<SignUp> {
   /// Called when the button for the document photo is pressed.
   ///
   /// Asks the user to choose a photo and saves it.
-  void _onImageButton() async {
+  void _onIDButton() async {
     device.chooseImage(context).then((file) {
       if (file != null) _idCard = file.path;
+    });
+  }
+
+  /// Called when the button for the user photo is pressed.
+  ///
+  /// Asks the user to choose a photo and saves it.
+  void _onPictureButton() async {
+    device.chooseImage(context).then((file) {
+      if (file != null) _picture = file.path;
     });
   }
 
@@ -184,7 +204,7 @@ class _SignUpState extends State<SignUp> {
         lastName: _lastName,
         placeOfBirth: _placeOfBirth,
         placeOfResidence: _placeOfResidence,
-        picture: null,
+        picture: _picture,
         idCard: _idCard,
         fiscalCode: _fiscalCode,
         dateOfBirth: DateTime.parse(_dateOfBirth),
