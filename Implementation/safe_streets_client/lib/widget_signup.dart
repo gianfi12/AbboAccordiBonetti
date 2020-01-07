@@ -69,6 +69,11 @@ class _SignUpState extends State<SignUp> {
         onSaved: (s) => _firstName = s,
       ),
       _TextFormPlaceholder(
+        label: l.AvailableStrings.SIGN_LAST_NAME,
+        error: l.AvailableStrings.SIGN_REQUIRED,
+        onSaved: (s) => _lastName = s,
+      ),
+      _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_PLACE_BIRTH,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _placeOfBirth = s,
