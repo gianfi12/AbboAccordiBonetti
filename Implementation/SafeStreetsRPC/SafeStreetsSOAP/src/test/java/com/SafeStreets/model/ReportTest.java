@@ -9,4 +9,8 @@ public class ReportTest {
     @Test
     public void fromJSON() {
     }
+
+    @Test
+    public void toJSON() {
+    }
 }

@@ -72,6 +72,9 @@ public class CoordinateEntity {
     }
 
     public Coordinate toCoordinate() {
+        if(altitude==null)
+            return new Coordinate(latitude.doubleValue(), longitude.doubleValue(), null);
+
         return new Coordinate(latitude.doubleValue(), longitude.doubleValue(), altitude.doubleValue());
     }
 

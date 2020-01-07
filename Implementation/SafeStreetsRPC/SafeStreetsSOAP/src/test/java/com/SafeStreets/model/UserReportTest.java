@@ -66,10 +66,62 @@ public class UserReportTest {
     }
 
     @Test
-    public void toReport() {
+    public void toReport() throws ImageReadException {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
+        EntityManager em = emf.createEntityManager();
+
+        BufferedImage mainPicture= DataManagerAdapter.readImage("../picturesData/ParkingOnReservedStall.png");
+
+        List<BufferedImage> otherPictures = new ArrayList<>();
+        otherPictures.add(DataManagerAdapter.readImage("../picturesData/ParkingOnReservedStall.png"));
+        otherPictures.add(DataManagerAdapter.readImage("../picturesData/ParkingOnReservedStall.png"));
+
+        Vehicle vehicle=new Vehicle("fb452rt");
+
+        Coordinate coordinate=new Coordinate(45.471245, 9.211029 , 150.0);
+        Timestamp reportTimeStamp=Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30));
+        Timestamp reportOfWatchedViolationTimeStamp=Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 50, 30));
+
+        Place place=new Place("Milano", "Via Carlo Pisacane", "3", coordinate);
+
+        EntityTransaction transaction=em.getTransaction();
+        transaction.begin();
+        UserEntity userEntity= em.find(UserEntity.class, "jak4");
+        transaction.commit();
+
+        UserReport userReport=new UserReport(DataManagerAdapter.toOffsetDateTimeFromTimestamp(reportTimeStamp),
+                DataManagerAdapter.toOffsetDateTimeFromTimestamp(reportOfWatchedViolationTimeStamp),
+                place, ViolationType.PARKING_ON_RESERVED_STALL, "Description",
+                vehicle,
+                userEntity.toUser(), mainPicture, otherPictures);
+
+        Report report=userReport.toReport();
+
+
+        assertEquals("Milano", report.getPlace().getCity());
+        assertEquals("Via Carlo Pisacane", report.getPlace().getAddress());
+        assertEquals("3", report.getPlace().getHouseCode());
+        assertEquals("fb452rt", report.getVehicle().getLicensePlate());
+        assertEquals(ViolationType.PARKING_ON_RESERVED_STALL, report.getViolationType());
+        assertEquals("Description", report.getDescription());
+        assertEquals(DataManagerAdapter.toOffsetDateTimeFromTimestamp(Timestamp.valueOf(LocalDateTime.of(2020,
+                1, 4, 8, 30, 30))), report.getReportOffsetDateTime());
+        assertEquals(DataManagerAdapter.toOffsetDateTimeFromTimestamp(Timestamp.valueOf(LocalDateTime.of(2020,
+                1, 4, 8, 50, 30))), report.getOdtOfWatchedViolation());
+
+
     }
 
     @Test
     public void fromJSON() {
     }
+
+    @Test
+    public void toJson() {
+    }
+
+    @Test
+    public void encodeToString() {
+    }
+
 }
