@@ -117,14 +117,16 @@ public class Dispatcher implements DispatcherInterface{
     public Boolean newReport(String username, String password, String userReport) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
         AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
-        if(accessType==AccessType.USER){
+        if(accessType==AccessType.USER || accessType==AccessType.MUNICIPALITY){
             UserDataInterface userData = UserDataInterface.getUserDataInstance();
             try {
                 User user = userData.getUser(username.replace("'",""),password.replace("'",""));
                 UserReport userReport1 = UserReport.fromJSON(userReport, user);
-                ElaborationManagerInterface elaborationManager = ElaborationManagerInterface.getInstance();
-                elaborationManager.elaborate(userReport1);
-                return true;
+                if( (accessType==AccessType.USER && userReport1.getViolationType().canBeReportedFromUser()) || (accessType==AccessType.MUNICIPALITY && userReport1.getViolationType().canBeReportedFromMunicipality())) {
+                    ElaborationManagerInterface elaborationManager = ElaborationManagerInterface.getInstance();
+                    elaborationManager.elaborate(userReport1);
+                    return true;
+                }
             }catch (ElaborationException e){
                 LOGGER.log(Level.SEVERE,"Error during the elaboration!");
             }catch (WrongPasswordException | UserNotPresentException | ImageReadException e){
@@ -198,8 +200,6 @@ public class Dispatcher implements DispatcherInterface{
 
             }
         }
-
-
         return response;
     }
 
@@ -218,14 +218,24 @@ public class Dispatcher implements DispatcherInterface{
         if(accessType==AccessType.MUNICIPALITY){
             DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
             try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                LocalDate untilDate = LocalDate.parse(until.replace("'",""), formatter);
-
-                List<UserReport> userReports= dataAnalysis.getUserReports(new QueryFilter(null,untilDate , authorizationManager.getMunicipality(username)));
-                for(UserReport userReport : userReports){
-                    returnList.add(userReport.toJson());
+                LocalDate untilDate=null;
+                LocalDate fromDate=null;
+                if(!from.replace("'", "").equals("null")){
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                    fromDate = LocalDate.parse(from.replace("'",""), formatter);
                 }
-            }catch(ImageReadException e){
+                if(!until.replace("'", "").equals("null")){
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+                    untilDate = LocalDate.parse(until.replace("'",""), formatter);
+                }
+
+                List<UserReport> userReports= dataAnalysis.getUserReports(new QueryFilter(fromDate, untilDate , authorizationManager.getMunicipality(username.replace("'",""))));
+                for(UserReport userReport : userReports){
+                    if(userReport.getPlace().getCoordinate()!=null) {
+                        returnList.add(userReport.toJson());
+                    }
+                }
+            }catch(ImageReadException | MunicipalityNotPresentException e){
                 LOGGER.log(Level.SEVERE,"Error image loading during report access!");
             }
         }

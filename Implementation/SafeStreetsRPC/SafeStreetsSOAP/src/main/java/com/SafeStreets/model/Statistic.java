@@ -114,10 +114,12 @@ public class Statistic {
     public String toJSON(){
         Gson gson = new Gson();
         List<String> coordinates = new ArrayList<>();
-        for(Coordinate coordinate : coordinateListForStreet){
-            coordinates.add(gson.toJson(coordinate));
+        if(coordinateListForStreet!=null) {
+            for (Coordinate coordinate : coordinateListForStreet) {
+                coordinates.add(gson.toJson(coordinate));
+            }
         }
-        return gson.toJson(new StatisticSend(street,coordinates,numberOfViolationsInStreet,numberOfReports,numberOfUsers,reportsNoDivUsersNo,date.toString(),vehicle.getLicensePlate(),numberOfViolationsOfVehicle,violationType.toString(),statisticType.toString()));
+        return gson.toJson(new StatisticSend((street==null?"":street),coordinates,numberOfViolationsInStreet,numberOfReports,numberOfUsers,reportsNoDivUsersNo,(date==null?"":date.toString()),(vehicle==null? "":vehicle.getLicensePlate()),numberOfViolationsOfVehicle,(violationType==null? "": violationType.toString()),statisticType.toString()));
     }
 
     class StatisticSend{

@@ -725,7 +725,7 @@ Future<List<String>> getAvailableReportCategories() {
 
 class _SOAPTest implements DispatcherInterface {
   String _username, _password;
-  final String ip='192.168.1.7';
+  final String ip='localhost';
 
   _SOAPTest(this._username, this._password);
 
@@ -743,14 +743,15 @@ class _SOAPTest implements DispatcherInterface {
       print("Respons error from the server");
       return Future.value(new List());
     }
-    List<model.Report> returnList = new List();
     var parser = xml.parse(response.body);
     var returnElement = parser.findAllElements("return");
-    List<String> resp = new List();
+    List<model.Report> resp = new List();
     var elements = returnElement.toList();
-    elements.forEach((element) => resp.add(element.text.replaceAll("\"", "")));
-    return Future.value(returnList);
+    elements.forEach((element) => resp.add(model.Report.fromJson(json.decode(element.text))));
+    return Future.value(resp);
   }
+  
+
 
   @override
   Future<List<String>> getAvailableStatistics() async{
@@ -888,17 +889,13 @@ class _SOAPTest implements DispatcherInterface {
       print("Respons error from the server");
       return Future.value(returnList);
     }
-    //TODO the return list
     var parser = xml.parse(response.body);
     var returnElement = parser.findAllElements("return");
-    var resp;
-    var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
-    if(string=="true"){
-      resp=true;
-    }else if (string=="false"){
-      resp=false;
-    }
-    return Future.value(resp);  }
+    //var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
+    var elements = returnElement.toList();
+    elements.forEach((element) => returnList.add(model.StatisticsItem.fromJson(json.decode(element.text))));
+
+    return Future.value(returnList);  }
 
   @override
   Future<bool> userRegistration(
@@ -953,7 +950,7 @@ String getSoapAccessReports(String username, String password, DateTime from, Dat
 }
 
 String getSoapDataAnalysis(String username,String password,String statisticsType, model.DevicePosition location) {
-  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:accessReports xmlns:ns2="http://SafeStreets.com/"><arg0>''';
+  var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:requestDataAnalysis xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   string = string + username;
   string = string + ''''</arg0><arg1>''' ;
   string = string + password;

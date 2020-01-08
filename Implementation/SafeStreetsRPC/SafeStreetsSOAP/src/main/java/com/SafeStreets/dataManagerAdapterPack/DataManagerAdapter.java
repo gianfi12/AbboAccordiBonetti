@@ -1,5 +1,6 @@
 package com.SafeStreets.dataManagerAdapterPack;
 
+import com.SafeStreets.Dispatcher;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.MunicipalityEntity;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An implementation of {@link UserDataInterface}, {@link MunicipalityDataInterface} and {@link ReportsDataInterface}.
@@ -32,6 +35,10 @@ import java.util.TimeZone;
  */
 @Stateless
 public class DataManagerAdapter implements UserDataInterface, MunicipalityDataInterface, ReportsDataInterface {
+    /**
+     * This is used to print log message if an error occurs
+     */
+    private final static Logger LOGGER = Logger.getLogger(DataManagerAdapter.class.getName());
 
     private static final String PERSISTENCE_UNIT_NAME ="manager1";
 

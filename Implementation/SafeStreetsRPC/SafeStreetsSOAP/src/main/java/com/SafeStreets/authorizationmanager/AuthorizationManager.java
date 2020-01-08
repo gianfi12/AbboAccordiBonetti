@@ -58,9 +58,11 @@ class AuthorizationManager implements AuthorizationManagerInterface{
      * This method return the jurisdiction area of the municipality
      * @param username Is the username of the municipality
      * @return Is the place of the municipality
+     * @throws MunicipalityNotPresentException Is throw if the municipality is not present
      */
     @Override
-    public Place getMunicipality(String username) {
-        return null;
+    public Place getMunicipality(String username) throws MunicipalityNotPresentException{
+        MunicipalityDataInterface municipalityData = MunicipalityDataInterface.getMunicipalityDataInstance();
+        return municipalityData.getMunicipalityArea(username);
     }
 }

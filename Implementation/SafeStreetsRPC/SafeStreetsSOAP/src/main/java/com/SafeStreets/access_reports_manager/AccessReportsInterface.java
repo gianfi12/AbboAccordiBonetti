@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AccessReportsInterface {
 
-    List<String> accessReports(String username, String password, Date from, Date until);
+    List<String> accessReports(String username, String password, String from, String until);
 }

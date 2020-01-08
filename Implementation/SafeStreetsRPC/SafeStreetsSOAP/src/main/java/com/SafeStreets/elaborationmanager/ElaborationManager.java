@@ -20,7 +20,7 @@ class ElaborationManager implements ElaborationManagerInterface {
      */
     @Override
     public void elaborate(UserReport userReport) throws ElaborationException {
-        ReportsDataInterface reportsData= ReportsDataInterface.getReportsDataInstance();
+        ReportsDataInterface reportsData = ReportsDataInterface.getReportsDataInstance();
         try {
             reportsData.addUserReport(userReport);
         }catch (ImageStoreException e){

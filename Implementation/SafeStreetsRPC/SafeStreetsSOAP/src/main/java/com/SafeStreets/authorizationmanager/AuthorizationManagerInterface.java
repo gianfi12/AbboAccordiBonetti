@@ -1,5 +1,6 @@
 package com.SafeStreets.authorizationmanager;
 
+import com.SafeStreets.exceptions.MunicipalityNotPresentException;
 import com.SafeStreets.model.AccessType;
 import com.SafeStreets.model.Place;
 
@@ -26,7 +27,8 @@ public interface AuthorizationManagerInterface {
      * This method return the jurisdiction area of the municipality
      * @param username Is the username of the municipality
      * @return Is the place of the municipality
+     * @throws MunicipalityNotPresentException Is throw if the municipality is not present
      */
-    Place getMunicipality(String username);
+    Place getMunicipality(String username) throws MunicipalityNotPresentException;
 
 }

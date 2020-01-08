@@ -92,16 +92,24 @@ public class Report {
         return null;
     }
 
-    public JSONObject toJSON(){
+    public static JSONObject toJSON(Report report){
         Gson gson = new Gson();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("reportOffsetDateTime",reportOffsetDateTime.toString());
-        jsonObject.put("odtOfWatchedViolation",odtOfWatchedViolation.toString());
+        if(report.getReportOffsetDateTime()!=null) {
+            jsonObject.put("reportOffsetDateTime",report.getReportOffsetDateTime().toString());
+        }else{
+            jsonObject.put("reportOffsetDateTime","");
+        }
+        if(report.getOdtOfWatchedViolation()!=null) {
+            jsonObject.put("odtOfWatchedViolation", report.getOdtOfWatchedViolation().toString());
+        }else{
+            jsonObject.put("odtOfWatchedViolation", "");
+        }
         Type type = new TypeToken<Place>(){}.getType();
-        jsonObject.put("place",gson.toJson(place,type));
-        jsonObject.put("violationType",violationType.toString());
-        jsonObject.put("description",description);
-        jsonObject.put("vehicle",vehicle.getLicensePlate());
+        jsonObject.put("place",gson.toJson(report.getPlace(),type));
+        jsonObject.put("violationType",report.getViolationType().toString());
+        jsonObject.put("description",report.getDescription());
+        jsonObject.put("vehicle",report.getVehicle().getLicensePlate());
 
         return  jsonObject;
     }

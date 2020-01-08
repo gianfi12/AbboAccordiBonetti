@@ -73,7 +73,7 @@ public interface DispatcherInterface {
      * @param until This date indicates that the municipality is interested in the reports up to this date
      * @return Is a list that contains the request reports as a JSON string
      */
-    List<String> accessReports(String username,String password,Date from,Date until);
+    List<String> accessReports(String username,String password,String from,String until);
 
     /**
      * This is the method is used by the municipality to retrieve the suggestions elaborated by the system

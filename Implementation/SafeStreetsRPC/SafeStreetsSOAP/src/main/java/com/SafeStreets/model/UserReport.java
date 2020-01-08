@@ -99,7 +99,7 @@ public class UserReport extends Report{
     }
 
     public String toJson(){
-        JSONObject jsonObject = super.toJSON();
+        JSONObject jsonObject = Report.toJSON(this);
         jsonObject.put("author", authorUser.getUsername());
         jsonObject.put("mainPicture", encodeToString(mainPicture,"png"));
         List<String> picturesString = new ArrayList<>();

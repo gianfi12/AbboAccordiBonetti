@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:safe_streets_client/handler_localization.dart';
 
 /// A class that contains a position, expressed in latitude and longitude.
 class DevicePosition {
@@ -17,6 +18,8 @@ class DevicePosition {
         'latitude': latitude,
         'longitude': longitude,
       };
+
+
 }
 
 /// An entry of a statistic, with main and secondary text.
@@ -30,6 +33,27 @@ class StatisticsItem {
   const StatisticsItem({@required this.head, String tail})
       : assert(head != null),
         tail = tail ?? '';
+
+  factory StatisticsItem.fromJson(Map<String, dynamic> parsedJson){
+    StatisticsItem statisticsItem;
+    String statisticType = parsedJson["statisticType"];
+    switch (statisticType) {
+      case "VIOLATIONS_STAT":
+        statisticsItem = new StatisticsItem(head: getString(parsedJson["violationType"]));
+        break;
+      case "VEHICLES_STAT":
+        statisticsItem = new StatisticsItem(head: "The vehicle with plate number "+ parsedJson["vehicle"].toUpperCase()+ " has generate "+parsedJson["numberOfViolationsOfVehicle"].toString()+" violations.");
+
+        break;
+      case "EFFECTIVENESS_STAT":
+
+        break;
+      case "STREETS_STAT":
+
+        break;
+    }
+    return statisticsItem;
+  }
 }
 
 /// A report from the user.
@@ -72,7 +96,6 @@ class Report {
     this.plateNumber,
     this.author,
   })  : assert(deviceDateTime != null),
-        assert(mainImage != null),
         assert(violationType != null);
 
   @override
@@ -116,6 +139,27 @@ class Report {
     });
     return jsonList;
   }
+
+  factory Report.fromJson(Map<String, dynamic> parsedJson){
+    var placeDecode = jsonDecode(parsedJson["place"]);
+    String position = "City: "+ placeDecode["city"] +" Address: "+ placeDecode["address"] ;
+    var devicePositionDecode = placeDecode["coordinate"];
+    DateTime offset;
+    if (parsedJson["odtOfWatchedViolation"]!=""){
+      offset = DateTime.parse(parsedJson["odtOfWatchedViolation"]);
+    }
+
+    return Report(deviceDateTime: DateTime.parse(parsedJson["reportOffsetDateTime"]),
+    violationDateTime:offset,
+    mainImage: null,
+    otherImages: new List(),
+    devicePosition: new DevicePosition(latitude: devicePositionDecode["latitude"], longitude: devicePositionDecode["longitude"]),
+    position:position,
+    violationType: parsedJson["violationType"],
+    plateNumber: parsedJson["vehicle"],
+    author:parsedJson["author"]);
+  }
+
 }
 
 /// The type of access a client can have.

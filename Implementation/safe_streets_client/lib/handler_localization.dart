@@ -185,3 +185,12 @@ String localKey(String key) {
   log('Missing enum for $key');
   return 'No AvailableString for: $key, please report to the developers';
 }
+
+String getString(String string){
+  for(AvailableStrings availableStrings in AvailableStrings.values){
+    if(string == availableStrings.toString().split(".")[1]){
+      return local(availableStrings);
+    }
+  }
+  return null;
+}
