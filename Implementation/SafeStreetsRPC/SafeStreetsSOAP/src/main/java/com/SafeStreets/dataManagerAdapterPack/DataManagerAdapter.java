@@ -343,22 +343,24 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         if(until==null)
             until=LocalDate.now(DataManagerAdapter.getZONEID());
 
+
+
         if(filter.getPlace().getAddress()==null || filter.getPlace().getAddress().equals(""))
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
                     "BETWEEN '"+toTimestampFromLocalDate(from, true)+
                     "'"+" AND '"+toTimestampFromLocalDate(until, false) +
-                    "' AND place.city='"+filter.getPlace().getCity()+"'";
+                    "' AND place.city='"+getStdStringForCity(filter.getPlace().getCity())+"'";
         else if(filter.getPlace().getHouseCode()==null || filter.getPlace().getHouseCode().equals("")) {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
                     "BETWEEN '"+toTimestampFromLocalDate(from, true)+
                     "'"+" AND '"+toTimestampFromLocalDate(until, false) +
-                    "' AND place.city='"+filter.getPlace().getCity()+"'" +
+                    "' AND place.city='"+getStdStringForCity(filter.getPlace().getCity())+"'" +
                     " AND place.address='"+filter.getPlace().getAddress()+"'";
         } else {
             queryString = "FROM UserReportEntity WHERE reportTimeStamp " +
                     "BETWEEN '"+toTimestampFromLocalDate(from, true)+
                     "'"+" AND '"+toTimestampFromLocalDate(until, false) +
-                    "' AND place.city='"+filter.getPlace().getCity()+"'" +
+                    "' AND place.city='"+getStdStringForCity(filter.getPlace().getCity())+"'" +
                     " AND place.address='"+filter.getPlace().getAddress()+"'" +
                     " AND place.houseCode='"+filter.getPlace().getHouseCode()+"'";
         }
@@ -455,5 +457,15 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         }
         timestamp.setTime(c.getTimeInMillis());
         return timestamp;
+    }
+
+    public static String getStdStringForCity(String city) {
+        if(city==null || city.isEmpty())
+            return "";
+
+        city=city.toLowerCase();
+        String firstChar=Character.toString(city.charAt(0)).toUpperCase();
+
+        return firstChar+city.substring(1);
     }
 }

@@ -42,6 +42,8 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         Timestamp fromTS= DataManagerAdapter.toTimestampFromLocalDate(from, true);
         Timestamp toTS= DataManagerAdapter.toTimestampFromLocalDate(to, false);
 
+        city=DataManagerAdapter.getStdStringForCity(city);
+
         switch (statisticType) {
             case STREETS_STAT:
                 return getStreetsViolationsStatistics(city, fromTS, toTS);

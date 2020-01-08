@@ -77,7 +77,7 @@ public class DataManagerAdapterTest {
 
         transaction=em.getTransaction();
         transaction.begin();
-        em.createQuery(deleteUser);
+        em.createQuery(deleteUser).executeUpdate();
         transaction.commit();
 
 
@@ -118,7 +118,7 @@ public class DataManagerAdapterTest {
 
         transaction=em.getTransaction();
         transaction.begin();
-        em.createQuery(deleteUser);
+        em.createQuery(deleteUser).executeUpdate();
         transaction.commit();
     }
 
@@ -371,7 +371,7 @@ public class DataManagerAdapterTest {
 
         transaction=em.getTransaction();
         transaction.begin();
-        em.createQuery(deleteReport);
+        em.createQuery(deleteReport).executeUpdate();
         transaction.commit();
 
     }
@@ -585,7 +585,7 @@ public class DataManagerAdapterTest {
         UserReportEntity userReportEntity=new UserReportEntity();
         userReportEntity.setReportTimeStamp(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30)));
         userReportEntity.setViolationType(ViolationType.PARKING_ON_RESERVED_STALL.toString());
-        userReportEntity.setMainPicture("/Users/max/Desktop/forSE2proj/picturesData/ParkingOnReservedStall2.png");
+        userReportEntity.setMainPicture(PICTURESDATA_PATH+"ParkingOnReservedStall2.png");
         PlaceEntity placeEntity=new PlaceEntity();
         placeEntity.setCity("Milano");
         placeEntity.setAddress("Piazzale Gabrio Piola");
@@ -612,7 +612,7 @@ public class DataManagerAdapterTest {
         UserReportEntity userReportEntity2=new UserReportEntity();
         userReportEntity2.setReportTimeStamp(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 30, 30)));
         userReportEntity2.setViolationType(ViolationType.PARKING_ON_RESERVED_STALL.toString());
-        userReportEntity2.setMainPicture("/Users/max/Desktop/forSE2proj/picturesData/ParkingOnReservedStall2.png");
+        userReportEntity2.setMainPicture(PICTURESDATA_PATH+"ParkingOnReservedStall2.png");
         PlaceEntity placeEntity2=new PlaceEntity();
         placeEntity2.setCity("Milano");
         placeEntity2.setAddress("Piazzale Gabrio Piola");
@@ -649,7 +649,7 @@ public class DataManagerAdapterTest {
 
         transaction=em.getTransaction();
         transaction.begin();
-        em.createQuery(deleteReport);
+        em.createQuery(deleteReport).executeUpdate();
         transaction.commit();
 
         userReportEntity=dataManagerAdapter.findLastUserReport();
@@ -658,9 +658,21 @@ public class DataManagerAdapterTest {
 
         transaction=em.getTransaction();
         transaction.begin();
-        em.createQuery(deleteReport);
+        em.createQuery(deleteReport).executeUpdate();
         transaction.commit();
 
+    }
+
+    @Test
+    public void getStdStringForCity() {
+        assertEquals("Milano", DataManagerAdapter.getStdStringForCity("Milano"));
+        assertEquals("Venezia", DataManagerAdapter.getStdStringForCity("Venezia"));
+        assertEquals("Milano", DataManagerAdapter.getStdStringForCity("milano"));
+        assertEquals("Milano", DataManagerAdapter.getStdStringForCity("MILANO"));
+        assertEquals("Milano", DataManagerAdapter.getStdStringForCity("mILANO"));
+        assertEquals("", DataManagerAdapter.getStdStringForCity(null));
+        assertEquals("", DataManagerAdapter.getStdStringForCity(""));
+        assertEquals("Ferrara", DataManagerAdapter.getStdStringForCity("fErrARa"));
     }
 
 
