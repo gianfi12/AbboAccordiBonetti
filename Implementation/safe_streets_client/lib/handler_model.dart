@@ -33,27 +33,6 @@ class StatisticsItem {
   const StatisticsItem({@required this.head, String tail})
       : assert(head != null),
         tail = tail ?? '';
-
-  factory StatisticsItem.fromJson(Map<String, dynamic> parsedJson){
-    StatisticsItem statisticsItem;
-    String statisticType = parsedJson["statisticType"];
-    switch (statisticType) {
-      case "VIOLATIONS_STAT":
-        statisticsItem = new StatisticsItem(head: getString(parsedJson["violationType"]));
-        break;
-      case "VEHICLES_STAT":
-        statisticsItem = new StatisticsItem(head: "The vehicle with plate number "+ parsedJson["vehicle"].toUpperCase()+ " has generate "+parsedJson["numberOfViolationsOfVehicle"].toString()+" violations.");
-
-        break;
-      case "EFFECTIVENESS_STAT":
-
-        break;
-      case "STREETS_STAT":
-
-        break;
-    }
-    return statisticsItem;
-  }
 }
 
 /// A report from the user.

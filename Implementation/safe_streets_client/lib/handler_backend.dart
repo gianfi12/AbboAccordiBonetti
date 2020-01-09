@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:safe_streets_client/handler_localization.dart';
 
 import 'handler_model.dart' as model;
 import 'package:xml/xml.dart' as xml;
@@ -723,12 +724,20 @@ Future<List<String>> getAvailableReportCategories() {
           ]);
 }
 
+///This is the class responsible of the serializazion and deserialization of the client request and the server response,
+///it acts as a middleware between them
 class _SOAPTest implements DispatcherInterface {
+  ///The [_username] is the name selected by the user
+  ///while the [_password] is the password selected by the user
   String _username, _password;
+  ///[ip] is the ip address where the server is currectly running
   final String ip='localhost';
 
+  /// This is the constructor of the SOAP class
   _SOAPTest(this._username, this._password);
 
+  ///This method is used to access the reports stored by the system, by specifying the period of time in
+  ///which we are interested in, by using [from] and [until]
   @override
   Future<List<model.Report>> accessReports({DateTime from, DateTime until}) async{
     http.Response response = await http.post(
@@ -752,7 +761,7 @@ class _SOAPTest implements DispatcherInterface {
   }
   
 
-
+  /// This method returns a list with the possible statistics that the client can request to the server
   @override
   Future<List<String>> getAvailableStatistics() async{
     http.Response response = await http.post(
@@ -775,12 +784,15 @@ class _SOAPTest implements DispatcherInterface {
     return Future.value(resp);
   }
 
+  ///This method return the suggestions made by the system to the municipality
   @override
   Future<List<String>> getSuggestions() {
     // TODO: implement getSuggestions
     throw UnimplementedError();
   }
 
+  ///This method return an AccessType that indicates how the client has been recognized by the system:
+  ///that says if the client is a User, or a Municipality, or if it has not been already registered
   @override
   Future<model.AccessType> login() async{
     http.Response response = await http.post(
@@ -809,6 +821,7 @@ class _SOAPTest implements DispatcherInterface {
     return Future.value(access);
   }
 
+  ///This method perform a registration of a Municipality with a valid [code], that is its contract code
   @override
   Future<bool> municipalityRegistration(
       {String code,
@@ -847,6 +860,7 @@ class _SOAPTest implements DispatcherInterface {
     return Future.value(resp);
   }
 
+  ///This method sends a [report] made by the user to the server in order to be validate and memorized
   @override
   Future<bool> newReport({model.Report report}) async {
     http.Response response = await http.post(
@@ -873,6 +887,7 @@ class _SOAPTest implements DispatcherInterface {
     return Future.value(resp);
   }
 
+  ///This method requests to the server the statistic about the provided [statisticsType] and [location]
   @override
   Future<List<model.StatisticsItem>> requestDataAnalysis(
       {String statisticsType, model.DevicePosition location}) async{
@@ -893,10 +908,50 @@ class _SOAPTest implements DispatcherInterface {
     var returnElement = parser.findAllElements("return");
     //var string = returnElement.toList().elementAt(0).text.replaceAll("\"", "");
     var elements = returnElement.toList();
-    elements.forEach((element) => returnList.add(model.StatisticsItem.fromJson(json.decode(element.text))));
+    elements.forEach((element) => returnList.addAll(statisticFromJson(json.decode(element.text))));
 
-    return Future.value(returnList);  }
+    return Future.value(returnList);
+  }
 
+  ///This method is an helper of the requestDataAnalysis method that helps us to deserialize the statistic that comes from the server
+  Iterable<model.StatisticsItem> statisticFromJson(Map<String, dynamic> parsedJson){
+    List<model.StatisticsItem> statisticsItem = new List();
+    String statisticType = parsedJson["statisticType"];
+    switch (statisticType) {
+      case "VIOLATIONS_STAT":
+        statisticsItem.add(new model.StatisticsItem(head: getString(parsedJson["violationType"])));
+        break;
+      case "VEHICLES_STAT":
+        statisticsItem.add(new model.StatisticsItem(head: "The vehicle with plate number "+ parsedJson["vehicle"].toUpperCase()+ " has generate "+parsedJson["numberOfViolationsOfVehicle"].toString()+" violations."));
+        break;
+      case "EFFECTIVENESS_STAT":
+        DateTime date;
+        date = DateTime.parse(parsedJson["date"]);
+        statisticsItem.add(new model.StatisticsItem(head: "The stats of the system were:\nNumber of reports: "+ parsedJson["numberOfReports"].toString()+ "\nNumber of users: "+parsedJson["numberOfUsers"].toString()+ "\nRatio reports on users: "+ parsedJson["reportsNoDivUsersNo"].toString()+ "\nAll the stat up to "+ date.toString()));
+        break;
+      case "STREETS_STAT":
+        var coordinateList = parsedJson["coordinateListForStreet"];
+        for(String coordinate in coordinateList){
+          Map<String, dynamic> parsed = jsonDecode(coordinate);
+          statisticsItem.add(new model.StatisticsItem(head: parsed["latitude"].toString(),tail: parsed["longitude"].toString()));
+        }
+        break;
+    }
+    return statisticsItem;
+  }
+
+  ///This method performs a registration of the user, in which:
+  ///[username] is the username selected by the user
+  ///[email] is the email provided by the user
+  ///[firstName] is the first name of the user
+  ///[lastName] is the last name of the user
+  ///[placeOfBirth] is where the user was born
+  ///[placeOfResidence] is where the user actually live
+  ///[picture] is a photo of the user
+  ///[idCard] is a photo of the identification document of the user
+  ///[fiscalCode] is the unique identifier of the user, usually provided by its county
+  ///[dateOfBirth] is when the user was born
+  ///[password] is the password selected by the user
   @override
   Future<bool> userRegistration(
       {String username,
@@ -936,6 +991,7 @@ class _SOAPTest implements DispatcherInterface {
   }
 }
 
+///This method returns a string that contains the SOAP request for the accessReport method exposed by the server
 String getSoapAccessReports(String username, String password, DateTime from, DateTime until){
   var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:accessReports xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   string = string + username;
@@ -949,6 +1005,7 @@ String getSoapAccessReports(String username, String password, DateTime from, Dat
   return string;
 }
 
+///This method returns a string that contains the SOAP request for the dataAnalysis method exposed by the server
 String getSoapDataAnalysis(String username,String password,String statisticsType, model.DevicePosition location) {
   var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:requestDataAnalysis xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   string = string + username;
@@ -963,8 +1020,7 @@ String getSoapDataAnalysis(String username,String password,String statisticsType
 
 }
 
-
-
+///This method returns a string that contains the SOAP request for the municipalityRegistration method exposed by the server
 String getSoapMunicipalityRegistration(String code, String username, String password, DataIntegrationInfo dataIntegrationInfo){
     var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:municipalityRegistration xmlns:ns2="http://SafeStreets.com/"><arg0>''';
     string = string + code;
@@ -979,6 +1035,7 @@ String getSoapMunicipalityRegistration(String code, String username, String pass
 
 }
 
+///This method returns a string that contains the SOAP request for the login method exposed by the server
 String getSoapLogin(String username, String password) =>
     '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:login xmlns:ns2="http://SafeStreets.com/"><arg0>''' +
     username +
@@ -986,6 +1043,7 @@ String getSoapLogin(String username, String password) =>
     password +
     ''''</arg1></ns2:login></S:Body></S:Envelope>''';
 
+///This method returns a string that contains the SOAP request for the userRegistration method exposed by the server
 String getSoapUserRegistration(User user,String password){
   var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:userRegistration xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   var userJson = jsonEncode(user.toJson());
@@ -996,6 +1054,7 @@ String getSoapUserRegistration(User user,String password){
   return string;
 }
 
+///This method returns a string that contains the SOAP request for the newReport method exposed by the server
 String getSoapNewReport(String report,String username,String password){
   var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:newReport xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   string = string + username;
@@ -1007,6 +1066,7 @@ String getSoapNewReport(String report,String username,String password){
   return string;
 }
 
+///This method returns a string that contains the SOAP request for the getAvailableStatistics method exposed by the server
 String getSoapAvailableStatistics(String username,String password){
   var string = '''<?xml version='1.0' encoding='UTF-8'?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:getAvailableStatistics xmlns:ns2="http://SafeStreets.com/"><arg0>''';
   string = string + username;
@@ -1016,14 +1076,18 @@ String getSoapAvailableStatistics(String username,String password){
   return string;
 }
 
+///This class represents an instance of a user, and it's used in order to serialize a instance of user that can be undestand from the server
 class User {
+  ///These are the parameters of the user that has been provided by the user in order to complete its registration
   String _username, _email, _firstName, _lastName, _placeOfBirth, _placeOfResidence, _picture, _idCard, _fiscalCode;
   DateTime _dateOfBirth;
 
+  ///This is the constructor of a user
   User(this._username, this._email, this._firstName, this._lastName,
       this._placeOfBirth, this._placeOfResidence, this._picture, this._idCard,
       this._fiscalCode, this._dateOfBirth);
 
+  ///This method specify to the json parser how an instance of a user can be serialized into JSON
   Map<String, dynamic> toJson() =>
       {
         'username': _username,
@@ -1038,25 +1102,33 @@ class User {
         'dateOfBirth': _dateOfBirth.toString(),
       };
 
+  ///This method is used to convert a file path provided by the user, into a string that describe the image, that can be inserted into json
   String imageToString(String path){
     List<int> imageBytes = File(path).readAsBytesSync();
     return base64Encode(imageBytes);
   }
-
   }
 
+  ///This is the DataIntegrationInfo class, that contains the information that can be used by the server to communicate with the server of the municipality
   class DataIntegrationInfo{
+  ///This fields contains the information useful to contact the server of the municipality, like the ip and the password of their machine,
+    ///in order to provide an access point for the system
   String _dataIntegrationIp, _dataIntegrationPort, _dataIntegrationPassword;
 
+  ///This is the consturctor of the class
   DataIntegrationInfo(this._dataIntegrationIp, this._dataIntegrationPort,
       this._dataIntegrationPassword);
 
+  ///This method returns the password used to enter the access point
   get dataIntegrationPassword => _dataIntegrationPassword;
 
+  ///This method returns the port of the access point
   get dataIntegrationPort => _dataIntegrationPort;
 
+  ///This method returns the ip of the access point
   String get dataIntegrationIp => _dataIntegrationIp;
 
+  ///This method is used by the json parser to serialize the instance of the class in a json object
   Map<String, dynamic> toJson() =>
       {
         'ip': dataIntegrationIp,

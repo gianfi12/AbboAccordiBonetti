@@ -1,6 +1,4 @@
-//TODO(test): backend
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -11,12 +9,14 @@ import 'package:safe_streets_client/handler_localization.dart' as l;
 import 'package:safe_streets_client/handler_model.dart';
 
 void main() async{
+  ///This test verifies that a client can be correctly logged in the system, if it has been previously registered inside the system
   test('Login Functionality', () async {
     var soap = DispatcherInterface.getNew("jak4", "jak");
     AccessType accessType = await soap.login();
     expect(accessType, AccessType.USER);
   });
 
+  ///This test verifies that a client can't be logged in inside the system if the password is wrong
   test('Login with wrong credentials', () {
     var soap = DispatcherInterface.getNew("jak4", "no_pass");
     soap.login().then((s) {
@@ -24,6 +24,15 @@ void main() async{
     });
   });
 
+  ///This test verifies that a client can't be logged in inside the system if the users is wrong
+  test('Login with wrong users', () {
+    var soap = DispatcherInterface.getNew("no_user", "jak");
+    soap.login().then((s) {
+      expect(s, AccessType.NOT_REGISTERED);
+    });
+  });
+
+  ///This test verifies that a user can correctly perform a registration, if there is not another user with the same credential
   test('Signup Functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("", "");
@@ -31,6 +40,16 @@ void main() async{
     File document = new File('assets/images/document.jpg');
     var reponse = await soap.userRegistration(username: "user", email:  "user@mail.com", firstName: "Real", lastName: "User", placeOfBirth: "Milan", placeOfResidence: "Milan", picture: picture.path, idCard: document.path, fiscalCode: "SDCHSDC127NASD", dateOfBirth: new DateTime(1995,11,23), password: "not_a_password");
     expect(reponse,true);
+  });
+
+  ///This test verifies that a user cannot correctly perform a registration, if there is another user with the same credential
+  test('Signup Functionality with user already registered', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("", "");
+    File picture = new File('assets/images/user.jpg');
+    File document = new File('assets/images/document.jpg');
+    var reponse = await soap.userRegistration(username: "jak4", email:  "user@mail.com", firstName: "Real", lastName: "User", placeOfBirth: "Milan", placeOfResidence: "Milan", picture: picture.path, idCard: document.path, fiscalCode: "SDCHSDC127NASD", dateOfBirth: new DateTime(1995,11,23), password: "not_a_password");
+    expect(reponse,false);
   });
 
   test('New Report functionality', () async{
@@ -75,6 +94,22 @@ void main() async{
     List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.VEHICLES_STAT.toString(), location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
     expect(response[0].head,"The vehicle with plate number FB452RT has generate 7 violations.");
     expect(response[0].tail, "");
+  });
+
+  test('Data Analysis Functionality for Effectivness', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("Milano", "Milan");
+    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.EFFECTIVENESS_STAT.toString(), location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
+    expect(response[0].head,"The stats of the system were:\nNumber of reports: 16\nNumber of users: 2\nRatio reports on users: 8.0\nAll the stat up to 2020-01-09 00:00:00.000");
+    expect(response[0].tail, "");
+  });
+
+  test('Data Analysis Functionality for streets', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("Milano", "Milan");
+    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.STREETS_STAT.toString(), location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
+    expect(response[0].head,"45.4801297");
+    expect(response[0].tail, "9.2229332");
   });
 
   test('Access Reports Functionality', () async{
