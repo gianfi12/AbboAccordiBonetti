@@ -62,7 +62,7 @@ class RegistrationManager implements RegistrationManagerInterface{
      */
     @Override
     public void addDataIntegration(String username, DataIntegrationInfo dataIntegrationInfo) {
-
+        //FOR FUTURE RELEASE
     }
 
     /**

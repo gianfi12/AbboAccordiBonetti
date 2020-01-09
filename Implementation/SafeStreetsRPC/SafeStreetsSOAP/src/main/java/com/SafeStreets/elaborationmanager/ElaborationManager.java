@@ -3,6 +3,8 @@ package com.SafeStreets.elaborationmanager;
 import com.SafeStreets.dataManagerAdapterPack.ReportsDataInterface;
 import com.SafeStreets.exceptions.ElaborationException;
 import com.SafeStreets.exceptions.ImageStoreException;
+import com.SafeStreets.exceptions.PlateNotRecognizedException;
+import com.SafeStreets.licensePlateRecognized.LicensePlateRecognizerInterface;
 import com.SafeStreets.model.UserReport;
 
 import javax.ejb.Stateless;
@@ -22,8 +24,12 @@ class ElaborationManager implements ElaborationManagerInterface {
     public void elaborate(UserReport userReport) throws ElaborationException {
         ReportsDataInterface reportsData = ReportsDataInterface.getReportsDataInstance();
         try {
+            LicensePlateRecognizerInterface licensePlateRecognizer = LicensePlateRecognizerInterface.getInstance();
+            if(!licensePlateRecognizer.recognize(userReport.getMainPicture(),userReport.getVehicle().getLicensePlate())){
+                throw new ElaborationException();
+            }
             reportsData.addUserReport(userReport);
-        }catch (ImageStoreException e){
+        }catch (ImageStoreException | PlateNotRecognizedException e) {
             throw new ElaborationException();
         }
     }

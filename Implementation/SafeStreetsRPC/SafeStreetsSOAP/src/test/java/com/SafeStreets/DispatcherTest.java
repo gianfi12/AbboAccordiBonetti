@@ -19,19 +19,28 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.time.LocalDate;
 
+/**
+ * This class contains the test of the Disptacher class
+ */
 public class DispatcherTest {
+    /**
+     * It contains an instance of the user data interface that is used in order to retrieve the information about the user
+     */
     UserDataInterface userDataInterface;
     Dispatcher dispatcher;
     final static Gson gson = new Gson();
 
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         userDataInterface = UserDataInterface.getUserDataInstance();
     }
 
+    /**
+     * This method test the login method
+     */
     @Test
-    public void testLogin() throws WrongPasswordException, UserNotPresentException, ImageReadException {
+    public void testLogin()  {
         dispatcher =  new Dispatcher();
         String response = dispatcher.login("jak4", "jak");
         Type type = new TypeToken<AccessType>(){}.getType();
@@ -44,6 +53,10 @@ public class DispatcherTest {
         assert (accessType==AccessType.NOT_REGISTERED);
     }
 
+    /**
+     * This method tests that a user can be correctly registered inside the system
+     * @throws IOException Is thrown if an IO error occurs
+     */
     @Test
     public void testUserRegistration() throws IOException {
         dispatcher =  new Dispatcher();

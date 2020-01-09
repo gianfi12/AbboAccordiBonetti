@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:safe_streets_client/handler_localization.dart';
 
 /// A class that contains a position, expressed in latitude and longitude.
 class DevicePosition {
@@ -90,6 +89,7 @@ class Report {
         'author: $author\n}\n';
   }
 
+  ///This method is used by the json parser in order to know how to serialize the object in the JSON standard
   Map<String, dynamic> toJson() =>
       {
         'reportOffsetDateTime': deviceDateTime.toString(),
@@ -104,11 +104,13 @@ class Report {
         'otherPictures': imageListToString(otherImages),
       };
 
+  ///This method returns a string encoded in base64 with the image specified by the [path]
   String imageToString(String path){
     List<int> imageBytes = File(path).readAsBytesSync();
     return base64Encode(imageBytes);
   }
 
+  ///Thsi method returns a json list of string that represents the given list of [images] path, in a base64 encoding
   List imageListToString(List<String> images){
     List jsonList = new List();
     List<int> imageBytes;
@@ -119,6 +121,7 @@ class Report {
     return jsonList;
   }
 
+  ///This method is used by the json parser in order to deserialize the object
   factory Report.fromJson(Map<String, dynamic> parsedJson){
     var placeDecode = jsonDecode(parsedJson["place"]);
     String position = "City: "+ placeDecode["city"] +" Address: "+ placeDecode["address"] ;

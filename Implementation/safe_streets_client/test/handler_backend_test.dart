@@ -52,6 +52,7 @@ void main() async{
     expect(reponse,false);
   });
 
+  ///This test verifies that a New Report can be correctly memorized by the system
   test('New Report functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
@@ -64,6 +65,7 @@ void main() async{
   });
 
 
+  ///This test checks that the client can retrieve the available statistics
   test('Available Statistics functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
@@ -73,6 +75,7 @@ void main() async{
     expect(statistics[2],"VIOLATIONS_STAT");
   });
 
+  ///This test checks that a municipality with the right contract code can be correctly logged in
   test('Municipality Registration Functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
@@ -80,6 +83,7 @@ void main() async{
     expect(response,true);
   });
 
+  ///This test checks that the result returned by a VIOLATIONS_STAT request return the right value
   test('Data Analysis Functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
@@ -88,6 +92,7 @@ void main() async{
     expect(response[0].tail, "");
   });
 
+  ///This test checks that the result returned by a VEHICLE_STAT request return the right value
   test('Data Analysis Functionality for Vehicle', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
@@ -104,6 +109,7 @@ void main() async{
     expect(response[0].tail, "");
   });
 
+  ///This test checks that the result returned by a  STREETS_STAT request return the right value
   test('Data Analysis Functionality for streets', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
@@ -112,6 +118,7 @@ void main() async{
     expect(response[0].tail, "9.2229332");
   });
 
+  ///This test checks that the client can ge the right set of report send to the system by the users
   test('Access Reports Functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
