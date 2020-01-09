@@ -19,7 +19,7 @@ import java.util.*;
  */
 @Stateless
 public class DataAnalysisManager implements DataAnalysisInterface {
-    private static final LocalDate FIRST_DATE=LocalDate.of(1900, 12, 1);
+    private static final LocalDate FIRST_DATE=LocalDate.of(2019, 10, 1);
     private static final int DAYS_SAMPLE=21;
 
     /**
