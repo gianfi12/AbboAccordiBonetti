@@ -19,6 +19,11 @@ import static org.junit.Assert.*;
  */
 public class UserReportEntityTest {
 
+    /**
+     * It tests the method toUserReportWithImages.
+     * It calls the method on a UserReportEntity to convert and verifies whether the resulted
+     * UserReport has the same values of UserReportEntity, included the Place and Coordinate attributes.
+     */
     @Test
     public void toUserReportWithImages() throws ImageReadException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");

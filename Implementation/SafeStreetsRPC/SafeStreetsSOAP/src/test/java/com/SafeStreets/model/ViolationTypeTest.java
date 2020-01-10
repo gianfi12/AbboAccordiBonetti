@@ -6,8 +6,15 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of ViolationType
+ */
 public class ViolationTypeTest {
 
+    /**
+     * It tests the method getViolationTypeReportableFromUser.
+     * It verifes whether the method returns all and only all the parking violation type.
+     */
     @Test
     public void getViolationTypeReportableFromUser() {
         List<ViolationType> violationTypeList= ViolationType.getViolationTypeReportableFromUser();
@@ -20,6 +27,10 @@ public class ViolationTypeTest {
         assertTrue(violationTypeList.contains(ViolationType.PARKING_ON_TRAFFIC_ISLAND));
         assertTrue(violationTypeList.contains(ViolationType.PARKING_NOT_PAYED));
         assertTrue(violationTypeList.contains(ViolationType.PARKING_ON_RED_ZONE));
+
+        for(ViolationType violationType : violationTypeList) {
+            assertTrue(violationType.canBeReportedFromUser());
+        }
 
     }
 }

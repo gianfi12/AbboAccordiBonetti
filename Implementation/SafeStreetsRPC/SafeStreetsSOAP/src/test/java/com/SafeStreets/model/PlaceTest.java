@@ -7,8 +7,16 @@ import java.math.BigDecimal;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of Place
+ */
 public class PlaceTest {
 
+    /**
+     * It tests the method toPlaceEntity
+     * It calls the method on a Place to convert and verifies whether the resulted
+     * PlaceEntity has the same values of Place
+     */
     @Test
     public void toPlaceEntity() {
         Coordinate coordinate=new Coordinate(3.4, 4.5, 5.6);
@@ -23,6 +31,11 @@ public class PlaceTest {
         assertEquals(new BigDecimal("5.6"), placeEntity.getCoordinateEntity().getAltitude());
     }
 
+    /**
+     * It tests the method toPlaceEntity
+     * It calls the method on a Place with address null to convert and verifies whether the resulted
+     * PlaceEntity has the same values of Place
+     */
     @Test
     public void toPlaceEntityWithAddressNull() {
         Place place=new Place("Milano", null, null, null);
@@ -34,6 +47,10 @@ public class PlaceTest {
         assertNull(placeEntity.getCoordinateEntity());
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two equal Place and it verifies whether they are equal.
+     */
     @Test
     public void isEqualTrue() {
         Coordinate coordinate=new Coordinate(3.4, 4.5, 5.6);
@@ -45,6 +62,10 @@ public class PlaceTest {
         assertTrue(place.isEqual(place2));
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two equal Place with address null and it verifies whether they are equal.
+     */
     @Test
     public void isEqualTrueWithAddressNull() {
         Place place=new Place("Milano", null, null, null);
@@ -54,6 +75,10 @@ public class PlaceTest {
         assertTrue(place.isEqual(place2));
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two different Place and it verifies whether they are not equal.
+     */
     @Test
     public void isEqualFalse() {
         Coordinate coordinate=new Coordinate(3.4, 4.5, 5.7);
@@ -65,6 +90,10 @@ public class PlaceTest {
         assertFalse(place.isEqual(place2));
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two different Place with address null and it verifies whether they are not equal.
+     */
     @Test
     public void isEqualFalseWithAddressNull() {
         Place place=new Place("Milano", null, null, null);

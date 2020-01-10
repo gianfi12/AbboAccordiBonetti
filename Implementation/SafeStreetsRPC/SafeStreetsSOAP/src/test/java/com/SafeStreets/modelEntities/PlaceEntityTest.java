@@ -14,8 +14,8 @@ public class PlaceEntityTest {
 
     /**
      * It tests the method toPlace.
-     * It gives to the method a CoordinateEntity to convert and verifies whether the resulted
-     * Coordinate has the same values of CoordinateEntity
+     * It calls the method on a PlaceEntity to convert and verifies whether the resulted
+     * Place has the same values of PlaceEntity, included the attribute coordinate.
      */
     @Test
     public void toPlace() {
@@ -43,6 +43,11 @@ public class PlaceEntityTest {
 
     }
 
+    /**
+     * It tests the method toPlace with a PlaceEntity without address and without house code.
+     * It calls the method on a PlaceEntity to convert and verifies whether the resulted
+     * Place has the same values of PlaceEntity, included the attribute coordinate.
+     */
     @Test
     public void toPlaceWithoutAddress() {
         PlaceEntity placeEntity=new PlaceEntity();
