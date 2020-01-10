@@ -236,7 +236,8 @@ public class UserReportEntity {
         if(vehicleEntity!=null)
             vehicle=vehicleEntity.toVehicle();
 
-        BufferedImage mainPictureBI=DataManagerAdapter.readImage(mainPicture);
+        //BufferedImage mainPictureBI=DataManagerAdapter.readImage(mainPicture);
+        BufferedImage mainPictureBI=null;
 
         List<BufferedImage> otherPicturesBI = new ArrayList<>();
 

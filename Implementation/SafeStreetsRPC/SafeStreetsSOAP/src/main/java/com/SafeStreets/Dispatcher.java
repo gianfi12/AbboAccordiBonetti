@@ -57,7 +57,7 @@ public class Dispatcher implements DispatcherInterface{
         RegistrationManagerInterface registrationManager= RegistrationManagerInterface.getInstance();
         try {
             registrationManager.startUserRegistration(user);
-            registrationManager.finishUserRegistration(user,password);
+            registrationManager.finishUserRegistration(user,removeFinal(password));
             return true;
         }catch (UserAlreadyPresentException | ImageStoreException e){
             LOGGER.log(Level.INFO,"Error User registration!");
@@ -79,9 +79,9 @@ public class Dispatcher implements DispatcherInterface{
     public Boolean municipalityRegistration(String code, String username, String password, String dataIntegrationInfo) {
         RegistrationManagerInterface registrationManager = RegistrationManagerInterface.getInstance();
         try{
-            registrationManager.municipalityRegistration(code.replace("'",""),username.replace("'",""),password.replace("'",""));
+            registrationManager.municipalityRegistration(removeFinal(code),removeFinal(username),removeFinal(password));
             Type type = new TypeToken<DataIntegrationInfo>(){}.getType();
-            DataIntegrationInfo dataIntegrationInfo1 = gson.fromJson(dataIntegrationInfo.replace("'",""),type);
+            DataIntegrationInfo dataIntegrationInfo1 = gson.fromJson(removeFinal(dataIntegrationInfo),type);
             //TODO register the data integration info
             return true;
         }catch (MunicipalityNotPresentException | PlaceForMunicipalityNotPresentException | MunicipalityAlreadyPresentException e){
@@ -100,7 +100,7 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public String login(String username, String password) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        AccessType accessType = authorizationManager.getAccessType(removeFinal(username),removeFinal(password));
         Type type = new TypeToken<AccessType>(){}.getType();
         return gson.toJson(accessType,type);
     }
@@ -116,11 +116,13 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public Boolean newReport(String username, String password, String userReport) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        username = removeFinal(username);
+        password = removeFinal(password);
+        AccessType accessType = authorizationManager.getAccessType(username,password);
         if(accessType==AccessType.USER || accessType==AccessType.MUNICIPALITY){
             UserDataInterface userData = UserDataInterface.getUserDataInstance();
             try {
-                User user = userData.getUser(username.replace("'",""),password.replace("'",""));
+                User user = userData.getUser(username,password);
                 UserReport userReport1 = UserReport.fromJSON(userReport, user);
                 if( (accessType==AccessType.USER && userReport1.getViolationType().canBeReportedFromUser()) || (accessType==AccessType.MUNICIPALITY && userReport1.getViolationType().canBeReportedFromMunicipality())) {
                     ElaborationManagerInterface elaborationManager = ElaborationManagerInterface.getInstance();
@@ -146,7 +148,7 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public List<String> getAvailableStatistics(String username, String password) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        AccessType accessType = authorizationManager.getAccessType(removeFinal(username),removeFinal(password));
         List<String> statistics = new ArrayList<>();
         switch (accessType){
             case NOT_REGISTERED:
@@ -179,15 +181,16 @@ public class Dispatcher implements DispatcherInterface{
     @Override
     public List<String> requestDataAnalysis(String username, String password, String statisticsType, String location) {
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        AccessType accessType = authorizationManager.getAccessType(removeFinal(username),removeFinal(password));
         List<String> response = new ArrayList<>();
-        StatisticType statistic = StatisticType.valueOf(statisticsType.split("\\.")[1].replace("'",""));
+        statisticsType = removeFinal(statisticsType);
+        StatisticType statistic = StatisticType.valueOf(statisticsType);
 
         if( (accessType==AccessType.USER && statistic.canBeForUser()) || (accessType==AccessType.MUNICIPALITY && statistic.canBeForMunicipality()) ){
             DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
             MapsServiceInterface mapsService = MapsServiceInterface.getInstance();
 
-            JSONObject obj = new JSONObject(location.replace("'", ""));
+            JSONObject obj = new JSONObject(removeFinal(location));
             Double longitude = obj.getDouble("longitude");
             Double latitude = obj.getDouble("latitude");
             try {
@@ -213,23 +216,24 @@ public class Dispatcher implements DispatcherInterface{
      */
     public List<String> accessReports(String username,String password,String from,String until){
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
-        AccessType accessType = authorizationManager.getAccessType(username.replace("'",""),password.replace("'",""));
+        AccessType accessType = authorizationManager.getAccessType(removeFinal(username),removeFinal(password));
         List<String> returnList = new ArrayList<>();
         if(accessType==AccessType.MUNICIPALITY){
             DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
             try {
                 LocalDate untilDate=null;
                 LocalDate fromDate=null;
-                if(!from.replace("'", "").equals("null")){
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                    fromDate = LocalDate.parse(from.replace("'",""), formatter);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                from=from.substring(0, from.length() - 1).split(" ")[0];
+                if(!from.equals("null")){
+                    fromDate = LocalDate.parse(from, formatter);
                 }
-                if(!until.replace("'", "").equals("null")){
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-                    untilDate = LocalDate.parse(until.replace("'",""), formatter);
+                until= until.substring(0, until.length() - 1).split(" ")[0];
+                if(!until.equals("null")){
+                    untilDate = LocalDate.parse(until, formatter);
                 }
 
-                List<UserReport> userReports= dataAnalysis.getUserReports(new QueryFilter(fromDate, untilDate , authorizationManager.getMunicipality(username.replace("'",""))));
+                List<UserReport> userReports= dataAnalysis.getUserReports(new QueryFilter(fromDate, untilDate , authorizationManager.getMunicipality(removeFinal(username))));
                 for(UserReport userReport : userReports){
                     if(userReport.getPlace().getCoordinate()!=null) {
                         returnList.add(userReport.toJson());
@@ -250,5 +254,17 @@ public class Dispatcher implements DispatcherInterface{
      */
     public List<String> getSuggestions(String username, String password){
         return null;
+    }
+
+    /**
+     * This method is called in order to remove the final ' character from the received string
+     * @param string Is the string that contains the terminal 'character
+     * @return Is the returned string without the final '
+     */
+    public static String removeFinal(String string){
+        if(string.lastIndexOf("'")==(string.length()-1)) {
+            return string.substring(0, string.length() - 1);
+        }
+        return string;
     }
 }

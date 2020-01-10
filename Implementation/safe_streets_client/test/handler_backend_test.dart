@@ -87,7 +87,7 @@ void main() async{
   test('Data Analysis Functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("jak4", "jak");
-    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.VIOLATIONS_STAT.toString(), location: new DevicePosition(latitude: 45.4408, longitude: 12.3155));
+    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: "VIOLATIONS_STAT", location: new DevicePosition(latitude: 45.4408, longitude: 12.3155));
     expect(response[0].head,l.local(l.AvailableStrings.PARKING_ON_RESERVED_STALL));
     expect(response[0].tail, "");
   });
@@ -96,16 +96,16 @@ void main() async{
   test('Data Analysis Functionality for Vehicle', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
-    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.VEHICLES_STAT.toString(), location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
-    expect(response[0].head,"The vehicle with plate number FB452RT has generate 7 violations.");
+    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: "VEHICLES_STAT", location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
+    expect(response[0].head,"The vehicle with plate number AB123CD has generate 8 violations.");
     expect(response[0].tail, "");
   });
 
   test('Data Analysis Functionality for Effectivness', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
-    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.EFFECTIVENESS_STAT.toString(), location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
-    expect(response[0].head,"The stats of the system were:\nNumber of reports: 16\nNumber of users: 2\nRatio reports on users: 8.0\nAll the stat up to 2020-01-09 00:00:00.000");
+    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: "EFFECTIVENESS_STAT", location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
+    expect(response[0].head,"The stats of the system were:\nNumber of reports: 32\nNumber of users: 2\nRatio reports on users: 16.0\nAll the stat up to 2020-01-10 00:00:00.000");
     expect(response[0].tail, "");
   });
 
@@ -113,9 +113,9 @@ void main() async{
   test('Data Analysis Functionality for streets', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
-    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: l.AvailableStrings.STREETS_STAT.toString(), location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
-    expect(response[0].head,"45.4801297");
-    expect(response[0].tail, "9.2229332");
+    List<StatisticsItem> response = await soap.requestDataAnalysis(statisticsType: "STREETS_STAT", location: new DevicePosition(latitude: 45.4642, longitude: 9.1900));
+    expect(response[0].head,"45.4932476");
+    expect(response[0].tail, "9.2161629");
   });
 
   ///This test checks that the client can ge the right set of report send to the system by the usersset

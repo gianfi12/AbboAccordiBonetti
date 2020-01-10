@@ -27,6 +27,10 @@ public class UserReport extends Report{
     private User authorUser;
     private BufferedImage mainPicture;
     private List<BufferedImage> otherPictures;
+    /**
+     * Is the images format used to save the photo on the server
+     */
+    private final String IMAGE_TYPE="png";
 
     public UserReport(OffsetDateTime reportOffsetDateTime, OffsetDateTime odtOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle, User authorUser, BufferedImage mainPicture, List<BufferedImage> otherPictures) {
         super(reportOffsetDateTime, odtOfWatchedViolation, place, violationType, description, vehicle);
@@ -70,6 +74,13 @@ public class UserReport extends Report{
                     getDescription(), getVehicle());
     }
 
+    /**
+     * This method is used to reconstruct a User report that comes from the client, the definition of the user class is defined as a json string
+     * with the structure presented in this method and with the required parameters
+     * @param jsonstring Is the correctly fomatted json string
+     * @param user is the user that has sent this report
+     * @return Is the reconstructed user report
+     */
     public static UserReport fromJSON(String jsonstring,User user){
         Report report = Report.fromJSON(jsonstring);
         JSONObject obj = new JSONObject(jsonstring);
@@ -98,20 +109,32 @@ public class UserReport extends Report{
         }
     }
 
+    /**
+     * This method is used to return a json string that represents the User report, that has a structure as described in this method
+     * @return Is the json string that represents the object
+     */
     public String toJson(){
         JSONObject jsonObject = Report.toJSON(this);
         jsonObject.put("author", authorUser.getUsername());
-        jsonObject.put("mainPicture", encodeToString(mainPicture,"png"));
+        //jsonObject.put("mainPicture", encodeToString(mainPicture,IMAGE_TYPE));
+        //the comment where necessary in order to send report to the client only without image, otherwise java goes out of memory
+        jsonObject.put("mainPicture", "");
         List<String> picturesString = new ArrayList<>();
-        for(BufferedImage picture: otherPictures){
+        /*for(BufferedImage picture: otherPictures){
             picturesString.add(encodeToString(picture,"png"));
-        }
+        }*/
         jsonObject.put("otherPictures", picturesString);
 
 
         return jsonObject.toString();
     }
 
+    /**
+     * This method is used to encode an image as a string in the Base64 standard
+     * @param image Is the image that has to be encoded as a string
+     * @param type Is the format of the image, that in our server are saved as a png
+     * @return Is the string that encodes the image
+     */
     private String encodeToString(BufferedImage image, String type) {
         String imageString = null;
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

@@ -535,15 +535,17 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
 
         List<UserReport> userReportList=new ArrayList<>();
 
+        /*the commented code is due to the fact that the number of the image can be very high, that can push java to be out of memory*/
         for (UserReportEntity userReportEntity : userReportEntityList) {
 
-            String otherPicturesQueryString="FROM OtherPictureEntity WHERE userReportEntity="+userReportEntity.getId();
+            /*String otherPicturesQueryString="FROM OtherPictureEntity WHERE userReportEntity="+userReportEntity.getId();
 
             transaction.begin();
             TypedQuery<OtherPictureEntity> otherPicturesQuery = em.createQuery(otherPicturesQueryString, OtherPictureEntity.class);
-            transaction.commit();
+            transaction.commit();*/
 
-            List<OtherPictureEntity> otherPictureEntities=otherPicturesQuery.getResultList();
+            //List<OtherPictureEntity> otherPictureEntities=otherPicturesQuery.getResultList();
+            List<OtherPictureEntity> otherPictureEntities=new ArrayList<>();
 
             userReportList.add(userReportEntity.toUserReportWithImages(otherPictureEntities));
 
