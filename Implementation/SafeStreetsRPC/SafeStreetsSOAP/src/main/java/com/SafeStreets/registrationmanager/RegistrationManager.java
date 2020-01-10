@@ -30,7 +30,7 @@ class RegistrationManager implements RegistrationManagerInterface{
     public void startUserRegistration(User info) throws UserAlreadyPresentException{
         UserDataInterface dataManagerAdapter = UserDataInterface.getUserDataInstance();
         IdentityVerifierInterface identityVerifier = IdentityVerifierInterface.getInstance();
-        if(dataManagerAdapter.exists(info.getUsername()) && !identityVerifier.verify(info))
+        if(dataManagerAdapter.exists(info.getUsername()) || !identityVerifier.verify(info))
                 throw new UserAlreadyPresentException();
     }
 

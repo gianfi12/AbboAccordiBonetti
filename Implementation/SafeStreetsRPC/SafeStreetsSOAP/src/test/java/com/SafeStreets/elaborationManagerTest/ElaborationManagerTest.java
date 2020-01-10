@@ -45,4 +45,6 @@ public class ElaborationManagerTest {
         File file = new File(url.getPath());
         elaborationManager.elaborate(new UserReport(OffsetDateTime.now(), OffsetDateTime.now(),mapsService.geocoding(new Coordinate(45.4645,9.1909,null)), ViolationType.INCIDENT_VEHICLES_VIOLATION,"",new Vehicle("ASDGH456"),userData.getUser("jak4","jak"), ImageIO.read(file),new ArrayList<>()));
     }
+
+
 }
