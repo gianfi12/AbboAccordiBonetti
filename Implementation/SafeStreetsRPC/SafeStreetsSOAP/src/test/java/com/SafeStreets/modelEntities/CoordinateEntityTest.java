@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of CoordinateEntity
+ */
 public class CoordinateEntityTest {
 
     @Test

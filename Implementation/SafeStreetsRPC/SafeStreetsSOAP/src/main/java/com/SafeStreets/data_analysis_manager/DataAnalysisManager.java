@@ -14,12 +14,24 @@ import java.time.LocalDate;
 import java.util.*;
 
 /**
+ * An implementation of {@link DataAnalysisInterface}.
+ * It implements the DataAnalysisManager component. It allows to get various statistics about the violations,
+ * the streets, the vehicles and the effectiveness of the system. Then it allows to get the reports
+ * done by the users.
  *
  * @author Massimiliano Bonetti
+ * @see DataAnalysisInterface
  */
 @Stateless
 public class DataAnalysisManager implements DataAnalysisInterface {
+    /**
+     * Conventionally, first day of activity of the system. It is considered as start day when
+     * the given start day of the methods is null.
+     */
     private static final LocalDate FIRST_DATE=LocalDate.of(2019, 10, 1);
+    /**
+     * Interval of time between one effectiveness statistic and the next one.
+     */
     private static final int DAYS_SAMPLE=21;
 
     /**
@@ -29,6 +41,20 @@ public class DataAnalysisManager implements DataAnalysisInterface {
     DataAnalysisManager() {
     }
 
+    /**
+     * It returns the statistics about the reported violations,
+     * the streets, the vehicles or the effectiveness of the system.
+     * The statistics are calculated based on the reports of the given city and with a reportOffsetDateTime
+     * between the date "from" and the date "to".
+     * If the date "from" is null then it is not considered as a filter.
+     * If the date "to" is null then it is not considered as a filter.
+     * @param statisticType type of statistic to calculate
+     * @param city only the reports of this city are considered
+     * @param from only the report with a reportOffsetDateTime from this date are considered
+     * @param to only the report with a reportOffsetDateTime until this date are considered
+     * @return the statistics about the reported violations,
+     * the streets, the vehicles or the effectiveness of the system
+     */
     @Override
     public List<Statistic> getStatistics(StatisticType statisticType, String city, LocalDate from,
                                          LocalDate to) {
@@ -59,6 +85,21 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     }
 
+    /**
+     * It returns the statistics about the streets. In particular it returns a list of Statistic, each
+     * one contains the street considered, the number of reported violations in that street and a list
+     * of coordinates of the reports in that street.
+     * The statistics are calculated based on the reports of the given city and with a reportOffsetDateTime
+     * between the date "from" and the date "to".
+     * If the date "from" is null then it is not considered as a filter.
+     * If the date "to" is null then it is not considered as a filter.
+     * @param city only the reports of this city are considered
+     * @param from only the report with a reportOffsetDateTime from this timestamp are considered
+     * @param to only the report with a reportOffsetDateTime until this timestamp are considered
+     * @return statistics about the reported violations. In particular it returns a list of Statistic, each
+     * one contains the street considered, the number of reported violations in that street and a list
+     * of coordinates of the reports in that street.
+     */
     private List<Statistic> getStreetsViolationsStatistics(String city, Timestamp from,
                                                            Timestamp to) {
 
@@ -106,6 +147,27 @@ public class DataAnalysisManager implements DataAnalysisInterface {
 
     }
 
+    /**
+     * It returns the statistics about the effectiveness of the system. In particular it returns a list of Statistic, each statistic
+     * contains a date. The list is ordered from the most recent date which is "to" and the next statistic has a date that differs
+     * from the previous one by DAYS_SAMPLE days. The last statistic has date "to".
+     * Each statistic has also the number of users that were registered in the system at the corresponding date,
+     * the number of reports that were present in the system at the corresponding date and the
+     * number of users divided by the number of reports at the corresponding date.
+     * The statistics are calculated based on the reports of the given city and with a reportOffsetDateTime
+     * between the date "from" and the date "to".
+     * If the date "from" is null then it is not considered as a filter.
+     * If the date "to" is null then it is not considered as a filter.
+     * @param city only the reports of this city are considered
+     * @param from only the report with a reportOffsetDateTime from this date are considered
+     * @param to only the report with a reportOffsetDateTime until this date are considered
+     * @return statistics about the effectiveness of the system. In particular it returns a list of Statistic, each statistic
+     * contains a date. The list is ordered from the most recent date which is "to" and the next statistic has a date that differs
+     * from the previous one by DAYS_SAMPLE days. The last statistic has date "to".
+     * Each statistic has also the number of users that were registered in the system at the corresponding date,
+     * the number of reports that were present in the system at the corresponding date and the
+     * number of users divided by the number of reports at the corresponding date.
+     */
     private List<Statistic> getEffectivenessesStatistics(String city, LocalDate from,
                                                          LocalDate to) {
 
@@ -129,6 +191,17 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         return statisticList;
     }
 
+
+    /**
+     * It returns one statistic of type effectiveness. The statistic contains the number of users that were registered in the system at the given dateSample,
+     * the number of reports that were present in the system at the given dateSample and the
+     * number of users divided by the number of reports at the given dateSample.
+     * @param city only the reports of this city are considered
+     * @param dateSample the statistic is calculated on this date
+     * @return effectiveness statistic which contains the number of users that were registered in the system at the given dateSample,
+     * the number of reports that were present in the system at the given dateSample and the
+     * number of users divided by the number of reports at the given dateSample.
+     */
     private Statistic getEffectivenessStatistic(String city, LocalDate dateSample) {
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
 
@@ -168,6 +241,21 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         return statistic;
     }
 
+    /**
+     * It returns the statistics about the vehicles. In particular it returns a list of Statistic ordered by the vehicle
+     * that has committed the highest number of violations. Each statistic
+     * contains a vehicle.
+     * The statistics are calculated based on the reports of the given city and with a reportOffsetDateTime
+     * between the date "from" and the date "to".
+     * If the date "from" is null then it is not considered as a filter.
+     * If the date "to" is null then it is not considered as a filter.
+     * @param city only the reports of this city are considered
+     * @param from only the report with a reportOffsetDateTime from this timestamp are considered
+     * @param to only the report with a reportOffsetDateTime until this timestamp are considered
+     * @return statistics about the vehicles. In particular it returns a list of Statistic ordered by the vehicle
+     * that has committed the highest number of violations. Each statistic
+     * contains a vehicle.
+     */
     private List<Statistic> getVehiclesStatistics(String city, Timestamp from,
                                                   Timestamp to) {
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
@@ -197,6 +285,19 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         return statisticList;
     }
 
+    /**
+     * It returns the statistics about the reported violations. In particular it returns a list of Statistic ordered
+     * by the type of violation that has been reported more. Each statistic contains a type of violation.
+     * The statistics are calculated based on the reports of the given city and with a reportOffsetDateTime
+     * between the date "from" and the date "to".
+     * If the date "from" is null then it is not considered as a filter.
+     * If the date "to" is null then it is not considered as a filter.
+     * @param city only the reports of this city are considered
+     * @param from only the report with a reportOffsetDateTime from this timestamp are considered
+     * @param to only the report with a reportOffsetDateTime until this timestamp are considered
+     * @return statistics about the reported violations. In particular it returns a list of Statistic ordered
+     * by the type of violation that has been reported more. Each statistic contains a type of violation.
+     */
     private List<Statistic> getViolationsStatistics(String city, Timestamp from,
                                                     Timestamp to) {
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();
@@ -222,6 +323,16 @@ public class DataAnalysisManager implements DataAnalysisInterface {
         return statisticList;
     }
 
+    /**
+     * It returns the reports done by the user by applying the given filter.
+     * So by considering the city of the filter, the address of the filter if it is not null and
+     * the houseCode of the filter if the address and the houseCode are not null
+     * @param filter filter to apply to the userReports. In this way are considered the reports of the city of the filter, the address of the filter if it is not null and
+     * the houseCode of the filter if the address and the houseCode are not null
+     * @return reports done by the user by applying the given filter
+     * @throws ImageReadException if it is not possible to read the mainPicture or the otherPictures of the
+     * userReports, for example because a path to one image is wrong or because one image is not present
+     */
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
         ReportsDataInterface reportsDataInterface = ReportsDataInterface.getReportsDataInstance();

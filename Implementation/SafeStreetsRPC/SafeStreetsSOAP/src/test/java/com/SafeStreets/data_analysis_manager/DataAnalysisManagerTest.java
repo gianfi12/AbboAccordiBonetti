@@ -10,8 +10,15 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of the DataAnalysisManager
+ */
 public class DataAnalysisManagerTest {
-
+    /**
+     * It tests the method getStatistics when statisticType is STREETS_STAT.
+     * It verifies whether the statistics are of type STREETS_STAT and if they have been calculated correctly by
+     * checking the values of the statistics with the expected results.
+     */
     @Test
     public void getStreetsViolationsStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
@@ -35,6 +42,11 @@ public class DataAnalysisManagerTest {
         assertEquals(1, statisticList.get(1).getNumberOfViolationsInStreet());
     }
 
+    /**
+     * It tests the method getStatistics when statisticType is EFFECTIVENESS_STAT.
+     * It verifies whether the statistics are of type EFFECTIVENESS_STAT and if they have been calculated correctly by
+     * checking the values of the statistics with the expected results.
+     */
     @Test
     public void getEffectivenessesStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
@@ -81,6 +93,11 @@ public class DataAnalysisManagerTest {
 
 
 
+    /**
+     * It tests the method getStatistics when statisticType is VEHICLES_STAT.
+     * It verifies whether the statistics are of type VEHICLES_STAT and if they have been calculated correctly by
+     * checking the values of the statistics with the expected results.
+     */
     @Test
     public void getVehiclesStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
@@ -101,6 +118,11 @@ public class DataAnalysisManagerTest {
 
     }
 
+    /**
+     * It tests the method getStatistics when statisticType is VIOLATIONS_STAT.
+     * It verifies whether the statistics are of type VIOLATIONS_STAT and if they have been calculated correctly by
+     * checking the values of the statistics with the expected results.
+     */
     @Test
     public void getViolationsStatisticsTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
@@ -118,6 +140,11 @@ public class DataAnalysisManagerTest {
 
     }
 
+    /**
+     * It tests the method getStatistics when statisticType is VIOLATIONS_STAT.
+     * It verifies whether the VIOLATIONS_STAT are of type STREETS_STAT and if they have been calculated correctly by
+     * checking the values of the statistics with the expected results.
+     */
     @Test
     public void getStatisticsWithoutFilterOnDatesTest() {
         DataAnalysisInterface dataAnalysisInterface=new DataAnalysisManager();
@@ -137,7 +164,10 @@ public class DataAnalysisManagerTest {
     }
 
 
-
+    /**
+     * It tests the method getUserReports.
+     * It verifies whether the reports have the most important attributes set and whether they respect the given filter.
+     */
     @Test
     public void getUserReportsTest() throws ImageReadException {
         DataAnalysisInterface dataAnalysisInterface=DataAnalysisInterface.getInstance();

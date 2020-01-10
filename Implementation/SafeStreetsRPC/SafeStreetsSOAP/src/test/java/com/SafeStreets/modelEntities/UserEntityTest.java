@@ -13,6 +13,9 @@ import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of UserEntity
+ */
 public class UserEntityTest {
 
     @Test
