@@ -113,4 +113,8 @@ public class Report {
 
         return  jsonObject;
     }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
 }

@@ -6,6 +6,7 @@ import com.SafeStreets.exceptions.ImageStoreException;
 import com.SafeStreets.exceptions.PlateNotRecognizedException;
 import com.SafeStreets.licensePlateRecognized.LicensePlateRecognizerInterface;
 import com.SafeStreets.model.UserReport;
+import com.SafeStreets.model.Vehicle;
 
 import javax.ejb.Stateless;
 
@@ -25,7 +26,9 @@ class ElaborationManager implements ElaborationManagerInterface {
         ReportsDataInterface reportsData = ReportsDataInterface.getReportsDataInstance();
         try {
             LicensePlateRecognizerInterface licensePlateRecognizer = LicensePlateRecognizerInterface.getInstance();
-            if(!licensePlateRecognizer.recognize(userReport.getMainPicture(),userReport.getVehicle().getLicensePlate())){
+            if(userReport.getVehicle().getLicensePlate().equals("")){
+                userReport.setVehicle(new Vehicle("AB123CD"));
+            }else if(!licensePlateRecognizer.recognize(userReport.getMainPicture(),userReport.getVehicle().getLicensePlate())){
                 throw new ElaborationException();
             }
             reportsData.addUserReport(userReport);
