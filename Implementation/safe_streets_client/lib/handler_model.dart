@@ -74,7 +74,9 @@ class Report {
     this.plateNumber,
     this.author,
   })  : assert(deviceDateTime != null),
-        assert(violationType != null);
+        assert(violationType != null) {
+    if (otherImages == null) otherImages = [];
+  }
 
   @override
   String toString() {
@@ -93,15 +95,16 @@ class Report {
   Map<String, dynamic> toJson() =>
       {
         'reportOffsetDateTime': deviceDateTime.toString(),
-        'odtOfWatchedViolation': violationDateTime.toString(),
-        'place': position,
-        'devicePosition': devicePosition,
-        'violationType': violationType,
-        'description': "",
-        'vehicle': plateNumber ?? "",
-        'author': "",
-        'mainPicture': imageToString(mainImage),
-        'otherPictures': imageListToString(otherImages),
+        'odtOfWatchedViolation': violationDateTime?.toString() ?? '',
+        'place': position ?? '',
+        'devicePositionLat': devicePosition?.latitude ?? '',
+        'devicePositionLng': devicePosition?.longitude ?? '',
+        'violationType': violationType ?? '',
+        'description': '',
+        'vehicle': plateNumber ?? '',
+        'author': '',
+        'mainPicture': imageToString(mainImage) ?? '',
+        'otherPictures': imageListToString(otherImages) ?? '',
       };
 
   ///This method returns a string encoded in base64 with the image specified by the [path]
@@ -110,7 +113,7 @@ class Report {
     return base64Encode(imageBytes);
   }
 
-  ///Thsi method returns a json list of string that represents the given list of [images] path, in a base64 encoding
+  ///This method returns a json list of string that represents the given list of [images] path, in a base64 encoding
   List imageListToString(List<String> images){
     List jsonList = new List();
     List<int> imageBytes;

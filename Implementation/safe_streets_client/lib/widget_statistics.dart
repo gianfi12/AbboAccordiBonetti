@@ -92,7 +92,7 @@ class _StatisticsState extends State<Statistics> {
   /// right, not localized.
   _buildRow(model.StatisticsItem item) {
     return ListTile(
-      title: Text(l.localKey(item.head)),
+      title: Text(item.head),
       trailing: Text(item.tail),
     );
   }

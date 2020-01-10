@@ -757,6 +757,7 @@ class _SOAPTest implements DispatcherInterface {
     List<model.Report> resp = new List();
     var elements = returnElement.toList();
     elements.forEach((element) => resp.add(model.Report.fromJson(json.decode(element.text))));
+    print(resp);
     return Future.value(resp);
   }
   

@@ -18,8 +18,15 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of UserReport
+ */
 public class UserReportTest {
-
+    /**
+     * It tests the method toUserReportEntity
+     * It calls the method on a UserReport to convert and verifies whether the resulted
+     * UserReportEntity has the same values (of the attributes) of UserReport
+     */
     @Test
     public void toUserReportEntity() throws ImageReadException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
@@ -65,6 +72,11 @@ public class UserReportTest {
 
     }
 
+    /**
+     * It tests the method toReport
+     * It calls the method on a UserReport to convert and verifies whether the resulted
+     * Report has the same values (of the attributes) of UserReport
+     */
     @Test
     public void toReport() throws ImageReadException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");

@@ -10,6 +10,11 @@ import static org.junit.Assert.*;
  */
 public class VehicleEntityTest {
 
+    /**
+     * It tests the method toVehicle.
+     * It calls the method on a VehicleEntity to convert and verifies whether the resulted
+     * Vehicle has the same values of VehicleEntity.
+     */
     @Test
     public void toVehicle() {
         VehicleEntity vehicleEntity=new VehicleEntity();

@@ -18,6 +18,11 @@ import static org.junit.Assert.*;
  */
 public class UserEntityTest {
 
+    /**
+     * It tests the method toUser.
+     * It calls the method on a UserEntity to convert and verifies whether the resulted
+     * User has the same values of UserEntity, included the attributes place and coordinates.
+     */
     @Test
     public void toUser() throws ImageReadException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");
@@ -54,6 +59,11 @@ public class UserEntityTest {
         assertEquals(LocalDate.of(1990,8,1),user.getDateOfBirth());
     }
 
+    /**
+     * It tests the method toUser with a UserEntity without pictures.
+     * It calls the method on a UserEntity to convert and verifies whether the resulted
+     * User has the same values of UserEntity, included the Place and Coordinate attributes.
+     */
     @Test
     public void toUserFromUserEntityWithoutPicture() throws ImageReadException {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("manager1");

@@ -12,10 +12,19 @@ import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of User
+ */
 public class UserTest {
-
+    /**
+     * Directory used for test which contains the images of the users and of the reports
+     */
     private static final String PICTURESDATA_TEST_PATH ="image/";
-
+    /**
+     * It tests the method toUserEntity.
+     * It calls the method on a User to convert and verifies whether the resulted
+     * UserEntity has the same values (of the attributes) of User
+     */
     @Test
     public void toUserEntity() throws ImageReadException {
         String password="userP";
@@ -50,7 +59,11 @@ public class UserTest {
         assertTrue(userEntity.getPlaceOfResidenceEntity().toPlace().isEqual(placeOfResidence));
 
     }
-
+    /**
+     * It tests the method toUserEntity.
+     * It calls the method on a User without pictures to convert and verifies whether the resulted
+     * UserEntity has the same values (of the attributes) of User
+     */
     @Test
     public void toUserEntityWithoutPicture() throws ImageReadException {
         String password="userP";
@@ -86,6 +99,13 @@ public class UserTest {
 
     }
 
+
+    /**
+     * It returns the image corresponding to the given path
+     * @param imagePath path in which the image must be read
+     * @return image corresponding to the given path
+     * @throws ImageReadException if there was a problem during the read of the image
+     */
     private BufferedImage readImageFromResourcesImage(String imagePath) throws ImageReadException {
 
         BufferedImage bufferedImage;
@@ -104,6 +124,10 @@ public class UserTest {
         return bufferedImage;
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two equal User and it verifies whether they are equal.
+     */
     @Test
     public void isEqualTrue() throws ImageReadException {
         String picturePath=PICTURESDATA_TEST_PATH+"pictureBobTest.png";
@@ -140,6 +164,10 @@ public class UserTest {
         assertTrue(user.isEqual(user2));
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two different User and it verifies whether they are not equal.
+     */
     @Test
     public void isEqualFalse() throws ImageReadException {
         String picturePath=PICTURESDATA_TEST_PATH+"pictureBobTest.png";
@@ -176,6 +204,10 @@ public class UserTest {
         assertFalse(user.isEqual(user2));
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two equal User without pictures and it verifies whether they are equal.
+     */
     @Test
     public void isEqualTrueWithoutPictures() throws ImageReadException {
         String idPicturePath=PICTURESDATA_TEST_PATH+"idBobTest.png";
@@ -209,6 +241,10 @@ public class UserTest {
         assertTrue(user.isEqual(user2));
     }
 
+    /**
+     * It tests the method isEqual.
+     * It calls the method on two equal User(one of them has no pictures) and it verifies whether they are equal.
+     */
     @Test
     public void isEqualTrueOneUserWithoutPicture() throws ImageReadException {
         String idPicturePath=PICTURESDATA_TEST_PATH+"idBobTest.png";

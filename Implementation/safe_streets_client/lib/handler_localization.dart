@@ -78,6 +78,7 @@ enum AvailableStrings {
   SPEED_VIOLATION,
   AGAINST_TRAFFIC_VIOLATION,
   OTHER_VIOLATION,
+  INCIDENT_VEHICLES_VIOLATION,
 }
 
 /// The translation of the strings.
@@ -157,6 +158,7 @@ const _values = {
   AvailableStrings.SPEED_VIOLATION: 'Speed violation',
   AvailableStrings.AGAINST_TRAFFIC_VIOLATION: 'Against traffic violation',
   AvailableStrings.OTHER_VIOLATION: 'Other violation',
+  AvailableStrings.INCIDENT_VEHICLES_VIOLATION: 'Incident',
 };
 
 /// This provides a method to obtain a localized string.
