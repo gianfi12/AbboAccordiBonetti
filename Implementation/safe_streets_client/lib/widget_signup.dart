@@ -18,7 +18,7 @@ class SignUp extends StatefulWidget {
 }
 
 /// The state for the sign up widget.
-class _SignUpState extends State<SignUp> {
+class _SignUpState extends State<SignUp> with AutomaticKeepAliveClientMixin{
   /// The key to validate the form.
   final _formKey = GlobalKey<FormState>();
 
@@ -115,6 +115,7 @@ class _SignUpState extends State<SignUp> {
             width: 400,
             child: ListView(
               children: _buildItems(),
+              addAutomaticKeepAlives: true,
             ),
           ),
         ),
@@ -226,6 +227,9 @@ class _SignUpState extends State<SignUp> {
       });
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 /// An item that represents a [TextFormField].
@@ -322,17 +326,14 @@ class MunSignUpState extends State<MunSignUp> {
       _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DI_IP,
         onSaved: (s) => _dataIntegrationIp = s,
-        validator: null,
       ),
       _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DI_PORT,
         onSaved: (s) => _dataIntegrationPort = s,
-        validator: null,
       ),
       _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DI_PASSWORD,
         onSaved: (s) => _dataIntegrationPassword = s,
-        validator: null,
       ),
     ];
   }

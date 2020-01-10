@@ -649,7 +649,7 @@ class _AdditionalInputsState extends State<AdditionalInputs> {
   void _onSave() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
-      if (overridePosition == null) {
+      if (overridePosition == null || overridePosition == "") {
         _sendReport(
           this.context,
           widget.dispatcher,
