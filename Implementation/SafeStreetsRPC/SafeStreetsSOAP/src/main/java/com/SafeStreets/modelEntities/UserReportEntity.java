@@ -221,6 +221,12 @@ public class UserReportEntity {
         return Objects.hash(id, reportTimeStamp, timeStampOfWatchedViolation, violationType, description, mainPicture);
     }
 
+    /**
+     * It returns the UserReport converted from this object
+     * @param otherPictureEntities optional pictures of the reports
+     * @return UserReport converted from this object
+     * @throws ImageReadException if there was a problem with the read of the images of the reports
+     */
     public UserReport toUserReportWithImages(List<OtherPictureEntity> otherPictureEntities) throws ImageReadException {
         OffsetDateTime odtOfWatchedViolation=null;
         if(timeStampOfWatchedViolation!=null)

@@ -15,14 +15,25 @@ import java.util.Objects;
 @Entity
 @Table(name = "vehicle", schema = "safe_streets_db")
 public class VehicleEntity {
+    /**
+     * license plate of the vehicle
+     */
     private String licensePlate;
 
+    /**
+     * It returns the license plate of the vehicle, which corresponds to the attribute "license_plate".
+     * @return license plate of the vehicle,
+     */
     @Id
     @Column(name = "license_plate")
     public String getLicensePlate() {
         return licensePlate;
     }
 
+    /**
+     * It sets the license plate with the given one
+     * @param licensePlate new license plate
+     */
     public void setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
     }
@@ -120,6 +131,10 @@ public class VehicleEntity {
         return Objects.hash(licensePlate);
     }
 
+    /**
+     * It returns the Vehicle converted from this object
+     * @return Vehicle converted from this object
+     */
     public Vehicle toVehicle() {
         return new Vehicle(licensePlate);
     }

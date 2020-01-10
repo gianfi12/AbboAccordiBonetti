@@ -17,152 +17,292 @@ import java.util.Objects;
 @Entity
 @Table(name = "user", schema = "safe_streets_db")
 public class UserEntity {
+    /**
+     * Username of the user
+     */
     private String username;
+    /**
+     * email
+     */
     private String email;
+    /**
+     * firstname
+     */
     private String firstname;
+    /**
+     * lastname
+     */
     private String lastname;
-
+    /**
+     * place of birth
+     */
     private PlaceEntity placeOfBirthEntity;
-
+    /**
+     * place of residence
+     */
     private PlaceEntity placeOfResidenceEntity;
-
+    /**
+     * path to the picture of the user
+     */
     private String picture;
+    /**
+     * path to the identity card picture of the user
+     */
     private String idCard;
+    /**
+     * fiscal code
+     */
     private String fiscalCode;
+    /**
+     * date of birth
+     */
     private Date dateOfBirth;
+    /**
+     * hash of the password+salt
+     */
     private String password;
+    /**
+     * salt of the password
+     */
     private String salt;
-
+    /**
+     * date of registration
+     */
     private Date dateOfRegistration;
 
 
-
+    /**
+     * It returns the username of the user, which is the key of the element and it corresponds to the attribute "username" in the database.
+     * @return username of the user
+     */
     @Id
     @Column(name = "username")
     public String getUsername() {
         return username;
     }
 
+    /**
+     * It sets the username with the given one
+     * @param username new username
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * It returns the email of the user, which  corresponds to the attribute "email" in the database.
+     * @return email of the user
+     */
     @Basic
     @Column(name = "email")
     public String getEmail() {
         return email;
     }
 
+    /**
+     * It sets the email with the given one
+     * @param email new email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * It returns the first name of the user, which  corresponds to the attribute "firstname" in the database.
+     * @return first name of the user
+     */
     @Basic
     @Column(name = "firstname")
     public String getFirstname() {
         return firstname;
     }
 
+    /**
+     * It sets the first name with the given one
+     * @param firstname new first name
+     */
     public void setFirstname(String firstname) {
         this.firstname = firstname;
     }
 
+    /**
+     * It returns the last name of the user, which  corresponds to the attribute "lastname" in the database.
+     * @return last name of the user
+     */
     @Basic
     @Column(name = "lastname")
     public String getLastname() {
         return lastname;
     }
 
+    /**
+     * It sets the last name with the given one
+     * @param lastname new last name
+     */
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
 
+    /**
+     * It returns the picture path of the user, which  corresponds to the attribute "picture" in the database.
+     * @return picture path of the user
+     */
     @Basic
     @Column(name = "picture")
     public String getPicture() {
         return picture;
     }
 
+    /**
+     * It sets the picture path with the given one
+     * @param picture new picture path
+     */
     public void setPicture(String picture) {
         this.picture = picture;
     }
 
+    /**
+     * It returns the id card path of the user, which  corresponds to the attribute "id_card" in the database.
+     * @return id_card path of the user
+     */
     @Basic
     @Column(name = "id_card")
     public String getIdCard() {
         return idCard;
     }
 
+    /**
+     * It sets the id card path with the given one
+     * @param idCard new id card path
+     */
     public void setIdCard(String idCard) {
         this.idCard = idCard;
     }
 
+    /**
+     * It returns the fiscal code of the user, which  corresponds to the attribute "fiscal_code" in the database.
+     * @return fiscal code of the user
+     */
     @Basic
     @Column(name = "fiscal_code")
     public String getFiscalCode() {
         return fiscalCode;
     }
 
+    /**
+     * It sets the fiscal code with the given one
+     * @param fiscalCode new fiscal code
+     */
     public void setFiscalCode(String fiscalCode) {
         this.fiscalCode = fiscalCode;
     }
 
+    /**
+     * It returns the date of birth of the user, which  corresponds to the attribute "date_of_birth" in the database.
+     * @return date of birth of the user
+     */
     @Basic
     @Column(name = "date_of_birth")
     public Date getDateOfBirth() {
         return dateOfBirth;
     }
 
+    /**
+     * It sets the date of birth with the given one
+     * @param dateOfBirth new date of birth
+     */
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
+    /**
+     * It returns the hash of the password of the user, which  corresponds to the attribute "password" in the database.
+     * @return hash of the password of the user
+     */
     @Basic
     @Column(name = "password")
     public String getPassword() {
         return password;
     }
 
+    /**
+     * It sets the password with the given one
+     * @param password new password
+     */
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /**
+     * It returns the salt of the user, which  corresponds to the attribute "salt" in the database.
+     * @return salt of the user
+     */
     @Basic
     @Column(name = "salt")
     public String getSalt() {
         return salt;
     }
 
+    /**
+     * It sets the salt with the given one
+     * @param salt new salt
+     */
     public void setSalt(String salt) {
         this.salt = salt;
     }
 
+    /**
+     * It returns the date of registration of the user, which  corresponds to the attribute "date_of_registration" in the database.
+     * @return date of registration of the user
+     */
     @Basic
     @Column(name = "date_of_registration")
     public Date getDateOfRegistration() {
         return dateOfRegistration;
     }
 
+    /**
+     * It sets the date of registration with the given one
+     * @param dateOfRegistration new date of registration
+     */
     public void setDateOfRegistration(Date dateOfRegistration) {
         this.dateOfRegistration = dateOfRegistration;
     }
 
+    /**
+     * It returns the place of birth of the user, which corresponds to the attribute "place_of_birth_id" in the database.
+     * It is many-to-one joined with PlaceEntity
+     * @return place of birth of the user
+     */
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinColumn(name = "place_of_birth_id")
     public PlaceEntity getPlaceOfBirthEntity() {
         return placeOfBirthEntity;
     }
 
+    /**
+     * It sets the place of birth with the given one
+     * @param placeOfBirthEntity new place of birth
+     */
     public void setPlaceOfBirthEntity(PlaceEntity placeOfBirthEntity) {
         this.placeOfBirthEntity = placeOfBirthEntity;
     }
 
+    /**
+     * It returns the place of residence of the user, which corresponds to the attribute "place_of_residence_id" in the database.
+     * It is many-to-one joined with PlaceEntity
+     * @return place of residence of the user
+     */
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinColumn(name = "place_of_residence_id")
     public PlaceEntity getPlaceOfResidenceEntity() {
         return placeOfResidenceEntity;
     }
 
+    /**
+     * It sets the place of residence with the given one
+     * @param placeOfResidenceEntity new place of residence
+     */
     public void setPlaceOfResidenceEntity(PlaceEntity placeOfResidenceEntity) {
         this.placeOfResidenceEntity = placeOfResidenceEntity;
     }
@@ -270,7 +410,11 @@ public class UserEntity {
         return Objects.hash(username, email, firstname, lastname, picture, idCard, fiscalCode, dateOfBirth, password, salt, dateOfRegistration);
     }
 
-
+    /**
+     * It returns the User converted from this object
+     * @return User converted from this object
+     * @throws ImageReadException if there was a problem during the read of the pictures of the user
+     */
     public User toUser() throws ImageReadException {
         BufferedImage pictureImage=null;
         if(picture!=null && !picture.equals(""))

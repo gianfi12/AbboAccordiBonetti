@@ -95,7 +95,7 @@ public class DataManagerAdapterTest {
         assertTrue(user.isEqual(savedUser));
 
 
-        String deleteUser= "DELETE FROM UserEntity WHERE username="+userEntity.getUsername();
+        String deleteUser= "DELETE FROM UserEntity as uR WHERE uR.username='"+userEntity.getUsername()+"'";
 
         transaction=em.getTransaction();
         transaction.begin();
@@ -279,7 +279,7 @@ public class DataManagerAdapterTest {
      * @throws MunicipalityNotPresentException if the test fails
      * @throws WrongPasswordException if the test passes
      */
-    @Test(expected = MunicipalityNotPresentException.class)
+    @Test(expected = WrongPasswordException.class)
     public void getMunicipalityWithWrongPassword() throws MunicipalityNotPresentException, WrongPasswordException {
         dataManagerAdapter.getMunicipality("Roma", "RomePWrong");
     }
@@ -465,13 +465,6 @@ public class DataManagerAdapterTest {
         assertEquals("../picturesData/OtherPictureFromReportOfjak41.png",otherPictureEntity2.getPicture());
 
 
-        String deleteReport= "DELETE FROM UserReportEntity WHERE id="+userReportEntity.getId();
-
-        transaction=em.getTransaction();
-        transaction.begin();
-        em.createQuery(deleteReport).executeUpdate();
-        transaction.commit();
-
     }
 
     /**
@@ -520,7 +513,7 @@ public class DataManagerAdapterTest {
             assertEquals(userReport.getPlace().getHouseCode(), queryFilter.getPlace().getHouseCode());
             assertTrue(userReport.getReportOffsetDateTime().isAfter(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getFrom(), true)));
             assertTrue(userReport.getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(queryFilter.getUntil(), false)));
-            assertNull(userReport.getOdtOfWatchedViolation());
+            assertNotNull(userReport.getOdtOfWatchedViolation());
             assertNotNull(userReport.getViolationType());
             assertNull(userReport.getDescription());
             assertNotNull(userReport.getMainPicture());
