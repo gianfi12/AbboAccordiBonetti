@@ -419,7 +419,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
     @Override
     public void addUserReport(UserReport userReport) throws ImageStoreException {
 
-        String mainPicturePath=saveImage(userReport.getMainPicture(), MAIN_PICTURE_FOR_REPORT+userReport.getAuthorUser().getUsername());
+        String mainPicturePath=saveImage(userReport.getMainPicture(), MAIN_PICTURE_FOR_REPORT+userReport.getAuthorUser().getUsername()+Instant.now());
 
         UserReportEntity userReportEntity=userReport.toUserReportEntity(mainPicturePath);
 
@@ -433,7 +433,7 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
         if(otherPicturesImages!=null) {
             String otherPicturePath;
             for(int i=0; i<otherPicturesImages.size(); i++) {
-                otherPicturePath=saveImage(otherPicturesImages.get(i), OTHER_PICTURE_FOR_REPORT+userReport.getAuthorUser().getUsername()+i);
+                otherPicturePath=saveImage(otherPicturesImages.get(i), OTHER_PICTURE_FOR_REPORT+userReport.getAuthorUser().getUsername()+Instant.now()+i);
                 OtherPictureEntity otherPictureEntity=new OtherPictureEntity();
                 otherPictureEntity.setPicture(otherPicturePath);
                 otherPictureEntity.setUserReportEntity(userReportEntity);

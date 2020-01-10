@@ -12,6 +12,11 @@ import static org.junit.Assert.*;
  */
 public class PlaceEntityTest {
 
+    /**
+     * It tests the method toPlace.
+     * It gives to the method a CoordinateEntity to convert and verifies whether the resulted
+     * Coordinate has the same values of CoordinateEntity
+     */
     @Test
     public void toPlace() {
         PlaceEntity placeEntity=new PlaceEntity();

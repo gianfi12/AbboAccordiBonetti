@@ -11,7 +11,11 @@ import static org.junit.Assert.*;
  * It tests the methods of CoordinateEntity
  */
 public class CoordinateEntityTest {
-
+    /**
+     * It tests the method toCoordinate.
+     * It gives to the method a CoordinateEntity to convert and verifies whether the resulted
+     * Coordinate has the same values of CoordinateEntity
+     */
     @Test
     public void toCoordinate() {
         CoordinateEntity coordinateEntity=new CoordinateEntity();
@@ -25,6 +29,11 @@ public class CoordinateEntityTest {
         assertTrue(7.8==coordinate.getLatitude());
     }
 
+    /**
+     * It tests the method toCoordinate by setting the altitude of CoordinateEntity to null.
+     * It gives to the method a CoordinateEntity to convert and verifies whether the resulted
+     * Coordinate has the same values of CoordinateEntity.
+     */
     @Test
     public void toCoordinateWithoutAltitude() {
         CoordinateEntity coordinateEntity=new CoordinateEntity();
