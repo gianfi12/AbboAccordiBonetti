@@ -7,8 +7,6 @@ import com.SafeStreets.model.User;
 import com.SafeStreets.exceptions.*;
 import com.SafeStreets.model.*;
 import com.SafeStreets.modelEntities.*;
-import org.bouncycastle.jcajce.provider.digest.SHA3;
-import org.bouncycastle.util.encoders.Hex;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -27,14 +25,34 @@ import java.util.TimeZone;
 
 import static org.junit.Assert.*;
 
+/**
+ * It tests the methods of the DataManagerAdapter
+ */
 public class DataManagerAdapterTest {
+    /**
+     * Name of the persistence unit used to communicate with the DBMS
+     */
     private static final String PERSISTENCE_UNIT_NAME ="manager1";
+    /**
+     * Entity manager used to communicate with the DBMS
+     */
     private static EntityManager em;
+    /**
+     * Component that manages the communication with the DBMS
+     */
     private static DataManagerAdapter dataManagerAdapter;
-
+    /**
+     * Directory which contains the images of the users and of the reports
+     */
     private static final String PICTURESDATA_PATH ="../picturesData/";
+    /**
+     * Directory used for test which contains the images of the users and of the reports
+     */
     private static final String PICTURESDATA_TEST_PATH ="image/";
 
+    /**
+     * It initialize the EntityManager and the DataManagerAdapter
+     */
     @BeforeClass
     public static void beforeClass() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
@@ -42,6 +60,10 @@ public class DataManagerAdapterTest {
         dataManagerAdapter=new DataManagerAdapter();
     }
 
+    /**
+     * It tests the method addUser.
+     * It creates an object User and it verifies whether it is correctly added to the database.
+     */
     @Test
     public void addUserTest() throws UserAlreadyPresentException, ImageStoreException, ImageReadException {
         String password="userP";
@@ -83,57 +105,35 @@ public class DataManagerAdapterTest {
 
     }
 
-    @Test
-    public void addUserTest2() throws UserAlreadyPresentException, ImageStoreException, ImageReadException {
-
-        String password="not_a_password";
-        BufferedImage pictureImage = readImageFromResourcesImage(PICTURESDATA_TEST_PATH+"pictureBobTest.png");
-
-        BufferedImage idCardImage = readImageFromResourcesImage(PICTURESDATA_TEST_PATH+"idBobTest.png");
-
-        Coordinate birthCoordinate=new Coordinate(45.4642035,9.189982,0.0);
-        Coordinate residenceCoordinate=new Coordinate(45.462035,9.189982,0.0);
-        Place placeOfBirth = new Place("Milano", "Via Aristide de Togni", "12", birthCoordinate);
-
-        Place placeOfResidence = new Place("Milano", "Via Aristide de Togni", "12", residenceCoordinate);
-
-        String username="user";
-        User user = new User(username, "user@mail.com", "Real", "User", placeOfBirth, placeOfResidence, pictureImage, idCardImage, "SDCHSDC127NASD", LocalDate.of(1995,11,23));
-
-        dataManagerAdapter.addUser(user, password);
-
-        EntityTransaction transaction=em.getTransaction();
-        transaction.begin();
-        UserEntity userEntity=em.find(UserEntity.class, username);
-        transaction.commit();
-
-        assertEquals(DataManagerAdapter.generatePasswordHash(password, userEntity.getSalt()), userEntity.getPassword());
-        assertEquals(PICTURESDATA_PATH+username+"Picture"+".png", userEntity.getPicture());
-        assertEquals(PICTURESDATA_PATH+username+"IdCard"+".png", userEntity.getIdCard());
-
-        User savedUser = userEntity.toUser();
-        assertTrue(user.isEqual(savedUser));
-
-        String deleteUser= "DELETE FROM UserEntity WHERE username="+userEntity.getUsername();
-
-        transaction=em.getTransaction();
-        transaction.begin();
-        em.createQuery(deleteUser).executeUpdate();
-        transaction.commit();
-    }
-
+    /**
+     * It tests the method readImage.
+     * It verifies whether readImage of DataManagerAdapter returns a not null BufferedImage
+     * @throws ImageReadException if the test fails
+     */
     @Test
     public void readImage() throws ImageReadException {
         BufferedImage bufferedImage=DataManagerAdapter.readImage("../picturesData/park-on-sidewalk.png");
         assertNotNull(bufferedImage);
     }
 
+    /**
+     * It tests the method readImage.
+     * It verifies whether readImage of DataManagerAdapter returns an ImageReadException because there is no image associated to
+     * the given path
+     * @throws ImageReadException if the test passes
+     */
     @Test(expected = ImageReadException.class)
     public void readImagePictureNotPresent() throws ImageReadException {
         DataManagerAdapter.readImage("../picturesData/park-on-sidewalk453.png");
     }
 
-
+    /**
+     * It tests the method getUser.
+     * It verifies whether the User returned by getUser has the parameters set correctly.
+     * @throws UserNotPresentException if the test fails
+     * @throws ImageReadException if the test fails
+     * @throws WrongPasswordException if the test fails
+     */
     @Test
     public void getUser() throws UserNotPresentException, ImageReadException, WrongPasswordException {
         User user =dataManagerAdapter.getUser("jak4", "jak");
@@ -157,6 +157,10 @@ public class DataManagerAdapterTest {
         assertEquals(LocalDate.of(1983,1,1), user.getDateOfBirth());
     }
 
+    /**
+     * It tests the method addMunicipality.
+     * It creates an object Municipality and it verifies whether it is correctly added to the database.
+     */
     @Test
     public void addMunicipality() throws MunicipalityAlreadyPresentException, PlaceForMunicipalityNotPresentException, MunicipalityNotPresentException, WrongPasswordException {
         dataManagerAdapter.addMunicipality("14", "Firenze", "FlorenceP");
@@ -197,6 +201,11 @@ public class DataManagerAdapterTest {
         transaction.commit();
     }
 
+    /**
+     * It tests the method getMunicipalityArea when the given username is present in the database.
+     * It verifies then whether the returned place has the expected values.
+     * @throws MunicipalityNotPresentException if the test fails
+     */
     @Test
     public void getMunicipalityAreaWithMunicipalityPresent() throws MunicipalityNotPresentException {
         Place place=dataManagerAdapter.getMunicipalityArea("Venezia");
@@ -209,22 +218,40 @@ public class DataManagerAdapterTest {
         assertTrue(122.0000000000==place.getCoordinate().getAltitude());
     }
 
+    /**
+     * It tests the method getMunicipalityArea with a given username not present in the database.
+     * @throws MunicipalityNotPresentException if the test passes
+     */
     @Test(expected=MunicipalityNotPresentException.class)
     public void getMunicipalityAreaWithMunicipalityNotPresent() throws MunicipalityNotPresentException {
         dataManagerAdapter.getMunicipalityArea("NoMunicipality");
     }
 
+    /**
+     * It tests the method checkContract.
+     * It verifies whether the given contract code is present
+     */
     @Test
     public void checkContractCodePresent() {
 
         assertTrue(dataManagerAdapter.checkContractCode("14"));
     }
 
+    /**
+     * It tests the method checkContract.
+     * It verifies whether the given contract code is not present
+     */
     @Test
     public void checkContractCodeNotPresent() {
         assertFalse(dataManagerAdapter.checkContractCode("149214"));
     }
 
+    /**
+     * It tests the method getMunicipality.
+     * It verifies whether the returned Municipality has the expected parameters.
+     * @throws MunicipalityNotPresentException if the test fails
+     * @throws WrongPasswordException if the test fails
+     */
     @Test
     public void getMunicipality() throws MunicipalityNotPresentException, WrongPasswordException {
         Municipality municipality=dataManagerAdapter.getMunicipality("Roma", "RomeP");
@@ -235,58 +262,124 @@ public class DataManagerAdapterTest {
         assertNull(municipality.getPlace().getCoordinate());
     }
 
+    /**
+     * It tests the method getMunicipality.
+     * It verifies whether the given username is wrong.
+     * @throws MunicipalityNotPresentException if the test passes
+     * @throws WrongPasswordException if the test fails
+     */
+    @Test(expected = MunicipalityNotPresentException.class)
+    public void getMunicipalityWithWrongUsername() throws MunicipalityNotPresentException, WrongPasswordException {
+        dataManagerAdapter.getMunicipality("RomaWrong", "RomeP");
+    }
+
+    /**
+     * It tests the method getMunicipality.
+     * It verifies whether the given password is wrong.
+     * @throws MunicipalityNotPresentException if the test fails
+     * @throws WrongPasswordException if the test passes
+     */
+    @Test(expected = MunicipalityNotPresentException.class)
+    public void getMunicipalityWithWrongPassword() throws MunicipalityNotPresentException, WrongPasswordException {
+        dataManagerAdapter.getMunicipality("Roma", "RomePWrong");
+    }
+
+    /**
+     * It tests the method checkPassword.
+     * It verifies whether the given password of a user is true.
+     */
     @Test
     public void checkPasswordUserTrue() {
         assertTrue(dataManagerAdapter.checkPassword("smith40", "s4"));
     }
 
+    /**
+     * It tests the method checkPassword.
+     * It verifies whether the given password of a user is false.
+     */
     @Test
     public void checkPasswordUserFalse() {
         assertFalse(dataManagerAdapter.checkPassword("Justin76", "abct"));
     }
 
+    /**
+     * It tests the method checkPassword.
+     * It verifies whether the given password of a Municipality is true.
+     */
     @Test
     public void checkPasswordMunicipalityTrue() {
         assertTrue(dataManagerAdapter.checkPassword("Roma", "RomeP"));
     }
 
+    /**
+     * It tests the method checkPassword.
+     * It verifies whether the given password of a Municipality is false.
+     */
     @Test
     public void checkPasswordMunicipalityFalse() {
         assertFalse(dataManagerAdapter.checkPassword("Milano", "milan"));
     }
 
+    /**
+     * It tests the method exists.
+     * It verifies whether the given user exists
+     */
     @Test
     public void existsUserTrue() {
         assertTrue(dataManagerAdapter.exists("jak4"));
     }
 
+    /**
+     * It tests the method exists.
+     * It verifies whether the given user doesn't exist
+     */
     @Test
     public void existsUserFalse() {
         assertFalse(dataManagerAdapter.exists("jak452342678d"));
     }
 
+    /**
+     * It tests the method exists.
+     * It verifies whether the given Municipality exists
+     */
     @Test
     public void existsMunicipalityTrue() {
         assertTrue(dataManagerAdapter.exists("Milano"));
     }
 
+    /**
+     * It tests the method exists.
+     * It verifies whether the given Municipality doesn't exist
+     */
     @Test
     public void existsMunicipalityFalse() {
         assertFalse(dataManagerAdapter.exists("SuperMilan"));
     }
 
+    /**
+     * It tests the method generatePasswordHash.
+     * It verifies whether from the given password and salt it generates the expected hash.
+     */
     @Test
     public void generatePasswordHash() {
         assertEquals("7d885571378195102c08f5f862bdfdeb68bc5f95a353143fd9d9d0ad5878c4a5b2d4e066514565e4c90ace6e21a374aa102113da25a8ed3320d4f2c2cb1bc987",
                 DataManagerAdapter.generatePasswordHash("justin", "M#T\\3|Yzoja`sIu("));
     }
 
+    /**
+     * It tests the method generatePasswordHash with password and salt both null.
+     * It verifies whether from the given password and salt it generates the expected hash.
+     */
     @Test
     public void generatePasswordHashWithPasswordAndSaltNull() {
         assertEquals("a69f73cca23a9ac5c8b567dc185a756e97c982164fe25859e0d1dcc1475c80a615b2123af1f5f94c11e3e9402c3ac558f500199d95b6d3e301758586281dcd26",
                 DataManagerAdapter.generatePasswordHash(null, null));
     }
 
+    /**
+     * It tests the method getReports.
+     * It verifies whether the reports have the most important attributes set and whether they respect the given filter.
+     */
     @Test
     public void getReports() throws ImageReadException {
         LocalDate from=LocalDate.of(2019, 11, 1);
@@ -304,6 +397,11 @@ public class DataManagerAdapterTest {
         assertTrue(reportList.get(1).getReportOffsetDateTime().isBefore(DataManagerAdapter.toOffsetDateTimeFromLocalDate(to, false)));
     }
 
+    /**
+     * It tests the method addUserReport.
+     * It creates one UserReport and it calls addUserReport, then it verifies whether the report
+     * has been added to the database.
+     */
     @Test
     public void addUserReport() throws ImageReadException, ImageStoreException {
 
@@ -376,6 +474,10 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method getUserReports whit a filter that contains as place only the city.
+     * It verifies whether the reports have the most important attributes set and whether they respect the given filter.
+     */
     @Test
     public void getUserReportsTestWithCity() throws ImageReadException {
         QueryFilter queryFilter=new QueryFilter(LocalDate.of(2019, 10, 1),
@@ -399,6 +501,10 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method getUserReports whit a filter that contains as place: the city, the address and the houseCode.
+     * It verifies whether the reports have the most important attributes set and whether they respect the given filter.
+     */
     @Test
     public void getUserReportsTestWithCityAddressAndHouseCode() throws ImageReadException {
         QueryFilter queryFilter=new QueryFilter(LocalDate.of(2018, 12, 1),
@@ -424,6 +530,10 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method getAggregatedResult with a query on the OtherPictureEntity.
+     * It verifies whether the results are not null and if they contain as UserReportEntity and id  greater than or equal to 2.
+     */
     @Test
     public void getAggregatedResult() {
         String otherPicturesQuery= "SELECT oP " +
@@ -435,11 +545,15 @@ public class DataManagerAdapterTest {
         List<Object[]> resultList = dataManagerAdapter.getAggregatedResult(queryFilter);
 
         for(Object[] objects : resultList) {
-            OtherPictureEntity otherPictureEntity= (OtherPictureEntity) resultList.get(0)[0];
+            OtherPictureEntity otherPictureEntity= (OtherPictureEntity) objects[0];
             assertTrue(2<=otherPictureEntity.getUserReportEntity().getId());
         }
     }
 
+    /**
+     * It tests the method toOffsetDateTimeFromTimestamp.
+     * It verifies whether from the given Timestamp the method returns the expected OffsetDateTime
+     */
     @Test
     public void toOffsetDateTimeFromTimestamp() {
         OffsetDateTime offsetDateTime= DataManagerAdapter.toOffsetDateTimeFromTimestamp(Timestamp.valueOf(LocalDateTime.of(2020, 1, 4, 8, 39, 40)));
@@ -452,6 +566,10 @@ public class DataManagerAdapterTest {
         assertTrue(offsetDateTime.isEqual(expectedODT));
     }
 
+    /**
+     * It tests the method toTimestampFromOffsetDateTime.
+     * It verifies whether from the given OffsetDateTime the method returns the expected Timestamp
+     */
     @Test
     public void toTimestampFromOffsetDateTime() {
         ZoneId zoneId= TimeZone.getTimeZone("Europe/Rome").toZoneId();
@@ -467,6 +585,10 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method toDateFromLocalDate.
+     * It verifies whether from the given LocalDate the method returns the expected Date
+     */
     @Test
     public void toDateFromLocalDate() {
         Date date = DataManagerAdapter.toDateFromLocalDate(LocalDate.of(2000, 10, 15));
@@ -475,6 +597,10 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method toLocalDateFromDate.
+     * It verifies whether from the given Date the method returns the expected LocalDate
+     */
     @Test
     public void toLocalDateFromDate() {
         LocalDate localDate = DataManagerAdapter.toLocalDateFromDate(Date.valueOf(LocalDate.of(2000, 11, 15)));
@@ -482,6 +608,10 @@ public class DataManagerAdapterTest {
         assertEquals(expectedLocalDate, localDate);
     }
 
+    /**
+     * It tests the method toOffsetDateTimeFromLocalDate with isZeroHourAndNot24 set to true.
+     * It verifies whether from the given LocalDate the method returns the expected OffsetDateTime with hour: 00:00:00
+     */
     @Test
     public void toOffsetDateTimeFromLocalDateBeginningOfDay() {
         OffsetDateTime odt = DataManagerAdapter.toOffsetDateTimeFromLocalDate(LocalDate.of(2019, 7, 10), true);
@@ -494,6 +624,10 @@ public class DataManagerAdapterTest {
         assertTrue(odt.isEqual(expectedODT));
     }
 
+    /**
+     * It tests the method toOffsetDateTimeFromLocalDate with isZeroHourAndNot24 set to false.
+     * It verifies whether from the given LocalDate the method returns the expected OffsetDateTime with hour: 23:59:50
+     */
     @Test
     public void toOffsetDateTimeFromLocalDateEndOfDay() {
         OffsetDateTime odt = DataManagerAdapter.toOffsetDateTimeFromLocalDate(LocalDate.of(2019, 7, 10), false);
@@ -506,6 +640,10 @@ public class DataManagerAdapterTest {
         assertTrue(odt.isEqual(expectedODT));
     }
 
+    /**
+     * It tests the method toTimestampFromLocalDate with isZeroHourAndNot24 set to true.
+     * It verifies whether from the given LocalDate the method returns the expected Timestamp with hour: 00:00:00
+     */
     @Test
     public void toTimestampFromLocalDateBeginningOfDay() {
         Timestamp timestamp=DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2010, 6, 30), true);
@@ -516,6 +654,10 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method toTimestampFromLocalDate with isZeroHourAndNot24 set to false.
+     * It verifies whether from the given LocalDate the method returns the expected Timestamp with hour: 23:59:50
+     */
     @Test
     public void toTimestampFromLocalDateEndOfDay() {
         Timestamp timestamp=DataManagerAdapter.toTimestampFromLocalDate(LocalDate.of(2010, 6, 30), false);
@@ -526,6 +668,12 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It returns the image corresponding to the given path
+     * @param imagePath path in which the image must be read
+     * @return image corresponding to the given path
+     * @throws ImageReadException if there was a problem during the read of the image
+     */
     private BufferedImage readImageFromResourcesImage(String imagePath) throws ImageReadException {
 
         BufferedImage bufferedImage;
@@ -544,41 +692,9 @@ public class DataManagerAdapterTest {
         return bufferedImage;
     }
 
-    @Test
-    public void hashTest() {
-        printHash("s4"+"M#c\\3|Yzoja`sIu(");
-    }
-
-    private static void printHash(String stringToHash) {
-        SHA3.DigestSHA3 digestSHA3 = new SHA3.Digest512();
-        byte[] digest = digestSHA3.digest(stringToHash.getBytes());
-        String hash = Hex.toHexString(digest);
-        System.out.println("hash SHA3-512 of "+stringToHash+" is " + hash);
-    }
-
-    @Test
-    public void testCoordinatePlace() {
-        CoordinateEntity coordinateEntity=new CoordinateEntity();
-        coordinateEntity.setAltitude(BigDecimal.valueOf(1));
-        coordinateEntity.setLatitude(BigDecimal.valueOf(1));
-        coordinateEntity.setLongitude(BigDecimal.valueOf(1));
-
-        PlaceEntity placeEntity=new PlaceEntity();
-        placeEntity.setCity("Milano");
-        placeEntity.setCoordinateEntity(coordinateEntity);
-
-        EntityTransaction transaction=em.getTransaction();
-        transaction.begin();
-        em.merge(coordinateEntity);
-        transaction.commit();
-
-        transaction=em.getTransaction();
-        transaction.begin();
-        em.merge(placeEntity);
-        transaction.commit();
-
-    }
-
+    /**
+     * This method tests whether it is possible to add two reports consecutively to the database.
+     */
     @Test
     public void addTwoReports() {
 
@@ -644,6 +760,7 @@ public class DataManagerAdapterTest {
 
         userReportEntity=dataManagerAdapter.findLastUserReport();
 
+        assertNotNull(userReportEntity);
 
         String deleteReport= "DELETE FROM UserReportEntity WHERE id="+userReportEntity.getId();
 
@@ -654,6 +771,8 @@ public class DataManagerAdapterTest {
 
         userReportEntity=dataManagerAdapter.findLastUserReport();
 
+        assertNotNull(userReportEntity);
+
         deleteReport= "DELETE FROM UserReportEntity WHERE id="+userReportEntity.getId();
 
         transaction=em.getTransaction();
@@ -663,6 +782,11 @@ public class DataManagerAdapterTest {
 
     }
 
+    /**
+     * It tests the method getStdStringForCity.
+     * It tries with different strings and verifies whether the result is equal to the expected one.
+     * Examples of strings: "Milano", "milano", "MILANO", null, "" and "fErrARa".
+     */
     @Test
     public void getStdStringForCity() {
         assertEquals("Milano", DataManagerAdapter.getStdStringForCity("Milano"));
