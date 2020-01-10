@@ -731,7 +731,7 @@ class _SOAPTest implements DispatcherInterface {
   ///while the [_password] is the password selected by the user
   String _username, _password;
   ///[ip] is the ip address where the server is currectly running
-  final String ip='localhost';
+  final String ip='10.42.0.1';
 
   /// This is the constructor of the SOAP class
   _SOAPTest(this._username, this._password);

@@ -98,7 +98,7 @@ class Report {
         'devicePosition': devicePosition,
         'violationType': violationType,
         'description': "",
-        'vehicle': plateNumber,
+        'vehicle': plateNumber ?? "",
         'author': "",
         'mainPicture': imageToString(mainImage),
         'otherPictures': imageListToString(otherImages),

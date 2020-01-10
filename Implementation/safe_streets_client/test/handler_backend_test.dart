@@ -118,7 +118,7 @@ void main() async{
     expect(response[0].tail, "9.2229332");
   });
 
-  ///This test checks that the client can ge the right set of report send to the system by the users
+  ///This test checks that the client can ge the right set of report send to the system by the usersset
   test('Access Reports Functionality', () async{
     WidgetsFlutterBinding.ensureInitialized();
     var soap = DispatcherInterface.getNew("Milano", "Milan");
@@ -133,6 +133,21 @@ void main() async{
     expect(response[0].plateNumber, "FF456ZZ");
     expect(response[0].author, "jak4");
   });
+
+  ///
+  test('new report with empty plate number', () async{
+    WidgetsFlutterBinding.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
+    var soap = DispatcherInterface.getNew("jak4", "jak");
+    File main = new File('assets/images/park-on-sidewalk.png');
+    File other = new File('assets/images/park-on-sidewalk2.png');
+    var images = [other.path];
+    var report = new Report(deviceDateTime: new DateTime(2011,12,23),violationDateTime: new DateTime(2011,12,22), mainImage: main.path,otherImages: images, devicePosition: null,position: "Piazza Leonardo da Vinci 32 Milano", violationType: l.AvailableStrings.PARKING_ON_SIDEWALK.toString(),plateNumber: null);
+    var response = await soap.newReport(report: report);
+    expect(response,true);
+  });
+
+
   
 
 }
