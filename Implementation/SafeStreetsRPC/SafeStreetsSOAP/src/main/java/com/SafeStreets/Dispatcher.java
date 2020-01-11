@@ -43,6 +43,12 @@ public class Dispatcher implements DispatcherInterface{
      * The Gson object is used to convert object to json and to convert from json string
      */
     private final static Gson gson = new Gson();
+    /**
+     * It allows to get various statistics about the violations,
+     * the streets, the vehicles and the effectiveness of the system. Then it allows to get the reports
+     * done by the users.
+     */
+    private DataAnalysisInterface dataAnalysisInterface;
 
     /**
      * This is the method call by a client that wants to register a user in the system
@@ -187,7 +193,9 @@ public class Dispatcher implements DispatcherInterface{
         StatisticType statistic = StatisticType.valueOf(statisticsType);
 
         if( (accessType==AccessType.USER && statistic.canBeForUser()) || (accessType==AccessType.MUNICIPALITY && statistic.canBeForMunicipality()) ){
-            DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
+            if(dataAnalysisInterface==null) {
+                dataAnalysisInterface=DataAnalysisInterface.getInstance();
+            }
             MapsServiceInterface mapsService = MapsServiceInterface.getInstance();
 
             JSONObject obj = new JSONObject(removeFinal(location));
@@ -195,7 +203,7 @@ public class Dispatcher implements DispatcherInterface{
             Double latitude = obj.getDouble("latitude");
             try {
                 Place place = mapsService.geocoding(new Coordinate(latitude, longitude, 0.0));
-                for( Statistic element : dataAnalysis.getStatistics(statistic,place.getCity(),null,null)){
+                for( Statistic element : dataAnalysisInterface.getStatistics(statistic,place.getCity(),null,null)){
                     response.add(element.toJSON());
                 }
             }catch(FieldsException | GeocodeException e){
@@ -218,8 +226,11 @@ public class Dispatcher implements DispatcherInterface{
         AuthorizationManagerInterface authorizationManager = AuthorizationManagerInterface.getInstance();
         AccessType accessType = authorizationManager.getAccessType(removeFinal(username),removeFinal(password));
         List<String> returnList = new ArrayList<>();
-        if(accessType==AccessType.MUNICIPALITY){
-            DataAnalysisInterface dataAnalysis = DataAnalysisInterface.getInstance();
+        if(accessType==AccessType.MUNICIPALITY) {
+            if(dataAnalysisInterface==null) {
+                dataAnalysisInterface=DataAnalysisInterface.getInstance();
+            }
+
             try {
                 LocalDate untilDate=null;
                 LocalDate fromDate=null;
@@ -233,7 +244,7 @@ public class Dispatcher implements DispatcherInterface{
                     untilDate = LocalDate.parse(until, formatter);
                 }
 
-                List<UserReport> userReports= dataAnalysis.getUserReports(new QueryFilter(fromDate, untilDate , authorizationManager.getMunicipality(removeFinal(username))));
+                List<UserReport> userReports= dataAnalysisInterface.getUserReports(new QueryFilter(fromDate, untilDate , authorizationManager.getMunicipality(removeFinal(username))));
                 for(UserReport userReport : userReports){
                     if(userReport.getPlace().getCoordinate()!=null) {
                         returnList.add(userReport.toJson());
@@ -244,6 +255,14 @@ public class Dispatcher implements DispatcherInterface{
             }
         }
         return returnList;
+    }
+
+    /**
+     * It sets the dataAnalysisInterface with the new one
+     * @param dataAnalysisInterface new dataAnalysisInterface
+     */
+    public void setDataAnalysisInterface(DataAnalysisInterface dataAnalysisInterface) {
+        this.dataAnalysisInterface=dataAnalysisInterface;
     }
 
     /**

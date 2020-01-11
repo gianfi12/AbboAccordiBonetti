@@ -1,5 +1,7 @@
 package com.SafeStreets;
 
+import com.SafeStreets.data_analysis_manager.DataAnalysisInterface;
+
 import java.util.Date;
 import java.util.List;
 
@@ -82,4 +84,10 @@ public interface DispatcherInterface {
      * @return Is a JSON list with the suggestions elaborated by the system
      */
     List<String> getSuggestions(String username, String password);
+
+    /**
+     * It sets the dataAnalysisInterface with the new one
+     * @param dataAnalysisInterface new dataAnalysisInterface
+     */
+    void setDataAnalysisInterface(DataAnalysisInterface dataAnalysisInterface);
 }

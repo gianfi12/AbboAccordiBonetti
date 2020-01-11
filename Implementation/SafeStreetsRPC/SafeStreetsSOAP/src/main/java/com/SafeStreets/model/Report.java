@@ -14,18 +14,50 @@ import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * It represents a report done by the user
+ */
 public class Report {
     /**
      * This is used to print log message if an error occurs
      */
     private final static Logger LOGGER = Logger.getLogger(Report.class.getName());
+    /**
+     * Time of when the report has been done
+     */
     private OffsetDateTime reportOffsetDateTime;
+    /**
+     * Time of when the violation has been seen, if it is null then it is assumed that the report
+     * has been done at the moment in which the violation has been seen
+     */
     private OffsetDateTime odtOfWatchedViolation;
+    /**
+     * Place in which the violation happen
+     */
     private Place place;
+    /**
+     * Type of the reported violation
+     */
     private ViolationType violationType;
+    /**
+     * Description of the report
+     */
     private String description;
+    /**
+     * Vehicle that has been accused to have done the violation
+     */
     private Vehicle vehicle;
 
+    /**
+     * It constructs one Report with the given parameters
+     * @param reportOffsetDateTime Time of when the report has been done
+     * @param odtOfWatchedViolation Time of when the violation has been seen, if it is null then it is assumed that the report
+     * has been done at the moment in which the violation has been seen
+     * @param place Place in which the violation happen
+     * @param violationType Type of the reported violation
+     * @param description Description of the report
+     * @param vehicle Vehicle that has been accused to have done the violation
+     */
     public Report(OffsetDateTime reportOffsetDateTime, OffsetDateTime odtOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle) {
         this.reportOffsetDateTime = reportOffsetDateTime;
         this.odtOfWatchedViolation = odtOfWatchedViolation;
@@ -35,30 +67,53 @@ public class Report {
         this.vehicle = vehicle;
     }
 
+    /**
+     * It returns the reportOffsetDateTime
+     * @return reportOffsetDateTime
+     */
     public OffsetDateTime getReportOffsetDateTime() {
         return reportOffsetDateTime;
     }
-
+    /**
+     * It returns the reportOffsetDateTime
+     * @return reportOffsetDateTime
+     */
     public OffsetDateTime getOdtOfWatchedViolation() {
         return odtOfWatchedViolation;
     }
-
+    /**
+     * It returns the place
+     * @return place
+     */
     public Place getPlace() {
         return place;
     }
-
+    /**
+     * It returns the violationType
+     * @return violationType
+     */
     public ViolationType getViolationType() {
         return violationType;
     }
-
+    /**
+     * It returns the description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
-
+    /**
+     * It returns the vehicle
+     * @return vehicle
+     */
     public Vehicle getVehicle() {
         return vehicle;
     }
 
+    /**
+     * It sets the place with the new one
+     * @param place new place
+     */
     public void setPlace(Place place) {
         this.place = place;
     }
