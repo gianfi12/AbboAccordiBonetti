@@ -17,23 +17,68 @@ import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * It represents a user
+ */
 public class User {
     /**
      * This is used to print log message if an error occurs
      */
     private final static Logger LOGGER = Logger.getLogger(User.class.getName());
-
+    /**
+     * username of the user
+     */
     private String username;
+    /**
+     * email
+     */
     private String email;
+    /**
+     * first name
+     */
     private String firstName;
+    /**
+     * last name
+     */
     private String lastName;
+    /**
+     * place of birth
+     */
     private Place placeOfBirth;
+    /**
+     * place of residence
+     */
     private Place placeOfResidence;
+    /**
+     * picture of the user
+     */
     private BufferedImage picture;
+    /**
+     * picture of the identity card of the user
+     */
     private BufferedImage imageIdCard;
+    /**
+     * fiscal code
+     */
     private String fiscalCode;
+    /**
+     * date of birth
+     */
     private LocalDate dateOfBirth;
 
+    /**
+     * It creates one User with the given parameters
+     * @param username username of the user
+     * @param email email
+     * @param firstName first name
+     * @param lastName last name
+     * @param placeOfBirth place of birth
+     * @param placeOfResidence place of residence
+     * @param picture picture of the user
+     * @param imageIdCard picture of the identity card
+     * @param fiscalCode fiscal code
+     * @param dateOfBirth date of birth
+     */
     public User(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, BufferedImage picture, BufferedImage imageIdCard, String fiscalCode, LocalDate dateOfBirth) {
         this.username = username;
         this.email = email;
@@ -47,46 +92,93 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
+    /**
+     * It returns the username
+     * @return username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * It returns the email
+     * @return email
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * It returns the firstName
+     * @return firstName
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * It returns the lastName
+     * @return lastName
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * It returns the placeOfBirth
+     * @return placeOfBirth
+     */
     public Place getPlaceOfBirth() {
         return placeOfBirth;
     }
 
+    /**
+     * It returns the placeOfResidence
+     * @return placeOfResidence
+     */
     public Place getPlaceOfResidence() {
         return placeOfResidence;
     }
 
+    /**
+     * It returns the picture
+     * @return picture
+     */
     public BufferedImage getPicture() {
         return picture;
     }
 
+    /**
+     * It returns the imageIdCard
+     * @return imageIdCard
+     */
     public BufferedImage getImageIdCard() {
         return imageIdCard;
     }
 
+    /**
+     * It returns the fiscalCode
+     * @return fiscalCode
+     */
     public String getFiscalCode() {
         return fiscalCode;
     }
 
+    /**
+     * It returns the dateOfBirth
+     * @return dateOfBirth
+     */
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
+    /**
+     * It returns the UserEntity converted from this object
+     * @param password password of the user
+     * @param picturePath path to the picture of the user
+     * @param imageIdCardPath path to the picture of the identity card of the user
+     * @return UserEntity converted from this object
+     */
     public UserEntity toUserEntity(String password, String picturePath, String imageIdCardPath) {
         UserEntity newUserEntity=new UserEntity();
 
@@ -114,6 +206,11 @@ public class User {
         return newUserEntity;
     }
 
+    /**
+     * It indicates whether the given user has the same attributes of this one
+     * @param userToCompare user to compare with this one
+     * @return whether the given user has the same attributes of this one
+     */
     public boolean isEqual(User userToCompare) {
         return username.equals(userToCompare.username)&&email.equals(userToCompare.email)
                 &&firstName.equals(userToCompare.firstName)

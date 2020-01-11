@@ -19,19 +19,44 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * It represents a report done by a user
+ */
 public class UserReport extends Report{
     /**
      * This is used to print log message if an error occurs
      */
-    private final static Logger LOGGER = Logger.getLogger(UserReport.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(UserReport.class.getName());
+    /**
+     * Author of the report
+     */
     private User authorUser;
+    /**
+     * Main picture
+     */
     private BufferedImage mainPicture;
+    /**
+     * Optional pictures
+     */
     private List<BufferedImage> otherPictures;
     /**
      * Is the images format used to save the photo on the server
      */
     private final String IMAGE_TYPE="png";
 
+    /**
+     * It creates a UserReport with the given parameters
+     * @param reportOffsetDateTime Time of when the report has been done
+     * @param odtOfWatchedViolation Time of when the violation has been seen, if it is null then it is assumed that the report
+     * has been done at the moment in which the violation has been seen
+     * @param place Place in which the violation happen
+     * @param violationType Type of the reported violation
+     * @param description Description of the report
+     * @param vehicle Vehicle that has been accused to have done the violation
+     * @param authorUser Author of the report
+     * @param mainPicture Main picture
+     * @param otherPictures Optional pictures
+     */
     public UserReport(OffsetDateTime reportOffsetDateTime, OffsetDateTime odtOfWatchedViolation, Place place, ViolationType violationType, String description, Vehicle vehicle, User authorUser, BufferedImage mainPicture, List<BufferedImage> otherPictures) {
         super(reportOffsetDateTime, odtOfWatchedViolation, place, violationType, description, vehicle);
         this.authorUser = authorUser;
@@ -39,19 +64,33 @@ public class UserReport extends Report{
         this.otherPictures = otherPictures;
     }
 
+    /**
+     * It returns the authorUser
+     * @return authorUser
+     */
     public User getAuthorUser() {
         return authorUser;
     }
-
+    /**
+     * It returns the mainPicture
+     * @return mainPicture
+     */
     public BufferedImage getMainPicture() {
         return mainPicture;
     }
-
+    /**
+     * It returns the otherPictures
+     * @return otherPictures
+     */
     public List<BufferedImage> getOtherPictures() {
         return otherPictures;
     }
 
-
+    /**
+     * It returns the UserReportEntity converted from this object
+     * @param mainPicturePath path to the main picture
+     * @return UserReportEntity converted from this object
+     */
     public UserReportEntity toUserReportEntity(String mainPicturePath) {
         UserReportEntity userReportEntity=new UserReportEntity();
         userReportEntity.setReportTimeStamp(DataManagerAdapter.toTimestampFromOffsetDateTime(getReportOffsetDateTime()));
@@ -69,6 +108,10 @@ public class UserReport extends Report{
         return userReportEntity;
     }
 
+    /**
+     * It returns the Report converted from this object
+     * @return Report converted from this object
+     */
     public Report toReport() {
             return new Report(getReportOffsetDateTime(), getOdtOfWatchedViolation(), getPlace(), getViolationType(),
                     getDescription(), getVehicle());

@@ -2,31 +2,36 @@ package com.SafeStreets.model;
 
 import com.SafeStreets.modelEntities.VehicleEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
+/**
+ * It represent a vehicle
+ */
 public class Vehicle {
-
-    @Id
+    /**
+     * License plate of the vehicle
+     */
     private String licensePlate;
 
-    public Vehicle() {
-
-    }
-
+    /**
+     * It creates a Vehicle with the given license plate
+     * @param licensePlate new license plate
+     */
     public Vehicle(String licensePlate) {
         this.licensePlate = licensePlate;
     }
 
+    /**
+     * It returns the license plate
+     * @return license plate
+     */
     public String getLicensePlate() {
         return licensePlate;
     }
 
-    public void setLicensePlate(String licensePlate) {
-        this.licensePlate = licensePlate;
-    }
-
+    /**
+     * It returns the VehicleEntity converted from this element
+     * @return VehicleEntity converted from this element
+     */
     public VehicleEntity toVehicleEntity() {
         VehicleEntity vehicleEntity=new VehicleEntity();
         vehicleEntity.setLicensePlate(licensePlate);

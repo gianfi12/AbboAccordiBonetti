@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * It represents a report done by the user
+ * It represents a report
  */
 public class Report {
     /**
