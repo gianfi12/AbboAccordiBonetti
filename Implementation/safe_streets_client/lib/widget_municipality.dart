@@ -22,16 +22,10 @@ class _AccessReportsState extends State<AccessReports> {
   List<model.Report> reports = [];
 
   /// The start of the reports dates range, yesterday by default.
-  DateTime from = DateTime.now().subtract(Duration(days: 1));
+  DateTime from;
 
   /// The end of the reports dates range, today by default.
-  DateTime until = DateTime.now();
-
-  @override
-  void initState() {
-    super.initState();
-    _onMoreItems();
-  }
+  DateTime until;
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +47,7 @@ class _AccessReportsState extends State<AccessReports> {
         centerTitle: true,
       ),
       body: ListView.separated(
-        itemBuilder: (context, index) {
-          if (index + 1 >= reports.length) _onMoreItems();
-          return _buildItem(reports[index]);
-        },
+        itemBuilder: (context, index) => _buildItem(reports[index]),
         separatorBuilder: (context, int) => const Divider(),
         itemCount: reports.length,
         padding: const EdgeInsets.all(8),
@@ -81,17 +72,20 @@ class _AccessReportsState extends State<AccessReports> {
 
   /// Called when more items are needed, this tries to add items to the list.
   void _onMoreItems() async {
-    var more = await widget.dispatcher.accessReports(from: from, until: until);
-    setState(() => reports.addAll(more));
+    if (from != null && until != null) {
+      var more =
+          await widget.dispatcher.accessReports(from: from, until: until);
+      setState(() => reports.addAll(more));
+    }
   }
 
   /// Called when the from date is changed: shows a calendar to pick a date.
   void _onFrom() async {
     var date = await showDatePicker(
       context: context,
-      initialDate: from,
+      initialDate: from ?? DateTime.now().subtract(Duration(days: 1)),
       firstDate: DateTime(2019),
-      lastDate: until,
+      lastDate: until ?? DateTime.now(),
     );
     if (date != null) {
       setState(() {
@@ -106,8 +100,8 @@ class _AccessReportsState extends State<AccessReports> {
   void _onUntil() async {
     var date = await showDatePicker(
       context: context,
-      initialDate: until,
-      firstDate: from,
+      initialDate: until ?? DateTime.now(),
+      firstDate: from ?? DateTime.now().subtract(Duration(days: 1)),
       lastDate: DateTime.now(),
     );
     if (date != null) {
