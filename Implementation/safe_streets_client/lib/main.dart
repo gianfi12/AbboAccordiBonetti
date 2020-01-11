@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      //debugShowCheckedModeBanner: false,//TODO: remove
+      //debugShowCheckedModeBanner: false,
       title: 'SafeStreets',
       theme: presets.getDefaultTheme(),
       home: login.Login(),

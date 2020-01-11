@@ -12,13 +12,10 @@ class DevicePosition {
         assert(longitude != null);
 
   ///This method is used to get the json serialization of the object
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         'latitude': latitude,
         'longitude': longitude,
       };
-
-
 }
 
 /// An entry of a statistic, with main and secondary text.
@@ -91,9 +88,8 @@ class Report {
         'author: $author\n}\n';
   }
 
-  ///This method is used by the json parser in order to know how to serialize the object in the JSON standard
-  Map<String, dynamic> toJson() =>
-      {
+  /// This method is used by the json parser in order to know how to serialize the object in the JSON standard
+  Map<String, dynamic> toJson() => {
         'reportOffsetDateTime': deviceDateTime.toString(),
         'odtOfWatchedViolation': violationDateTime?.toString() ?? '',
         'place': position ?? '',
@@ -107,44 +103,47 @@ class Report {
         'otherPictures': imageListToString(otherImages) ?? '',
       };
 
-  ///This method returns a string encoded in base64 with the image specified by the [path]
-  String imageToString(String path){
+  /// This method returns a string encoded in base64 with the image specified by the [path]
+  String imageToString(String path) {
     List<int> imageBytes = File(path).readAsBytesSync();
     return base64Encode(imageBytes);
   }
 
-  ///This method returns a json list of string that represents the given list of [images] path, in a base64 encoding
-  List imageListToString(List<String> images){
+  /// This method returns a json list of string that represents the given list of [images] path, in a base64 encoding
+  List imageListToString(List<String> images) {
     List jsonList = new List();
     List<int> imageBytes;
     images.forEach((element) => {
-        imageBytes = File(element).readAsBytesSync(),
-        jsonList.add(base64Encode(imageBytes)),
-    });
+          imageBytes = File(element).readAsBytesSync(),
+          jsonList.add(base64Encode(imageBytes)),
+        });
     return jsonList;
   }
 
-  ///This method is used by the json parser in order to deserialize the object
-  factory Report.fromJson(Map<String, dynamic> parsedJson){
+  /// This method is used by the json parser in order to deserialize the object
+  factory Report.fromJson(Map<String, dynamic> parsedJson) {
     var placeDecode = jsonDecode(parsedJson["place"]);
-    String position = "City: "+ placeDecode["city"] +" Address: "+ placeDecode["address"] ;
+    String position =
+        "City: " + placeDecode["city"] + " Address: " + placeDecode["address"];
     var devicePositionDecode = placeDecode["coordinate"];
     DateTime offset;
-    if (parsedJson["odtOfWatchedViolation"]!=""){
+    if (parsedJson["odtOfWatchedViolation"] != "") {
       offset = DateTime.parse(parsedJson["odtOfWatchedViolation"]);
     }
 
-    return Report(deviceDateTime: DateTime.parse(parsedJson["reportOffsetDateTime"]),
-    violationDateTime:offset,
-    mainImage: null,
-    otherImages: new List(),
-    devicePosition: new DevicePosition(latitude: devicePositionDecode["latitude"], longitude: devicePositionDecode["longitude"]),
-    position:position,
-    violationType: parsedJson["violationType"],
-    plateNumber: parsedJson["vehicle"],
-    author:parsedJson["author"]);
+    return Report(
+        deviceDateTime: DateTime.parse(parsedJson["reportOffsetDateTime"]),
+        violationDateTime: offset,
+        mainImage: null,
+        otherImages: new List(),
+        devicePosition: new DevicePosition(
+            latitude: devicePositionDecode["latitude"],
+            longitude: devicePositionDecode["longitude"]),
+        position: position,
+        violationType: parsedJson["violationType"],
+        plateNumber: parsedJson["vehicle"],
+        author: parsedJson["author"]);
   }
-
 }
 
 /// The type of access a client can have.
@@ -153,5 +152,3 @@ enum AccessType {
   MUNICIPALITY,
   NOT_REGISTERED,
 }
-
-

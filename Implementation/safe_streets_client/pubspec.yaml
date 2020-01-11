@@ -27,8 +27,6 @@ dependencies:
   path:
   image_picker: ^0.6.2+3
 
-  #cupertino_icons: ^0.1.2//TODO: remove
-
   #The following allow to use the maps and retrieve the position.
   google_maps_flutter: ^0.5.21
   geolocator: ^5.1.5

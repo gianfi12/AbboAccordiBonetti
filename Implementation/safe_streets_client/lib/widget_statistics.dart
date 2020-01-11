@@ -17,7 +17,6 @@ class Statistics extends StatefulWidget {
   State<StatefulWidget> createState() => _StatisticsState();
 }
 
-//TODO(hig): decide and implement how to handle web version (no position).
 //TODO(low): side bar menu.
 /// A state for the statistics class.
 class _StatisticsState extends State<Statistics> {
