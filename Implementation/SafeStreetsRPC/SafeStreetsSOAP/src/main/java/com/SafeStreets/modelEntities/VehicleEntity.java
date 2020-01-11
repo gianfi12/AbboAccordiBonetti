@@ -9,8 +9,9 @@ import javax.persistence.Table;
 import java.util.Objects;
 
 /**
- * It is class used to map the table "vehicle" in the database.
+ * It is a class used to map the table "vehicle" in the database.
  * It represents a vehicle with its license plate.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "vehicle", schema = "safe_streets_db")

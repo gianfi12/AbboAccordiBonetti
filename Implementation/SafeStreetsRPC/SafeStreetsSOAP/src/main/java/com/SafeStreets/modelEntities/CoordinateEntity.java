@@ -7,8 +7,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * It is class used to map the table "coordinate" in the database.
+ * It is a class used to map the table "coordinate" in the database.
  * It represents a coordinate with latitude, longitude and altitude.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "coordinate", schema = "safe_streets_db")

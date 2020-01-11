@@ -15,23 +15,53 @@ import java.util.Objects;
 /**
  * It is class used to map the table "user_report" in the database.
  * It represents a report done by a user.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "user_report", schema = "safe_streets_db")
 public class UserReportEntity {
+    /**
+     * Identifier of the element
+     */
     private int id;
+    /**
+     * Timestamp of when the report has been done
+     */
     private Timestamp reportTimeStamp;
+    /**
+     * Timestamp of when the violation has been seen, if it is null then it is assumed that the report
+     * has been done at the moment in which the violation has been seen
+     */
     private Timestamp timeStampOfWatchedViolation;
+    /**
+     * type of th reported violation
+     */
     private String violationType;
+    /**
+     * description of the report
+     */
     private String description;
+    /**
+     * Main picture of the violation
+     */
     private String mainPicture;
-
+    /**
+     * Place in which the violation happen
+     */
     private PlaceEntity place;
-
+    /**
+     * Vehicle that has been accused to have done the violation
+     */
     private VehicleEntity vehicleEntity;
-
+    /**
+     * User that has done the report
+     */
     private UserEntity userEntity;
 
+    /**
+     * It returns the id. It is the key of the element and it corresponds to the attribute "id" in the table of the database.
+     * @return id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -39,86 +69,157 @@ public class UserReportEntity {
         return id;
     }
 
+    /**
+     * It sets the id with the new one
+     * @param id new id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * It returns the reportTimeStamp, which corresponds to the attribute "report_time_stamp" in the table of the database.
+     * @return reportTimeStamp
+     */
     @Basic
     @Column(name = "report_time_stamp")
     public Timestamp getReportTimeStamp() {
         return reportTimeStamp;
     }
 
+    /**
+     * It sets the reportTimeStamp with the new one
+     * @param reportTimeStamp new reportTimeStamp
+     */
     public void setReportTimeStamp(Timestamp reportTimeStamp) {
         this.reportTimeStamp = reportTimeStamp;
     }
 
+    /**
+     * It returns the timeStampOfWatchedViolation, which corresponds to the attribute "time_stamp_of_watched_violation" in the table of the database.
+     * @return timeStampOfWatchedViolation
+     */
     @Basic
     @Column(name = "time_stamp_of_watched_violation")
     public Timestamp getTimeStampOfWatchedViolation() {
         return timeStampOfWatchedViolation;
     }
 
+    /**
+     * It sets the timeStampOfWatchedViolation with the new one
+     * @param timeStampOfWatchedViolation new timeStampOfWatchedViolation
+     */
     public void setTimeStampOfWatchedViolation(Timestamp timeStampOfWatchedViolation) {
         this.timeStampOfWatchedViolation = timeStampOfWatchedViolation;
     }
 
+    /**
+     * It returns the violationType, which corresponds to the attribute "violation_type" in the table of the database.
+     * @return violationType
+     */
     @Basic
     @Column(name = "violation_type")
     public String getViolationType() {
         return violationType;
     }
 
+    /**
+     * It sets the violationType with the new one
+     * @param violationType new violationType
+     */
     public void setViolationType(String violationType) {
         this.violationType = violationType;
     }
 
+    /**
+     * It returns the description, which corresponds to the attribute "description" in the table of the database.
+     * @return description
+     */
     @Basic
     @Column(name = "description")
     public String getDescription() {
         return description;
     }
 
+    /**
+     * It sets the description with the new one
+     * @param description new description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * It returns the mainPicture, which corresponds to the attribute "main_picture" in the table of the database.
+     * @return mainPicture
+     */
     @Basic
     @Column(name = "main_picture")
     public String getMainPicture() {
         return mainPicture;
     }
 
+    /**
+     * It sets the mainPicture with the new one
+     * @param mainPicture new mainPicture
+     */
     public void setMainPicture(String mainPicture) {
         this.mainPicture = mainPicture;
     }
 
+    /**
+     * It returns the place, which corresponds to the attribute "place_id" in the table of the database.
+     * It is many-to-one joined with PlaceEntity
+     * @return place
+     */
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinColumn(name = "place_id")
     public PlaceEntity getPlace() {
         return place;
     }
 
+    /**
+     * It sets the place with the new one
+     * @param place new place
+     */
     public void setPlace(PlaceEntity place) {
         this.place = place;
     }
 
+    /**
+     * It returns the vehicleEntity, which corresponds to the attribute "vehicle_license_plate" in the table of the database.
+     * It is many-to-one joined with VehicleEntity
+     * @return vehicleEntity
+     */
     @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.MERGE)
     @JoinColumn(name = "vehicle_license_plate")
     public VehicleEntity getVehicleEntity() {
         return vehicleEntity;
     }
 
+    /**
+     * It sets the vehicleEntity with the new one
+     * @param vehicleEntity new vehicleEntity
+     */
     public void setVehicleEntity(VehicleEntity vehicleEntity) {
         this.vehicleEntity = vehicleEntity;
     }
 
+    /**
+     * It returns the userEntity, which corresponds to the attribute "user" in the table of the database.
+     * It is many-to-one joined with UserEntity
+     * @return userEntity
+     */
     @ManyToOne
     @JoinColumn(name = "user")
     public UserEntity getUserEntity() {
         return userEntity;
     }
 
+    /**
+     * It sets the userEntity with the new one
+     * @param userEntity new userEntity
+     */
     public void setUserEntity(UserEntity userEntity) {
         this.userEntity = userEntity;
     }

@@ -4,8 +4,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * It is class used to map the table "other_picture" in the database.
+ * It is a class used to map the table "other_picture" in the database.
  * It represents an optional picture of a report done by a user.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "other_picture", schema = "safe_streets_db")

@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/*
+/**
+ * It tests the methods of MapsServiceAdapter.
  * Note: this does not test the correctness of the results nor the
  * interaction with the maps service.
  */

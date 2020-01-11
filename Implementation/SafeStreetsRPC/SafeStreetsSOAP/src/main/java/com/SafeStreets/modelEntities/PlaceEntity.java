@@ -7,8 +7,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * It is class used to map the table "place" in the database.
- * It represents a place with an identifier, a city, an address, a houseCode and a coordinate
+ * It is a class used to map the table "place" in the database.
+ * It represents a place with an identifier, a city, an address, a houseCode and a coordinate.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "place", schema = "safe_streets_db")

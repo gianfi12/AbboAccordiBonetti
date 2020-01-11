@@ -124,16 +124,4 @@ public class UserReportTest {
 
     }
 
-    @Test
-    public void fromJSON() {
-    }
-
-    @Test
-    public void toJson() {
-    }
-
-    @Test
-    public void encodeToString() {
-    }
-
 }

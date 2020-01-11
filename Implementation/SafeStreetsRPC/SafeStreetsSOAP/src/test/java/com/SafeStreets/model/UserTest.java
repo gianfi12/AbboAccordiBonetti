@@ -279,13 +279,6 @@ public class UserTest {
         assertTrue(user.isEqual(user2));
     }
 
-    @Test
-    public void toJSON() {
-    }
-
-    @Test
-    public void fromJSON() {
-    }
 
 
 }

@@ -6,8 +6,9 @@ import javax.persistence.*;
 import java.util.Objects;
 
 /**
- * It is class used to map the table "municipality" in the database.
- * It represents a Municipality
+ * It is a class used to map the table "municipality" in the database.
+ * It represents a Municipality.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "municipality", schema = "safe_streets_db")

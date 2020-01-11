@@ -494,6 +494,9 @@ public class DataManagerAdapter implements UserDataInterface, MunicipalityDataIn
      */
     @Override
     public List<UserReport> getUserReports(QueryFilter filter) throws ImageReadException {
+        if(!filter.isApplyFilter())
+            return new ArrayList<>();
+
         String queryString;
 
         LocalDate from=filter.getFrom();

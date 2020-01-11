@@ -11,8 +11,9 @@ import java.sql.Date;
 import java.util.Objects;
 
 /**
- * It is class used to map the table "user" in the database.
+ * It is a class used to map the table "user" in the database.
  * It represents a user.
+ * @author Massimiliano Bonetti
  */
 @Entity
 @Table(name = "user", schema = "safe_streets_db")
