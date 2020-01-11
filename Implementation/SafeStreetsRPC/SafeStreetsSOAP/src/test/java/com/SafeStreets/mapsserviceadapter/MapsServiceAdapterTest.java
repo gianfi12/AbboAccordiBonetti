@@ -14,6 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class MapsServiceAdapterTest {
 
+    /**
+     * Given a list of address components, this tests that the method
+     * extracts the correct field given a field type.
+     */
     @Test
     void getField() {
         AddressComponent[] components = {
@@ -33,6 +37,9 @@ class MapsServiceAdapterTest {
                 new MapsServiceAdapter().getField(AddressComponentType.LOCALITY, components));
     }
 
+    /**
+     * this tests the translation between Coordinate and LatLng.
+     */
     @Test
     void latLngFrom() {
         Coordinate coordinate = new Coordinate(1.0, 2.1, 3.3);
@@ -42,6 +49,9 @@ class MapsServiceAdapterTest {
         assertEquals(coordinate.getLongitude(), latLng.lng);
     }
 
+    /**
+     * this tests the translation between LatLng and Coordinate.
+     */
     @Test
     void coordinateFrom() {
         LatLng latLng = new LatLng(1.0, 3.01);
@@ -51,6 +61,9 @@ class MapsServiceAdapterTest {
         assertEquals(latLng.lng, coordinate.getLongitude());
     }
 
+    /**
+     * Tests the translation from GeocodingResult to Place.
+     */
     @Test
     void placeFrom() {
         GeocodingResult result = new GeocodingResult();

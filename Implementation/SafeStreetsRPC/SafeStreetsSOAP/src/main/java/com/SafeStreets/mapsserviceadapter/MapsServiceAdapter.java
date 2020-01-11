@@ -19,7 +19,8 @@ import java.io.IOException;
  *
  * @author Abbo Giulio A.
  * @see MapsServiceInterface
- */@Stateless
+ */
+@Stateless
 class MapsServiceAdapter implements MapsServiceInterface {
     /**
      * The context of the maps service: must be a singleton.
@@ -76,46 +77,20 @@ class MapsServiceAdapter implements MapsServiceInterface {
     }
 
     /**
+     * This is not implemented due to issues with Google Maps API.
      * {@inheritDoc}
      */
     @Override
-    public boolean isPlaceInLocation(Place place, String location) throws GeocodeException, FieldsException {
+    public boolean isPlaceInLocation(Place place, String location) {
         throw new UnsupportedOperationException();
-/*        // Initial checks
-        if (place.getCoordinate() == null) throw new FieldsException("Coordinate is null");
-        if (place.getCoordinate().getLatitude() == null || place.getCoordinate().getLongitude() == null)
-            throw new FieldsException("Not valid coordinate fields");
-
-        // The name of the location recognized by google maps
-        String locationName;
-        // The name corresponding to the AddressComponentType of "location" in place
-        String placeLocation;
-        try {
-            // Get locationName
-            GeocodingResult locResult = GeocodingApi.geocode(context, location).await()[0];
-            AddressComponentType locationType =
-                    AddressComponentType.valueOf(locResult.types[0].name());
-            locationName = getField(locationType, locResult.addressComponents);
-
-            // Get place location
-            GeocodingResult[] placeRes = GeocodingApi
-                    .reverseGeocode(context, latLngFrom(place.getCoordinate()))
-                    .await();
-            placeLocation = getField(locationType,
-                    placeRes[0].addressComponents);
-
-            // Check if AddressComponentType of location is valid for place
-            if (placeLocation == null)
-                throw  new GeocodeException("Unable to " + "elaborate " + locationType);
-        } catch (ApiException | InterruptedException | IOException | IllegalArgumentException e) {
-            Thread.currentThread().interrupt();
-            throw new GeocodeException("Trying to geocode " + location + " " + place, e);
-        }
-
-        // Check if the place is in the location
-        return placeLocation.equals(locationName);*/
     }
 
+    /**
+     * Returns a Place built from the data in the GeocodingResult.
+     *
+     * @param result the result from the maps api
+     * @return a place containing the data from the result
+     */
     Place placeFrom(GeocodingResult result) {
         return new Place(
                 getField(AddressComponentType.LOCALITY, result.addressComponents),
@@ -125,14 +100,34 @@ class MapsServiceAdapter implements MapsServiceInterface {
         );
     }
 
+    /**
+     * Returns a Coordinate from a given LatLng.
+     *
+     * @param latLng the data to put in the Coordinate
+     * @return a Coordinate from a given LatLng
+     */
     Coordinate coordinateFrom(LatLng latLng) {
         return new Coordinate(latLng.lat, latLng.lng, 0.0);
     }
 
+    /**
+     * Returns a LatLng from a given Coordinate.
+     *
+     * @param coordinate the data to put in the LatLng
+     * @return a LatLng from a given Coordinate
+     */
     LatLng latLngFrom(Coordinate coordinate) {
         return new LatLng(coordinate.getLatitude(), coordinate.getLongitude());
     }
 
+    /**
+     * Given a list of {@linkplain AddressComponent}, returns the field
+     * corresponding to a given {@linkplain AddressComponentType}.
+     *
+     * @param type       the type to look for
+     * @param components the list of AddressComponents
+     * @return the field corresponding to a given type, empty string if none found
+     */
     String getField(AddressComponentType type, AddressComponent[] components) {
         for (AddressComponent c : components) {
             for (AddressComponentType t : c.types) {
