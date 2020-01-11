@@ -18,15 +18,15 @@ class SignUp extends StatefulWidget {
 }
 
 /// The state for the sign up widget.
-class _SignUpState extends State<SignUp> with AutomaticKeepAliveClientMixin{
+class _SignUpState extends State<SignUp> {
   /// The key to validate the form.
   final _formKey = GlobalKey<FormState>();
 
   /// The key to later show a snack bar.
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  /// A list of the text fields to build.
-  List<_TextFormPlaceholder> textFields = [];
+  /// A list of the element in the list view.
+  List<Widget> _elements = [];
 
   //Start of subscription contents.
   String _username;
@@ -41,13 +41,12 @@ class _SignUpState extends State<SignUp> with AutomaticKeepAliveClientMixin{
   String _idCard;
   String _password;
 
-  //TODO(hig): validate inputs based on json, especially dates and images.
   //TODO(low): link elements.
   //TODO(low): change keyboards.
   @override
   void initState() {
     super.initState();
-    textFields = <_TextFormPlaceholder>[
+    var textPlaceholders = <_TextFormPlaceholder>[
       _TextFormPlaceholder(
         label: l.AvailableStrings.LOGIN_USERNAME,
         error: l.AvailableStrings.SIGN_REQUIRED,
@@ -99,34 +98,8 @@ class _SignUpState extends State<SignUp> with AutomaticKeepAliveClientMixin{
         onSaved: (s) => _password = s,
       ),
     ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(l.local(l.AvailableStrings.LOGIN_SIGN_UP)),
-      ),
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: SizedBox(
-            width: 400,
-            child: ListView(
-              children: _buildItems(),
-              addAutomaticKeepAlives: true,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Builds the text field and some buttons.
-  List<Widget> _buildItems() {
-    var list = textFields.map((e) => e.buildTextForm()).toList();
-    list.addAll(<Widget>[
+    _elements = textPlaceholders.map((e) => e.buildTextForm()).toList();
+    _elements.addAll(<Widget>[
       Padding(
         padding: EdgeInsets.all(8.0),
       ),
@@ -167,7 +140,29 @@ class _SignUpState extends State<SignUp> with AutomaticKeepAliveClientMixin{
         ),
       ),
     ]);
-    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text(l.local(l.AvailableStrings.LOGIN_SIGN_UP)),
+      ),
+      body: Center(
+        child: Form(
+          key: _formKey,
+          child: SizedBox(
+            width: 400,
+            child: SingleChildScrollView(
+              child: Column(
+                children: _elements,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Called when the button for the document photo is pressed.
@@ -227,9 +222,6 @@ class _SignUpState extends State<SignUp> with AutomaticKeepAliveClientMixin{
       });
     }
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 /// An item that represents a [TextFormField].
@@ -291,8 +283,8 @@ class MunSignUpState extends State<MunSignUp> {
   /// The key to later show a snack bar.
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  /// A list of the text fields to build.
-  List<_TextFormPlaceholder> textFields = [];
+  /// A list of the element in the list view.
+  List<Widget> _elements = [];
 
   //Start of subscription contents.
   String _code;
@@ -307,7 +299,7 @@ class MunSignUpState extends State<MunSignUp> {
   @override
   void initState() {
     super.initState();
-    textFields = <_TextFormPlaceholder>[
+    var textPlaceholders = <_TextFormPlaceholder>[
       _TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_CODE,
         error: l.AvailableStrings.SIGN_REQUIRED,
@@ -336,6 +328,21 @@ class MunSignUpState extends State<MunSignUp> {
         onSaved: (s) => _dataIntegrationPassword = s,
       ),
     ];
+    _elements = textPlaceholders.map((e) => e.buildTextForm()).toList();
+    _elements.addAll(<Widget>[
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.maxFinite,
+          child: RaisedButton(
+            child: Text(
+              l.local(l.AvailableStrings.LOGIN_SIGN_UP).toUpperCase(),
+            ),
+            onPressed: _onSendButton,
+          ),
+        ),
+      ),
+    ]);
   }
 
   @override
@@ -350,33 +357,15 @@ class MunSignUpState extends State<MunSignUp> {
           key: _formKey,
           child: SizedBox(
             width: 400,
-            child: ListView(
-              children: _buildItems(),
+            child: SingleChildScrollView(
+              child: Column(
+                children: _elements,
+              ),
             ),
           ),
         ),
       ),
     );
-  }
-
-  /// Builds the text field and some buttons.
-  List<Widget> _buildItems() {
-    var list = textFields.map((e) => e.buildTextForm()).toList();
-    list.addAll(<Widget>[
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          width: double.maxFinite,
-          child: RaisedButton(
-            child: Text(
-              l.local(l.AvailableStrings.LOGIN_SIGN_UP).toUpperCase(),
-            ),
-            onPressed: _onSendButton,
-          ),
-        ),
-      ),
-    ]);
-    return list;
   }
 
   /// Called when the send button is pressed.

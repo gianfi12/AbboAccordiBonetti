@@ -49,7 +49,7 @@ packages:
       name: camera
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.7+2"
+    version: "0.5.7+3"
   charcode:
     dependency: transitive
     description:
@@ -115,7 +115,7 @@ packages:
       name: geolocator
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.5"
+    version: "5.2.0"
   glob:
     dependency: transitive
     description:
@@ -491,7 +491,7 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.19+3"
+    version: "0.3.19+4"
   xml:
     dependency: transitive
     description:
