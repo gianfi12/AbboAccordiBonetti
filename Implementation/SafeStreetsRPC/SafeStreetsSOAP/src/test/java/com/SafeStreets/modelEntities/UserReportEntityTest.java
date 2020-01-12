@@ -52,7 +52,6 @@ public class UserReportEntityTest {
         assertNull(userReport.getOdtOfWatchedViolation());
         assertEquals(ViolationType.PARKING_ON_SIDEWALK,userReport.getViolationType());
         assertNull(userReport.getDescription());
-        assertNotNull(userReport.getMainPicture());
 
         assertEquals("Milano", userReport.getPlace().getCity());
         assertEquals("Via Camillo Golgi", userReport.getPlace().getAddress());

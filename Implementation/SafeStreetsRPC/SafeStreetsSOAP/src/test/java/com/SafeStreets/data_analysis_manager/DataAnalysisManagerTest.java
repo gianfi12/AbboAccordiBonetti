@@ -188,14 +188,9 @@ public class DataAnalysisManagerTest {
             assertNull(userReport.getOdtOfWatchedViolation());
             assertNotNull(userReport.getViolationType());
             assertNull(userReport.getDescription());
-            assertNotNull(userReport.getMainPicture());
             assertNotNull(userReport.getVehicle().getLicensePlate());
             assertNotNull(userReport.getAuthorUser().getUsername());
-            assertNotNull(userReport.getOtherPictures());
         }
-
-        assertEquals(2, userReportList.get(0).getOtherPictures().size());
-        assertEquals(1, userReportList.get(1).getOtherPictures().size());
 
     }
 }

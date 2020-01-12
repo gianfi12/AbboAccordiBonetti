@@ -439,7 +439,6 @@ public class DataManagerAdapterTest {
         assertTrue(userReportEntity.getId()>userReportEntityOld.getId());
 
         assertEquals("", userReportEntity.getDescription());
-        assertEquals("../picturesData/MainPictureFromReportOfjak4.png", userReportEntity.getMainPicture());
         assertEquals(ViolationType.PARKING_ON_RESERVED_STALL.toString(), userReportEntity.getViolationType());
         assertEquals("Milano", userReportEntity.getPlace().getCity());
         assertEquals("Via Carlo Pisacane", userReportEntity.getPlace().getAddress());
@@ -459,11 +458,8 @@ public class DataManagerAdapterTest {
 
         OtherPictureEntity otherPictureEntity= (OtherPictureEntity) resultList.get(0)[0];
         assertEquals(userReportEntity.getId(),otherPictureEntity.getUserReportEntity().getId());
-        assertEquals("../picturesData/OtherPictureFromReportOfjak40.png",otherPictureEntity.getPicture());
-
         OtherPictureEntity otherPictureEntity2= (OtherPictureEntity) resultList.get(1)[0];
-        assertEquals("../picturesData/OtherPictureFromReportOfjak41.png",otherPictureEntity2.getPicture());
-
+        assertEquals(userReportEntity.getId(),otherPictureEntity2.getUserReportEntity().getId());
 
     }
 
@@ -487,7 +483,6 @@ public class DataManagerAdapterTest {
             assertNull(userReport.getOdtOfWatchedViolation());
             assertNotNull(userReport.getViolationType());
             assertNull(userReport.getDescription());
-            assertNotNull(userReport.getMainPicture());
             assertNotNull(userReport.getVehicle().getLicensePlate());
             assertNotNull(userReport.getAuthorUser().getUsername());
         }
@@ -516,7 +511,6 @@ public class DataManagerAdapterTest {
             assertNotNull(userReport.getOdtOfWatchedViolation());
             assertNotNull(userReport.getViolationType());
             assertNull(userReport.getDescription());
-            assertNotNull(userReport.getMainPicture());
             assertNotNull(userReport.getVehicle().getLicensePlate());
             assertNotNull(userReport.getAuthorUser().getUsername());
         }
