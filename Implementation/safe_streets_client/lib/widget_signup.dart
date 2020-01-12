@@ -46,13 +46,13 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
-    var textPlaceholders = <_TextFormPlaceholder>[
-      _TextFormPlaceholder(
+    var textPlaceholders = <TextFormPlaceholder>[
+      TextFormPlaceholder(
         label: l.AvailableStrings.LOGIN_USERNAME,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _username = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_EMAIL,
         onSaved: (s) => _email = s,
         validator: (value) {
@@ -62,37 +62,37 @@ class _SignUpState extends State<SignUp> {
           return null;
         },
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_FIRST_NAME,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _firstName = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_LAST_NAME,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _lastName = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_PLACE_BIRTH,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _placeOfBirth = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DATE_BIRTH,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _dateOfBirth = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_PLACE_RESIDENCE,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _placeOfResidence = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_FISCAL,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _fiscalCode = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.LOGIN_PASSWORD,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _password = s,
@@ -225,7 +225,8 @@ class _SignUpState extends State<SignUp> {
 }
 
 /// An item that represents a [TextFormField].
-class _TextFormPlaceholder {
+@visibleForTesting
+class TextFormPlaceholder {
   /// The label of the field.
   l.AvailableStrings label;
 
@@ -240,7 +241,7 @@ class _TextFormPlaceholder {
   /// If not specified, a default is used, that prints [error] if the field is empty.
   FormFieldValidator<String> validator;
 
-  _TextFormPlaceholder({
+  TextFormPlaceholder({
     @required this.label,
     this.error,
     @required this.onSaved,
@@ -299,31 +300,31 @@ class MunSignUpState extends State<MunSignUp> {
   @override
   void initState() {
     super.initState();
-    var textPlaceholders = <_TextFormPlaceholder>[
-      _TextFormPlaceholder(
+    var textPlaceholders = <TextFormPlaceholder>[
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_CODE,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _code = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.LOGIN_USERNAME,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _username = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.LOGIN_PASSWORD,
         error: l.AvailableStrings.SIGN_REQUIRED,
         onSaved: (s) => _password = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DI_IP,
         onSaved: (s) => _dataIntegrationIp = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DI_PORT,
         onSaved: (s) => _dataIntegrationPort = s,
       ),
-      _TextFormPlaceholder(
+      TextFormPlaceholder(
         label: l.AvailableStrings.SIGN_DI_PASSWORD,
         onSaved: (s) => _dataIntegrationPassword = s,
       ),

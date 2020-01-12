@@ -27,7 +27,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
   int _currentItem = 1;
 
   /// The items of the bottom bar and their actions.
-  List<_ExtendedBNI> _navigationItems = [];
+  List<ExtendedBNI> _navigationItems = [];
 
   /// THis future controls the setup of the page.
   Future<void> _ready;
@@ -38,19 +38,19 @@ class _BottomNavigationState extends State<BottomNavigation> {
     super.initState();
     _ready = widget.dispatcher.login().then((accessType) {
       if (accessType == model.AccessType.USER && !kIsWeb) {
-        _navigationItems.add(_ExtendedBNI.route(
+        _navigationItems.add(ExtendedBNI.route(
           icon: const Icon(Icons.photo_camera),
           title: Text(l.local(l.AvailableStrings.NAV_NEW_REPORT)),
           child: () => report.NewReport(dispatcher: widget.dispatcher),
         ));
       }
       _navigationItems.addAll([
-        _ExtendedBNI.widget(
+        ExtendedBNI.widget(
           icon: const Icon(Icons.place),
           title: Text(l.local(l.AvailableStrings.NAV_AROUND_ME)),
           child: () => around.AroundMe(dispatcher: widget.dispatcher),
         ),
-        _ExtendedBNI.widget(
+        ExtendedBNI.widget(
           icon: const Icon(Icons.poll),
           title: Text(l.local(l.AvailableStrings.NAV_STATISTICS)),
           child: () => statistics.Statistics(dispatcher: widget.dispatcher),
@@ -58,13 +58,13 @@ class _BottomNavigationState extends State<BottomNavigation> {
       ]);
       if (accessType == model.AccessType.MUNICIPALITY) {
         _navigationItems.addAll([
-          _ExtendedBNI.widget(
+          ExtendedBNI.widget(
             icon: const Icon(Icons.build),
             title: Text(l.local(l.AvailableStrings.NAV_SUGGESTIONS)),
             child: () =>
                 municipality.Suggestions(dispatcher: widget.dispatcher),
           ),
-          _ExtendedBNI.widget(
+          ExtendedBNI.widget(
             icon: const Icon(Icons.report_problem),
             title: Text(l.local(l.AvailableStrings.NAV_REPORTS)),
             child: () =>
@@ -122,7 +122,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
           Expanded(
             child: IndexedStack(
               index: _currentItem,
-              children: _ExtendedBNI.getChildren(_navigationItems),
+              children: ExtendedBNI.getChildren(_navigationItems),
             ),
           ),
         ],
@@ -135,7 +135,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     return Scaffold(
       body: IndexedStack(
         index: _currentItem,
-        children: _ExtendedBNI.getChildren(_navigationItems),
+        children: ExtendedBNI.getChildren(_navigationItems),
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).primaryColor,
@@ -159,7 +159,8 @@ class _BottomNavigationState extends State<BottomNavigation> {
 typedef WidgetCallback = Widget Function();
 
 /// A bottom navigation bar item, extended to distinguish between a widget and a route.
-class _ExtendedBNI extends BottomNavigationBarItem {
+@visibleForTesting
+class ExtendedBNI extends BottomNavigationBarItem {
   /// The destination of the item when tapped.
   final WidgetCallback child;
 
@@ -167,22 +168,20 @@ class _ExtendedBNI extends BottomNavigationBarItem {
   final bool isRoute;
 
   /// Creates an item as a widget.
-  const _ExtendedBNI.widget(
+  const ExtendedBNI.widget(
       {@required icon, @required title, @required this.child})
       : assert(child != null),
         isRoute = false,
         super(icon: icon, title: title);
 
   /// Creates an item as a route.
-  const _ExtendedBNI.route({
-    @required icon,
-    @required title,
-    @required this.child,
-  })  : assert(child != null),
+  const ExtendedBNI.route(
+      {@required icon, @required title, @required this.child})
+      : assert(child != null),
         isRoute = true,
         super(icon: icon, title: title);
 
   /// Given some items, this returns them as a list of widgets.
-  static List<Widget> getChildren(Iterable<_ExtendedBNI> iterable) =>
+  static List<Widget> getChildren(Iterable<ExtendedBNI> iterable) =>
       iterable.map((e) => e.child()).toList();
 }
