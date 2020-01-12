@@ -221,6 +221,10 @@ public class User {
                 &&dateOfBirth.isEqual(userToCompare.dateOfBirth);
     }
 
+    /**
+     * This method is used in order to get a json string that represents the User instance
+     * @return Is the json string that represents the User
+     */
     public String toJSON(){
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         OutputStream b64 = new Base64OutputStream(os);
@@ -245,8 +249,15 @@ public class User {
 
 
     }
+
+    /**
+     * This is an intermediate class used to transform the instance of the user inside a jsons string
+     */
      class UserSend {
-         private String username;
+        /**
+         * These are the same attributes define in the previous User class
+         */
+        private String username;
          private String email;
          private String firstName;
          private String lastName;
@@ -257,6 +268,9 @@ public class User {
          private String fiscalCode;
          private LocalDate dateOfBirth;
 
+        /**
+         * This is the constructor of the class that takes the same arguments of the User class but in a serializable way
+         */
          public UserSend(String username, String email, String firstName, String lastName, Place placeOfBirth, Place placeOfResidence, String picture, String imageIdCard, String fiscalCode, LocalDate dateOfBirth) {
              this.username = username;
              this.email = email;
@@ -270,6 +284,9 @@ public class User {
              this.dateOfBirth = dateOfBirth;
          }
 
+        /**
+         * These are the different getter of the attributes of the class
+         */
          public String getUsername() {
              return username;
          }
@@ -312,6 +329,11 @@ public class User {
 
      }
 
+    /**
+     * This method takes a json string that represents a User and it returns the User instance
+     * @param info Is the json string that represents the User
+     * @return Is the instance of the User obtained by the given string
+     */
      public static User fromJSON(String info){
          JSONObject obj = new JSONObject(info);
          String username = obj.getString("username");

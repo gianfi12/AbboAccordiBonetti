@@ -14,9 +14,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONObject;
 
+import javax.annotation.security.PermitAll;
 import javax.jws.WebService;
 import javax.jws.WebMethod;
 import javax.ejb.*;
+import javax.ws.rs.OPTIONS;
 import java.lang.reflect.Type;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -261,6 +263,7 @@ public class Dispatcher implements DispatcherInterface{
      * It sets the dataAnalysisInterface with the new one
      * @param dataAnalysisInterface new dataAnalysisInterface
      */
+    @WebMethod(exclude = true)
     public void setDataAnalysisInterface(DataAnalysisInterface dataAnalysisInterface) {
         this.dataAnalysisInterface=dataAnalysisInterface;
     }

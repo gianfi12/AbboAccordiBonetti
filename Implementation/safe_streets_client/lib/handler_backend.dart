@@ -113,7 +113,7 @@ class _SOAP implements DispatcherInterface {
   String _username, _password;
 
   /// [ip] is the ip address where the server is correctly running
-  final String ip = '192.168.43.108';
+  final String ip = '192.168.1.14';
 
   /// This is the constructor of the SOAP class
   _SOAP(this._username, this._password);

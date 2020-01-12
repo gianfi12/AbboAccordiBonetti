@@ -126,14 +126,14 @@ class Report {
     String position =
         "City: " + placeDecode["city"] + " Address: " + placeDecode["address"];
     var devicePositionDecode = placeDecode["coordinate"];
-    DateTime offset;
+    DateTime offset = DateTime.now();
     if (parsedJson["odtOfWatchedViolation"] != "") {
       offset = DateTime.parse(parsedJson["odtOfWatchedViolation"]);
     }
 
     return Report(
         deviceDateTime: DateTime.parse(parsedJson["reportOffsetDateTime"]),
-        violationDateTime: offset,
+        violationDateTime: offset ?? DateTime.parse(parsedJson["reportOffsetDateTime"]),
         mainImage: null,
         otherImages: new List(),
         devicePosition: new DevicePosition(

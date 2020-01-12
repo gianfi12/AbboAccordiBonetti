@@ -241,7 +241,13 @@ public class Statistic {
         return gson.toJson(new StatisticSend((street==null?"":street),coordinates,numberOfViolationsInStreet,numberOfReports,numberOfUsers,reportsNoDivUsersNo,(date==null?"":date.toString()),(vehicle==null? "":vehicle.getLicensePlate()),numberOfViolationsOfVehicle,(violationType==null? "": violationType.toString()),statisticType.toString()));
     }
 
+    /**
+     * This is the class used to transform the an instance of the statistic class to an intermediate from that can be used to easily serialize the Statistic to a json string
+     */
     class StatisticSend{
+        /**
+         * These are the same attributes that are present in the above statistic class
+         */
         private String street;
         private List<String> coordinateListForStreet;
         private int numberOfViolationsInStreet;
@@ -254,6 +260,9 @@ public class Statistic {
         private String violationType;
         private String statisticType;
 
+        /**
+         * Is the constructor of the StatisticSend class that takes the same elements as of the Statistic class, but in this case the elements are represents in a serializable way
+         */
         public StatisticSend(String street, List<String> coordinateListForStreet, int numberOfViolationsInStreet, int numberOfReports, int numberOfUsers, double reportsNoDivUsersNo, String date, String vehicle, int numberOfViolationsOfVehicle, String violationType, String statisticType) {
             this.street = street;
             this.coordinateListForStreet = coordinateListForStreet;
