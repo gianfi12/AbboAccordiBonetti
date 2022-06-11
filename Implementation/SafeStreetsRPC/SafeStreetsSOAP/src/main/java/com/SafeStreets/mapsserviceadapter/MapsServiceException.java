@@ -3,7 +3,7 @@ package com.SafeStreets.mapsserviceadapter;
 /**
  * A class that represents a generic exception thrown by this package.
  *
- * @author Abbo Giulio A.
+ * @author giubots
  */
 public abstract class MapsServiceException extends Exception {
 

@@ -1,2 +1,2 @@
-# AbboAccordiBonetti
-Project of Software Egineering 2 made by  Giulio Abbo, Gianmarco Accordi and Massimiliano Bonetti.
+# SafeStreets
+Project of Software Egineering 2 made by Giulio (@giubots), Gianmarco Accordi and Massimiliano Bonetti.

@@ -4,7 +4,7 @@ package com.SafeStreets.mapsserviceadapter;
  * A {@link MapsServiceException} thrown when the underlying maps service
  * can not accomplish the given task.
  *
- * @author Abbo Giulio A.
+ * @author giubots
  */
 public class GeocodeException extends MapsServiceException {
     /**

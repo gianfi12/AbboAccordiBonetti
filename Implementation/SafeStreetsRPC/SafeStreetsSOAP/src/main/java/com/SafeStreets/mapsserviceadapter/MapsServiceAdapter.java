@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  * An implementation of {@link MapsServiceInterface} that uses Google Maps.
  *
- * @author Abbo Giulio A.
+ * @author giubots
  * @see MapsServiceInterface
  */
 @Stateless
@@ -27,7 +27,7 @@ class MapsServiceAdapter implements MapsServiceInterface {
      */
     private static final GeoApiContext context = new GeoApiContext
             .Builder()
-            .apiKey("AIzaSyD6-YCMxksVl0uOV52UD6NJr-RuaUpPqbo")
+            .apiKey("YOUR_KEY_HERE")
             .build();
 
     /**

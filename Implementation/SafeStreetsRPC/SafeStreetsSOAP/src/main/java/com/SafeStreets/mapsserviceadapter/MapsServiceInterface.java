@@ -13,7 +13,7 @@ import com.SafeStreets.model.Place;
  * <li>determine whether a {@linkplain Place} is in a generic location.</li>
  * </ul>
  *
- * @author Abbo Giulio A.
+ * @author giubots
  * @see Place
  * @see Coordinate
  */

@@ -8,7 +8,7 @@ package com.SafeStreets.mapsserviceadapter;
  * invalid fields, for example a {@linkplain com.SafeStreets.model.Place}
  * without coordinates when coordinates were needed.
  *
- * @author Abbo Giulio A.
+ * @author giubots
  */
 public class FieldsException extends MapsServiceException {
     /**
